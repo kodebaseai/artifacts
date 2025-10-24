@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import type { ComponentProps, JSX, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { analytics } from "./analytics";

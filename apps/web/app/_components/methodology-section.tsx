@@ -9,7 +9,7 @@ import {
 } from "motion/react";
 import Image from "next/image";
 import type { JSX } from "react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import LaptopScreen from "@/components/device-screens/laptop";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

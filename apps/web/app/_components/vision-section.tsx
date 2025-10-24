@@ -2,7 +2,7 @@
 
 import { motion, useInView, type Variants } from "motion/react";
 import Image from "next/image";
-import { type JSX, useRef } from "react";
+import React, { type JSX, useId, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export function VisionSection(): JSX.Element {
@@ -24,7 +24,7 @@ export function VisionSection(): JSX.Element {
 
   return (
     <section
-      id="vision"
+      id={useId()}
       className="container max-w-screen-xl px-base mx-auto flex flex-col gap-16"
     >
       <div className="flex flex-col items-center gap-2 text-center">

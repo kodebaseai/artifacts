@@ -1,11 +1,9 @@
-import type { JSX } from "react";
+import type { ComponentProps, JSX } from "react";
+import React from "react";
 
 import { cn } from "@/lib/utils";
 
-function Skeleton({
-  className,
-  ...props
-}: React.ComponentProps<"div">): JSX.Element {
+function Skeleton({ className, ...props }: ComponentProps<"div">): JSX.Element {
   return (
     <div
       data-slot="skeleton"

@@ -1,7 +1,8 @@
 "use client";
 
 import { Tabs as TabsPrimitive } from "@base-ui-components/react/tabs";
-import type * as React from "react";
+import type { ComponentProps } from "react";
+import React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -9,7 +10,7 @@ function Tabs({
   className,
   orientation = "horizontal",
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Root>) {
+}: ComponentProps<typeof TabsPrimitive.Root>) {
   return (
     <TabsPrimitive.Root
       data-slot="tabs"
@@ -27,7 +28,7 @@ function Tabs({
 function TabsList({
   className,
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.List>) {
+}: ComponentProps<typeof TabsPrimitive.List>) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
@@ -45,7 +46,7 @@ function TabsList({
 function TabsTrigger({
   className,
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Tab>) {
+}: ComponentProps<typeof TabsPrimitive.Tab>) {
   return (
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
@@ -67,7 +68,7 @@ function TabsTrigger({
 function TabsContent({
   className,
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Panel>) {
+}: ComponentProps<typeof TabsPrimitive.Panel>) {
   return (
     <TabsPrimitive.Panel
       data-slot="tabs-content"
@@ -80,7 +81,7 @@ function TabsContent({
 function TabsIndicator({
   className,
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Indicator>) {
+}: ComponentProps<typeof TabsPrimitive.Indicator>) {
   return (
     <TabsPrimitive.Indicator
       data-slot="tabs-indicator"

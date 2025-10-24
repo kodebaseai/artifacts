@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { JSX } from "react";
+import React, { type JSX } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,

@@ -1,6 +1,7 @@
 "use-client";
 
 import Image from "next/image";
+import React from "react";
 import type { JSX } from "react";
 import { cn } from "@/lib/utils";
 

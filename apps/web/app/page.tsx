@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import React, { type JSX } from "react";
 import { CTASection } from "./_components/cta-section";
 import { HeroSection } from "./_components/hero-section";
 import { HighlightsSection } from "./_components/highlights-section";

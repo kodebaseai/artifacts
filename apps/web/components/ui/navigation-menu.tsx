@@ -2,7 +2,8 @@ import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui-components/r
 import { cva } from "class-variance-authority";
 import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
-import type * as React from "react";
+import type { ComponentProps } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 
 function NavigationMenu({
@@ -10,7 +11,7 @@ function NavigationMenu({
   children,
   viewport = true,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
+}: ComponentProps<typeof NavigationMenuPrimitive.Root> & {
   viewport?: boolean;
 }) {
   return (
@@ -32,7 +33,7 @@ function NavigationMenu({
 function NavigationMenuList({
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.List>) {
+}: ComponentProps<typeof NavigationMenuPrimitive.List>) {
   return (
     <NavigationMenuPrimitive.List
       data-slot="navigation-menu-list"
@@ -48,7 +49,7 @@ function NavigationMenuList({
 function NavigationMenuItem({
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Item>) {
+}: ComponentProps<typeof NavigationMenuPrimitive.Item>) {
   return (
     <NavigationMenuPrimitive.Item
       data-slot="navigation-menu-item"
@@ -66,7 +67,7 @@ function NavigationMenuTrigger({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
+}: ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {
   return (
     <NavigationMenuPrimitive.Trigger
       data-slot="navigation-menu-trigger"
@@ -85,7 +86,7 @@ function NavigationMenuTrigger({
 function NavigationMenuContent({
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {
+}: ComponentProps<typeof NavigationMenuPrimitive.Content>) {
   return (
     <NavigationMenuPrimitive.Content
       data-slot="navigation-menu-content"
@@ -106,7 +107,7 @@ function NavigationMenuContent({
 function NavigationMenuViewport({
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Popup>) {
+}: ComponentProps<typeof NavigationMenuPrimitive.Popup>) {
   return (
     <div className="absolute top-full left-0 isolate z-50 flex justify-center">
       <NavigationMenuPrimitive.Portal>
@@ -143,7 +144,7 @@ function NavigationMenuViewport({
   );
 }
 
-// function _ArrowSvg(props: React.ComponentProps<'svg'>) {
+// function _ArrowSvg(props: ComponentProps<'svg'>) {
 //   return (
 //     <svg width="20" height="10" viewBox="0 0 20 10" fill="none" {...props}>
 //       <title>Arrow</title>
@@ -166,7 +167,7 @@ function NavigationMenuViewport({
 function NavigationMenuLink({
   className,
   ...props
-}: React.ComponentProps<typeof Link>) {
+}: ComponentProps<typeof Link>) {
   return (
     <Link
       data-slot="navigation-menu-link"
@@ -182,7 +183,7 @@ function NavigationMenuLink({
 function NavigationMenuIndicator({
   className,
   ...props
-}: React.ComponentProps<typeof NavigationMenuPrimitive.Positioner>) {
+}: ComponentProps<typeof NavigationMenuPrimitive.Positioner>) {
   return (
     <NavigationMenuPrimitive.Positioner
       data-slot="navigation-menu-indicator"

@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
-import { type JSX, useEffect, useRef } from "react";
+import React, { type JSX, useEffect, useRef } from "react";
 
 interface ScreenData {
   text: string;

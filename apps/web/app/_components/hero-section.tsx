@@ -1,4 +1,4 @@
-import type { JSX } from "react";
+import React, { useId, type JSX } from "react";
 import LaptopScreen from "@/components/device-screens/laptop";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,7 @@ import { AnalyticsLink } from "../../components/analytics-link";
 export function HeroSection(): JSX.Element {
   return (
     <section
-      id="hero"
+      id={useId()}
       className="relative grid place-items-center pt-section-gap"
     >
       {/* Background Grid*/}

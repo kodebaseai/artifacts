@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { type JSX, useCallback, useState } from "react";
+import React, { type JSX, useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   AnalyticsCategories,

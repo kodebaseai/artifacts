@@ -8,7 +8,7 @@ import {
   ShieldUser,
 } from "lucide-react";
 import type { JSX } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
@@ -185,7 +185,7 @@ export function ProblemSection(): JSX.Element {
 
   return (
     <section
-      id="problem"
+      id={useId()}
       className="container max-w-screen-xl mx-auto px-base my-32"
     >
       <Tabs

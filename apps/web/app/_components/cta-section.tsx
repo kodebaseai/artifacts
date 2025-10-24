@@ -1,5 +1,5 @@
 import { ArrowRight, BookOpen, Users } from "lucide-react";
-import type { JSX } from "react";
+import React,{ type JSX } from "react";
 import { CTAContent } from "./cta-content";
 
 export function CTASection(): JSX.Element {

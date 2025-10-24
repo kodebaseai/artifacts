@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import React from "react";
 import type { ComponentProps, JSX } from "react";
 import { analytics } from "./analytics";
 

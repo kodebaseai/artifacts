@@ -1,6 +1,6 @@
 "use client";
 
-import { type JSX, useState } from "react";
+import React, { type JSX, useState } from "react";
 import { FeatureFlags, useFeatureFlags } from "../../components/feature-flags";
 import { CTAButton } from "./cta-button";
 import { CTAThankYou } from "./cta-thank-you";
