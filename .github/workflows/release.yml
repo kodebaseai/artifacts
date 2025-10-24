@@ -52,9 +52,6 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Build packages
-        run: pnpm build
-
       - name: Check for changesets
         id: check-changesets
         run: |
