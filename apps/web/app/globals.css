@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "@kodebase/tailwind-config";
-@import "@kodebase/ui/styles.css";
 
 @custom-variant light (&:where(.light, .light *));
 
