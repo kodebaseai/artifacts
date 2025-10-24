@@ -6,19 +6,19 @@
   "exports": {
     ".": {
       "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "default": "./dist/index.js"
     },
     "./node": {
       "types": "./src/node-config.ts",
-      "default": "./src/node-config.ts"
+      "default": "./dist/configs/node-config.js"
     },
     "./js": {
       "types": "./src/js-config.ts",
-      "default": "./src/js-config.ts"
+      "default": "./dist/configs/js-config.js"
     },
     "./react": {
       "types": "./src/react-config.ts",
-      "default": "./src/react-config.ts"
+      "default": "./dist/config/react-config.js"
     }
   },
   "imports": {
@@ -43,7 +43,8 @@
     "collect-json-reports": "node dist/scripts/collect-json-outputs.js",
     "merge-json-reports": "nyc merge coverage/raw coverage/merged/merged-coverage.json",
     "report": "nyc report -t coverage/merged --report-dir coverage/report --reporter=html --exclude-after-remap false",
-    "view-report": "open coverage/report/index.html"
+    "view-report": "open coverage/report/index.html",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^6.6.3",
