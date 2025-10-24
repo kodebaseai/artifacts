@@ -66,10 +66,12 @@
   border-radius: 128px;
   height: 48px;
   padding: 0 20px;
-  border: none;
   font-family: var(--font-geist-sans);
   border: 1px solid transparent;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -83,6 +85,13 @@ a.primary {
   background: var(--foreground);
   color: var(--background);
   gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
 }
 
 a.secondary {
@@ -95,10 +104,12 @@ button.secondary {
   border-radius: 128px;
   height: 48px;
   padding: 0 20px;
-  border: none;
   font-family: var(--font-geist-sans);
   border: 1px solid transparent;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -185,4 +196,20 @@ button.secondary {
   .logo {
     filter: invert();
   }
+}
+
+.card:hover span {
+  transform: translateX(4px);
+}
+
+.secondary {
+  height: 48px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  border-radius: 8px;
+  background-color: var(--blue-glow);
+  filter: blur(var(--blur-medium));
 }

@@ -20,9 +20,18 @@
       "dependsOn": ["^check-types"]
     },
     "test": {
-      "dependsOn": ["^test"],
-      "inputs": ["$TURBO_DEFAULT$", "vitest.config.*", "vitest.workspace.*", "vitest-setup.*"],
-      "outputs": ["coverage/**", "test-results/**"]
+      "dependsOn": ["transit", "@kodebase/vitest-config#build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "vitest.config.*",
+        "vitest.workspace.*",
+        "vitest-setup.*"
+      ],
+      // "outputs": ["coverage/**", "test-results/**"]
+      "outputs": ["coverage.json"]
+    },
+    "transit": {
+      "dependsOn": ["^transit"]
     },
     "dev": {
       "cache": false,
