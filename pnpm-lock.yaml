@@ -228,6 +228,9 @@ importers:
 
   packages/ui:
     devDependencies:
+      '@kodebase/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
       '@kodebase/tailwind-config':
         specifier: workspace:*
         version: link:../tailwind-config
