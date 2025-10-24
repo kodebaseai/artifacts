@@ -101,3 +101,39 @@ This should be the default for:
 - Web applications (e.g., Next.js apps)
 - Documentation sites
 - Internal utilities or shared configurations
+
+### 7. Code Quality: Biome
+
+We use **Biome** for linting and formatting across the entire monorepo. Biome replaces ESLint and Prettier with a single, faster tool.
+
+#### **Configuration**
+- **Config file**: `biome.json` in the workspace root
+- **Version**: Biome v2.0+
+- **Line endings**: `"auto"` for cross-platform compatibility
+
+#### **Available Commands**
+```bash
+# Lint all files
+pnpm lint
+
+# Format all files
+pnpm format
+
+# Check all files (lint + format)
+pnpm check
+
+# Fix issues automatically
+pnpm check:fix
+```
+
+#### **Key Features**
+- **Single tool** for linting and formatting
+- **Faster** than ESLint + Prettier
+- **Better TypeScript support**
+- **Unified configuration** across the monorepo
+- **Turbo integration** for caching
+
+#### **File Patterns**
+- **Includes**: TypeScript, JavaScript, JSON, Markdown files
+- **Excludes**: `node_modules`, `dist`, `build`, `.turbo`, `coverage`, `*.d.ts`
+- **Cross-platform**: Automatically handles line endings per OS
