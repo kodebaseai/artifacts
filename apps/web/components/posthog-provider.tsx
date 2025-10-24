@@ -2,7 +2,7 @@
 
 import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
-import type { ReactNode } from "react";
+import type { JSX, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { FeatureFlagsProvider } from "./feature-flags";
 
