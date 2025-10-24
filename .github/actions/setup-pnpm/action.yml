@@ -15,6 +15,18 @@ runs:
 
     - name: Setup pnpm
       uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061
+      with:
+        version: 10.8.1 # Pin to a version compatible with Node 24
+
+    - name: Verify pnpm installation
+      shell: bash
+      run: |
+        pnpm --version
+        echo "PNPM_PATH=$(which pnpm)" >> $GITHUB_ENV
+        if ! command -v pnpm &> /dev/null; then
+          echo "pnpm not found in PATH" >&2
+          exit 1
+        fi
 
     - name: Get pnpm store directory
       shell: bash
