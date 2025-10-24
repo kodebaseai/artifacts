@@ -1,0 +1,70 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * 1' # Weekly on Monday at 2 AM
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: ['24']
+      fail-fast: false
+    steps:
+      - name: Setup pnpm
+        uses: ./.github/actions/setup-pnpm
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run security audit
+        id: audit
+        run: |
+          pnpm audit --audit-level moderate --json > audit.json
+          if jq -e '.vulnerabilities | length > 0' audit.json > /dev/null; then
+            echo "❌ Security vulnerabilities found"
+            cat audit.json | jq .
+            echo "AUDIT_FAILED=true" >> $GITHUB_ENV
+            exit 1
+          else
+            echo "✅ No security vulnerabilities found"
+          fi
+        env:
+          CI: true
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: audit-report-${{ matrix.node-version }}
+          path: audit.json
+          retention-days: 30
+
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    timeout-minutes: 5
+    if: github.event_name == 'pull_request' || github.event_name == 'schedule'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: ${{ github.event_name == 'pull_request' && 'moderate' || 'critical' }}
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, CC0-1.0
+          deny-licenses: GPL-3.0, AGPL-3.0

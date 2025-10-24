@@ -1,0 +1,100 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pr-checks:
+    name: PR Checks
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    timeout-minutes: 20
+    if: github.event.pull_request.draft == false
+    strategy:
+      matrix:
+        node-version: ['24']
+      fail-fast: false
+    steps:
+      - name: Setup pnpm
+        uses: ./.github/actions/setup-pnpm
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Lint
+        run: pnpm lint
+        env:
+          CI: true
+
+      - name: Format check
+        run: pnpm format --check
+
+      - name: Type check
+        run: pnpm check-types
+
+      - name: Run tests
+        run: pnpm test
+        env:
+          CI: true
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Check for changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+          commit: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        if: always()
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('## 🎯 PR Quality Check')
+            );
+
+            const body = `## 🎯 PR Quality Check
+
+            ### ✅ Checks Passed / ❌ Checks Failed:
+            - **Linting**: ${process.env.LINT_FAILED ? '❌ Failed' : '✅ Passed'}
+            - **Formatting**: ${process.env.FORMAT_FAILED ? '❌ Failed' : '✅ Passed'}
+            - **Type Checking**: ${process.env.TYPE_CHECK_FAILED ? '❌ Failed' : '✅ Passed'}
+            - **Tests**: ${process.env.TEST_FAILED ? '❌ Failed' : '✅ Passed'}
+            - **Build**: ${process.env.BUILD_FAILED ? '❌ Failed' : '✅ Passed'}
+            - **Changesets**: ${process.env.CHANGESET_FAILED ? '❌ Missing' : '✅ Found'}
+
+            ### 📋 Next Steps:
+            - ${process.env.LINT_FAILED || process.env.FORMAT_FAILED || process.env.TYPE_CHECK_FAILED || process.env.TEST_FAILED || process.env.BUILD_FAILED || process.env.CHANGESET_FAILED ? 'Fix the failing checks and push updates.' : 'Review the changes and merge when ready.'}
+            - Packages will be automatically published on merge to main`;
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }

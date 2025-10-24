@@ -1,0 +1,18 @@
+# Global owners
+* @migcarva
+
+# Package-specific owners
+packages/cli/ @migcarva
+packages/core/ @migcarva
+packages/ui/ @migcarva
+
+# Apps
+apps/web/ @migcarva
+apps/docs/ @migcarva
+
+# Configuration files
+.github/ @migcarva
+biome.json @migcarva
+turbo.json @migcarva
+package.json @migcarva
+pnpm-lock.yaml @migcarva

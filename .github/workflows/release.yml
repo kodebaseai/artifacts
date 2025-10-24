@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    strategy:
+      matrix:
+        node-version: ['24']
+      fail-fast: false
+    steps:
+      - name: Setup pnpm
+        uses: ./.github/actions/setup-pnpm
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Lint
+        run: pnpm lint
+        env:
+          CI: true
+
+      - name: Format check
+        run: pnpm format --check
+
+      - name: Type check
+        run: pnpm check-types
+
+      - name: Run tests
+        run: pnpm test
+        env:
+          CI: true
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Check for changesets
+        id: check-changesets
+        run: |
+          if [ -n "$(git diff --name-only origin/main^ origin/main | grep '.changeset')" ]; then
+            echo "hasChangesets=true" >> $GITHUB_OUTPUT
+          else
+            echo "hasChangesets=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Version packages
+        if: steps.check-changesets.outputs.hasChangesets == 'true'
+        id: version
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+          commit: "chore: release packages"
+          title: "chore: release packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to npm
+        id: publish
+        if: steps.version.outputs.hasChangesets == 'true'
+        run: |
+          pnpm changeset publish || echo "PUBLISH_FAILED=true" >> $GITHUB_ENV
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Upload publish logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: publish-logs-${{ matrix.node-version }}
+          path: npm-publish.log
+          retention-days: 30
+
+      - name: Send notification on success
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          echo "Published ${{ steps.changesets.outputs.publishedPackages }}"

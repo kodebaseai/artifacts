@@ -1,0 +1,109 @@
+name: Sync Public Mirrors
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/**'
+      - '.changeset/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync-mirrors:
+    name: Sync Public Mirrors
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    strategy:
+      matrix:
+        node-version: ['24']
+      fail-fast: false
+    steps:
+      - name: Setup pnpm
+        uses: ./.github/actions/setup-pnpm
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Lint
+        run: pnpm lint
+        env:
+          CI: true
+
+      - name: Format check
+        run: pnpm format --check
+        env:
+          CI: true
+
+      - name: Type check
+        run: pnpm check-types
+        env:
+          CI: true
+
+      - name: Run tests
+        run: pnpm test -- --coverage
+        env:
+          CI: true
+
+      - name: Build packages
+        run: pnpm build
+        env:
+          CI: true
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: build-artifacts-${{ matrix.node-version }}
+          path: |
+            packages/ui/dist/
+            packages/typescript-config/dist/
+          retention-days: 30
+
+      - name: Sync UI Package
+        id: sync-ui
+        if: hashFiles('packages/ui/**') != ''
+        run: |
+          git clone https://github.com/kodebaseai/kodebase-ui.git ui-mirror
+          rsync -av --delete packages/ui/ ui-mirror/ --exclude node_modules
+          cd ui-mirror
+          git add .
+          git commit -m "Sync UI package from ${{ github.repository }}@${{ github.sha }}" || echo "No changes to commit"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.MIRROR_GITHUB_TOKEN }}
+
+      - name: Sync TypeScript Config Package
+        id: sync-ts-config
+        if: hashFiles('packages/typescript-config/**') != ''
+        run: |
+          git clone https://github.com/kodebaseai/kodebase-typescript-config.git ts-config-mirror
+          rsync -av --delete packages/typescript-config/ ts-config-mirror/ --exclude node_modules
+          cd ts-config-mirror
+          git add .
+          git commit -m "Sync TypeScript config package from ${{ github.repository }}@${{ github.sha }}" || echo "No changes to commit"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.MIRROR_GITHUB_TOKEN }}
+
+      - name: Version packages
+        id: changesets
+        if: github.event_name == 'push'
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create-release
+        if: github.event_name == 'push' && steps.changesets.outputs.hasChangesets == 'true'
+        run: |
+          for package in $(echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r '.[] | .name + "@" + .version'); do
+            repo=$(echo $package | cut -d'@' -f1 | sed 's/@kodebaseai\///')
+            gh release create "$package" --repo kodebaseai/$repo --title "$package" --notes "Automated release from ${{ github.repository }}@${{ github.sha }}"
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.MIRROR_GITHUB_TOKEN }}
