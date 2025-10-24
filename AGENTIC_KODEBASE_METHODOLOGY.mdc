@@ -1,0 +1,239 @@
+# Kodebase Methodology
+
+> **PREAMBLE: METHODOLOGY UNDER LAW**
+>
+> This document outlines the step-by-step process for executing issues. It is subordinate to the **[Kodebase Agent Constitution](./AGENTIC_CONSTITUTION.mdc)**. All actions described herein MUST be performed in strict accordance with the laws of the Constitution.
+>
+
+## 1. The Core Philosophy: Git as a Database
+
+Kodebase treats the Git repository not just as a store for code, but as a structured, event-driven database.
+
+- **Artifacts:** Structured YAML files for Initiatives, Milestones, and Issues, validated against the official project schemas.
+- **Events:** An immutable, append-only log within each artifact that records its lifecycle. Core events include:
+    - `event`: The state transition
+    - `timestamp`: When the event occurred
+    - `actor`: Who triggered the event
+    - `trigger`: Type of the trigger
+    - Optional: `metadata` for additional context (example: blocking_dependencies array)
+- **Identity:**
+    - **Human:** The `actor` for any event is derived from the user's `git config` (`user.name`, `user.email`).
+    - **AI Agent:** An agent's Git identity MUST follow the pattern `agent.[TYPE].[SESSION]@[TENANT].kodebase.ai` to enable programmatic distinction.
+- **Automation (`kodebase` CLI):** Command-line tools that handle mechanical tasks like event generation, status transitions, and validation.
+
+## 2. Artifact Storage & Conventions
+
+### 2.1. Folder Structure
+
+To provide clarity and organization while optimizing for AI agent context consumption, artifacts use a milestone-oriented structure that enables "surgical context provision."
+
+- `/.kodebase/artifacts/` (root directory)
+  - `A.<initiative-slug-title>/` (initiative folder)
+    - `A.yml` (initiative file at initiative root)
+    - `A.1.<milestone-slug-title>/` (milestone folder)
+      - `A.1.yml`
+      - `A.1.1.<issue-slug-title>.yml`
+      - `A.1.2.<issue-slug-title>.yml`
+      - ... (all the other issues for this milestone)
+    - `A.2.<milestone-slug-title>/` (milestone folder)
+    - ...
+
+This structure provides:
+- **Natural work boundaries**: All related work lives together
+- **Efficient AI context**: Agents receive only relevant files (e.g., just A.1/* for working on A.1.5)
+- **Cognitive load management**: Each directory contains 8-15 items maximum
+- **Simple archival**: Complete milestones can be moved as units
+
+### 2.2. Data Format & Filename
+
+- **Format:** Artifacts are **YAML (`.yml`)** files.
+- **Naming Convention:**
+  - Initiatives: `<initiative-id>.yml` (e.g., `A.yml`, `C.yml` or `AC.yml`)
+  - Milestones: `<milestone-id>.yml` (e.g., `A.1.yml`, `B.23.yml` or `CD.2.yml`)
+  - Issues: `<issue-id>.yml` (e.g., `A.1.5.yml`, `F.4.56.yml` or `BD.12.5.yml`)
+- **Note:** Title slugs are not included in filenames to keep them concise and sortable
+
+### 2.3. Artifact Structure
+
+All artifacts follow a common structure with metadata and type-specific content:
+
+```yaml
+metadata:
+  title: "Human-readable title"
+  priority: critical|high|medium|low
+  estimation: XS|S|M|L|XL
+  created_by: "Name (email@domain.com)"
+  assignee: "Name (email@domain.com)"
+  schema_version: "0.1.0"
+  relationships: # relationships with direct siblings only
+    blocks: [artifact-ids]
+    blocked_by: [artifact-ids]
+  events:
+    - event: draft|ready|blocked|cancelled|in_progress|in_review|completed|archived
+      timestamp: "2025-01-06T15:17:00Z"
+      actor: "Name (email@domain.com)"
+      trigger: artifact_created|has_dependencies|dependencies_met|branch_created|pr_created|pr_merged|manual_cancel
+      metadata: {} # Optional context defined for some types of triggers
+
+content:
+  # Type-specific content (summary, acceptance_criteria, development_process, completion_analysis, completion_summary, notes, etc.)
+```
+
+## 3. The Automation & Intelligence Layer
+
+The system is composed of complementary automation components:
+
+- **Quick Scripts:** Lightweight automation (`pnpm ictx`, `pnpm cpr`, `pnpm complete`) that bridge the gap until full CLI implementation.
+- **The `kodebase` CLI:** Handles mechanical tasks - ID generation, event creation, status validation, relationship management. This is where timestamps, actor info, and state machine rules live.
+- **Kodebase VS Code Extension:** That exposes the CLI commands on a friendlier interface
+- **The MCP (Model Context Protocol):** Provides intelligent context to AI agents by aggregating relevant artifacts, code, and documentation.
+
+**Philosophy:** Automate the mechanical, preserve the creative. Humans and AI focus on solving problems, tools handle the bookkeeping.
+
+## 4. The Artifact Lifecycle: Streamlined Events
+
+The lifecycle is defined by events, with clear, simple transitions.
+
+|---------------|---------------------------------------------------|
+| Key           | Description                                       |
+|---------------|---------------------------------------------------|
+| `draft`       | Planning phase – allowed only on feature branches |
+| `ready`       | Ready to start work                               |
+| `blocked`     | Waiting on sibling dependencies                   |
+| `in_progress` | Active development                                |
+| `in_review`   | Under human review                                |
+| `completed`   | Work done – terminal                              |
+| `cancelled`   | Abandoned – terminal for issues, may re-draft     |
+| `archived`    | Historical, immutable                             |
+|---------------|---------------------------------------------------|
+
+**Inheritance:** `blocked`, `cancelled`, `archived` propagate *down* automatically; children don’t store extra events.
+
+### 4.1. Event Record Schema
+Field        | Req | Example                         | Notes
+------------ | --- | ------------------------------- | -------------------------------
+`event`      | ✅  | `in_progress`                   | One of the state keywords above
+`timestamp`  | ✅  | `2025-08-01T10:00:00Z`          | ISO-8601 UTC
+`actor`      | ✅  | `Git Hook (hook@post-checkout)` | `Name (identifier)`
+`trigger`    | ⬜  | `branch_created`                | Explains *why*
+`metadata`   | ⬜  | `{ pr: 95 }`                    | Free-form JSON/YAML
+
+No IDs, no correlation graphs – chronological order alone is authoritative.
+
+### 4.2. Lifecycle Flows
+
+#### **Creation**
+- Initiaing Command / Event: `kodebase create`
+- Key Rules:
+  • All new artifacts start as `draft`.
+  • Wizard enforces sibling-only dependencies & minimum content.
+  • Validation runs only on newly created files.
+  • When merged to `main`, each artifact ends in **`ready`** or **`blocked`** based on declared dependencies.
+- Resulting Events: `draft` → `ready` or `blocked`
+
+#### **Progress Cascade**
+- Initiaing Command / Event: `kodebase start`
+- Key Rules:
+  • Only Issues can be started.
+  • Issue must be `ready`; parent Milestone/Initiative must be `ready` or `in_progress`.
+  • *First* Issue started in a Milestone flips the Milestone to `in_progress` (same for Milestone → Initiative).
+- Resulting Events: `in_progress` on child, then on first-time parent(s) via `child_started:<id>` trigger
+
+#### **Completion Cascade**
+- Initiaing Command / Event: `kodebase start --submit` (Issue PR merged)
+- Key Rules:
+  • Issue PR merge adds `completed` on Issue.
+  • If it’s the last Issue of a Milestone, Milestone moves to `in_review`.
+  • If that Milestone is the last of its Initiative, Initiative moves to `in_review`.
+- Resulting Events: `completed` (Issue) → `in_review` (Milestone / Initiative) via `children_completed`
+
+#### **Dependency Resolution**
+- Initiaing Command / Event: Merge of blocking Issue PR
+- Key Rules:
+  • `blocked` events live *only* on the dependent Issue and list siblings in `metadata.blocking_dependencies`.
+  • On completion of a blocker, its dependents update that list (`resolved: true`, `resolved_at`).
+  • When all entries resolved, dependent receives a new `ready` event.
+- Resulting Events: metadata update on `blocked` event; optional new `ready` event
+
+#### **Cancel**
+- Initiaing Command / Event: `kodebase cancel`
+- Key Rules:
+  • CLI shows dependency impact report.
+  • Cancelling Milestone cascades `cancelled` to all its Issues; cancelling Initiative cascades to Milestones & Issues.
+  • User decides whether dependents move to `ready` or `cancelled`.
+- Resulting Events: `cancelled` events; possible follow-up `ready` events on dependents
+
+### 4.3. Trigger Catalogue
+
+Type       | Trigger                      | Emitted By                       | Typical Flow
+---------- | ---------------------------- | -------------------------------- | -----------------------------
+Manual     | `artifact_created`           | `create` command                 | Creation
+Manual     | `branch_created`             | Git post-checkout hook / `start` | Progress
+Manual     | `pr_ready`                   | `start --submit`                 | Completion (Issue → PR ready)
+Manual     | `manual_cancel`              | `cancel` command                 | Cancel
+Cascade    | `child_started:<id>`         | Event engine                     | Progress cascade
+Cascade    | `children_completed`         | Event engine                     | Completion cascade
+Cascade    | `dependencies_resolved:<id>` | Event engine                     | Dependency resolution
+Validation | `constraint_violation`       | `validate` command               | Validation flow
+
+### 4.4. Actor Attribution
+
+Pattern        | Example                                             | Type
+-------------- | --------------------------------------------------- | ----------
+Human          | `Jane Smith (jane@example.com)`                     | human
+AI Agent       | `Claude (agent.claude.session123@acme.kodebase.ai)` | ai_agent
+CLI            | `Kodebase CLI (cli@v1.0.0)`                         | automation
+Git Hook       | `Git Hook (hook@post-checkout)`                     | automation
+CI Runner      | `CI Runner (ci.github@job-42)`                      | automation
+Cascade Engine | `System Cascade (cascade@completion)`               | automation
+
+Every event’s `actor` field **must** follow these patterns.
+
+### 4.5. Constraints & Invariants
+
+1. Events are immutable once appended; **only `metadata` may be updated** (e.g., marking `resolved_at`).
+2. Events must be strictly chronological within each artifact file.
+3. State transitions must follow the table in §3.
+4. Parent cannot reach `completed` if any child is not `completed` or `cancelled`.
+5. A child cannot start unless it is `ready` *and* parent is `ready` (first child) or `in_progress`.
+6. `blocked` events may reference **only** IDs listed in `metadata.relationships.blocked_by` and those IDs must be siblings.
+7. No artifact may depend on a non-sibling (validated at creation and by `validate`).
+
+
+## 5. Git & Development Workflow
+
+### 5.1 CLI Command Catalogue
+
+| ------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------
+| Command             | Purpose (incl. key flags)                                                                                          | Primary State Effect
+| ------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------
+| `kodebase create`   | Wizard/one-shot add artifacts.  Flags: `--continue`, `--submit` (validate & open PR for new artifacts), `--abort`. | `(new) → draft → ready/blocked`
+| `kodebase start`    | Begin work on a *ready* Issue. Flags: `--submit` (validate & open PR for review after push).                       | `ready → in_progress`
+| `kodebase status`   | Show artifact(s) info. Flags: `--json`, `--check-parent`, `--all`, filters; replaces standalone `list`.            | *read-only*
+| `kodebase complete` | Trigger completion flow for Milestone/Initiative (intelligence report, celebration).                               | `in_review → completed / archived`
+| `kodebase cancel`   | Cancel an active artifact (Issue, Milestone, or Initiative). Flags: `--reason`, `--force`, `--dry-run`             | `<state> → cancelled / archived`
+| `kodebase validate` | Run constraint checks, optionally `--fix`.                                                                         | *read-only / writes fixes*
+| `kodebase setup`    | First-run configuration wizard.                                                                                    | n/a
+| `kodebase tutorial` | Interactive sandbox onboarding.                                                                                    | n/a
+
+`ready` command is deprecated (folded into `create`). Existing `pr` command is internal to hooks; users call `--submit` flags instead.
+
+### 5.2. Commit Message Patterns
+
+**Required:** Issue ID prefix
+**Recommended:** Conventional commit type
+**Flexible:** Message format
+
+Examples:
+- `A.1.5: feat: Implement email validation`
+- `A.1.5: Add test coverage for edge cases`
+- `A.1.5: refactor: Extract validation logic`
+
+**v2.0 Focus:** Clear communication over rigid formatting
+
+### 5.3. Development Approaches by Issue Type
+
+- **Code Implementation:** TDD for complex logic, direct for simple features
+- **Documentation:** Direct writing with iterative refinement
+- **Process/Config:** Focus on correctness and clarity
+- **Research:** Capture findings as you discover them
