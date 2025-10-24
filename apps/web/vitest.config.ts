@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { uiConfig } from "@kodebase/vitest-config/ui";
+import { uiConfig } from "@kodebase/vitest-config";
 import { defineConfig, mergeConfig } from "vitest/config";
 
 export default mergeConfig(

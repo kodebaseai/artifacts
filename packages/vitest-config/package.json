@@ -5,20 +5,24 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
     },
-    "./base": {
-      "types": "./dist/configs/base-config.d.ts",
-      "import": "./dist/configs/base-config.js",
-      "default": "./dist/configs/base-config.js"
+    "./node": {
+      "types": "./src/node-config.ts",
+      "default": "./src/node-config.ts"
     },
-    "./ui": {
-      "types": "./dist/configs/ui-config.d.ts",
-      "import": "./dist/configs/ui-config.js",
-      "default": "./dist/configs/ui-config.js"
+    "./js": {
+      "types": "./src/js-config.ts",
+      "default": "./src/js-config.ts"
+    },
+    "./react": {
+      "types": "./src/react-config.ts",
+      "default": "./src/react-config.ts"
     }
+  },
+  "imports": {
+    "#*": "./src/*"
   },
   "typesVersions": {
     "*": {
