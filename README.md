@@ -1,135 +1,60 @@
-# Turborepo starter
+# Kodebase Monorepo
 
-This Turborepo starter is maintained by the Turborepo core team.
+This is the Kodebase monorepo. It uses pnpm, Turborepo, Biome, and Changesets. Agents and developers should follow the Kodebase Agent Constitution and Methodology for day‑to‑day work.
 
-## Using this example
+**Start Here**
+- Read `.kodebase/docs/README.md` for the agent/developer onboarding.
+- Review `AGENTS.md`, `AGENTIC_CONSTITUTION.mdc`, and `AGENTIC_KODEBASE_METHODOLOGY.mdc` for principles and workflow.
 
-Run the following command:
+**Quick Start**
+- `pnpm install` to install dependencies.
+- `pnpm dlx turbo login` to enable Vercel Remote Caching (recommended).
+- `pnpm exec turbo link` to link the repo to the cache project.
+- `pnpm check` to run Biome lint + format checks.
+- `pnpm dev` to start development across apps, or `pnpm exec turbo dev --filter=<pkg>` for a specific app.
 
-```sh
-npx create-turbo@latest
-```
+**Core Commands**
+- `pnpm dev` runs `turbo run dev` across the workspace.
+- `pnpm build` runs `turbo run build`.
+- `pnpm check` runs Biome checks (lint + format) read‑only.
+- `pnpm check:fix` applies automatic fixes.
+- `pnpm test` runs workspace tests via Turborepo.
 
-## What's inside?
+**Changesets (Versioning & Changelogs)**
+- Add a changeset for user‑visible changes: `pnpm changeset add`.
+- Version during release: `pnpm changeset version`.
+- Publish public packages: `pnpm changeset publish`.
 
-This Turborepo includes the following packages/apps:
+**Commit Pattern**
+- Prefix commits with the Issue ID when applicable: `A.1.5: feat: Implement email validation`.
+- Conventional type is recommended but flexible; clarity over rigidity.
 
-### Apps and Packages
+**Remote Caching**
+- Authenticate: `pnpm dlx turbo login`.
+- Link cache: `pnpm exec turbo link`.
+- Unlink if needed: `npx turbo unlink`.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+**Quality & Tooling**
+- Lint: `pnpm lint` or `pnpm lint:fix`.
+- Format: `pnpm format` or `pnpm format:fix`.
+- Types: `pnpm check-types` (delegates to package tasks via Turborepo).
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+**Repo Structure (High Level)**
+- `apps/*` application code (e.g., Next.js apps).
+- `packages/*` shared libraries and configs.
+- `.kodebase/*` artifacts, docs, and process assets.
+- `turbo.json` task pipelines and caching config.
+- `biome.json` lint/format configuration.
 
-### Utilities
+**Working Method (Essentials)**
+- Scope work to the active issue’s acceptance criteria; keep it simple and local‑first unless requirements state otherwise.
+- If requirements are unclear, ask for clarification before coding.
+- Use the shared glossary (`.kodebase/docs/GLOSSARY.md`) for consistent terminology.
+- If a change adds notable complexity, record an ADR per the Constitution.
 
-This Turborepo has some additional tools already setup for you:
+**Monorepo + Public Mirrors**
+- Public packages are published to npm and mirrored to public repos.
+- Private apps/utilities keep `"private": true` and are never published.
+- Versioning and changelogs are managed centrally via Changesets.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+For deeper guidance, see `.kodebase/docs/README.md` and `AGENTS.md`.
