@@ -1,5 +1,5 @@
 {
-  "name": "@repo/ui",
+  "name": "@kodebase/ui",
   "version": "0.0.0",
   "private": true,
   "exports": {
@@ -13,11 +13,13 @@
     "check-types": "tsc --noEmit"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "@kodebase/typescript-config": "workspace:*",
     "@types/node": "^22.18.12",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
-    "typescript": "5.9.3"
+    "@vitest/coverage-istanbul": "^3.0.7",
+    "typescript": "5.9.3",
+    "vitest": "latest"
   },
   "dependencies": {
     "react": "^19.2.0",

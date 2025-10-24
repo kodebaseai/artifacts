@@ -17,9 +17,11 @@
     "@biomejs/biome": "2.3.0",
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.7",
+    "@kodebase/vitest-config": "workspace:*",
     "prettier": "^3.6.2",
     "turbo": "^2.5.8",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vitest": "latest"
   },
   "packageManager": "pnpm@10.19.0",
   "engines": {
