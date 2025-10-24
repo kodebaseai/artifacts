@@ -1,10 +1,10 @@
 import { ArrowRight, BookOpen, Users } from "lucide-react";
-import React,{ type JSX } from "react";
+import { type JSX, useId } from "react";
 import { CTAContent } from "./cta-content";
 
 export function CTASection(): JSX.Element {
   return (
-    <section id="cta" className="relative">
+    <section id={useId()} className="relative">
       {/* Background Grid*/}
       <div className="absolute -bottom-20 left-0 w-screen h-full overflow-hidden">
         <div className="grid-background" />

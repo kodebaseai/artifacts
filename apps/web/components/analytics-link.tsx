@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
-import type { ComponentProps, JSX } from "react";
+import type { ComponentProps, JSX, MouseEvent } from "react";
 import { analytics } from "./analytics";
 
 interface AnalyticsLinkProps extends ComponentProps<typeof Link> {
@@ -21,7 +20,7 @@ export function AnalyticsLink({
   onClick,
   ...linkProps
 }: AnalyticsLinkProps): JSX.Element {
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     // Track the analytics event
     analytics.track(eventName, eventProperties);
 

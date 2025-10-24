@@ -3,7 +3,6 @@ import { cva } from "class-variance-authority";
 import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import type { ComponentProps } from "react";
-import React from "react";
 import { cn } from "@/lib/utils";
 
 function NavigationMenu({

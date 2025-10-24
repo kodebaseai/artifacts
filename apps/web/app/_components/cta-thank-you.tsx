@@ -1,7 +1,7 @@
 "use client";
 
 import { BookOpen, CheckCircle, GitBranch } from "lucide-react";
-import React, { type JSX } from "react";
+import { type JSX, useId } from "react";
 import { Button } from "@/components/ui/button";
 import {
   AnalyticsCategories,
@@ -11,7 +11,7 @@ import {
 
 export function CTAThankYou(): JSX.Element {
   return (
-    <section id="cta" className="relative">
+    <section id={useId()} className="relative">
       <div className="absolute -bottom-20 left-0 w-screen h-full overflow-hidden">
         <div className="grid-background" />
       </div>

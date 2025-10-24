@@ -1,4 +1,4 @@
-import React, { useId, type JSX } from "react";
+import { type JSX, useId } from "react";
 import LaptopScreen from "@/components/device-screens/laptop";
 import { Button } from "@/components/ui/button";
 import {

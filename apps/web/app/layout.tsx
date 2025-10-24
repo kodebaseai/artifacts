@@ -4,7 +4,8 @@ import {
   Noto_Sans as NotoSans,
   Noto_Sans_Display as NotoSansDisplay,
 } from "next/font/google";
-import React, { type JSX } from "react";
+import type React from "react";
+import type { JSX } from "react";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";

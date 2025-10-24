@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { type JSX } from "react";
+import { type JSX, useId } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
@@ -78,7 +78,7 @@ const highlights = [
 
 export function HighlightsSection(): JSX.Element {
   return (
-    <section id="highlights" className="flex flex-col gap-16">
+    <section id={useId()} className="flex flex-col gap-16">
       <Carousel
         opts={{
           align: "center",

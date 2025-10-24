@@ -2,7 +2,6 @@
 
 import { Tabs as TabsPrimitive } from "@base-ui-components/react/tabs";
 import type { ComponentProps } from "react";
-import React from "react";
 
 import { cn } from "@/lib/utils";
 

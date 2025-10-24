@@ -1,7 +1,7 @@
 {
   "extends": "@kodebase/typescript-config/nextjs.json",
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]

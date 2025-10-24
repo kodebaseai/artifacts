@@ -2,7 +2,7 @@
 
 import { motion, useInView, type Variants } from "motion/react";
 import Image from "next/image";
-import React, { type JSX, useId, useRef } from "react";
+import { type JSX, useId, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export function VisionSection(): JSX.Element {

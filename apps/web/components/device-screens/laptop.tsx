@@ -1,8 +1,7 @@
 "use-client";
 
 import Image from "next/image";
-import React from "react";
-import type { JSX } from "react";
+import type { JSX, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export default function LaptopScreen({
@@ -10,7 +9,7 @@ export default function LaptopScreen({
   children,
 }: {
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }): JSX.Element {
   return (
     <div className={cn("inline-block w-full", className)}>

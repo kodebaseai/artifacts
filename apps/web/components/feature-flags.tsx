@@ -1,7 +1,13 @@
 "use client";
 
 import posthog from "posthog-js";
-import * as React from "react";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 /**
  * Define all feature flags in the application
@@ -90,9 +96,9 @@ interface FeatureFlagsContextValue {
   getValue: (flagName: FeatureFlagName) => unknown;
 }
 
-const FeatureFlagsContext = React.createContext<
-  FeatureFlagsContextValue | undefined
->(undefined);
+const FeatureFlagsContext = createContext<FeatureFlagsContextValue | undefined>(
+  undefined,
+);
 
 /**
  * Provider component that loads and provides feature flags to children
@@ -100,14 +106,12 @@ const FeatureFlagsContext = React.createContext<
 export function FeatureFlagsProvider({
   children,
 }: {
-  children: React.ReactNode;
-}): React.JSX.Element {
-  const [flags, setFlags] = React.useState<Record<string, boolean | string>>(
-    {},
-  );
-  const [isLoading, setIsLoading] = React.useState(true);
+  children: ReactNode;
+}): JSX.Element {
+  const [flags, setFlags] = useState<Record<string, boolean | string>>({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Skip on server
     if (typeof window === "undefined") {
       return;
@@ -188,7 +192,7 @@ export function FeatureFlagsProvider({
  * Hook to access feature flags
  */
 export function useFeatureFlags() {
-  const context = React.useContext(FeatureFlagsContext);
+  const context = useContext(FeatureFlagsContext);
   if (!context) {
     throw new Error(
       "useFeatureFlags must be used within a FeatureFlagsProvider",
@@ -210,15 +214,15 @@ export function useFeatureFlag(flagName: FeatureFlagName): boolean {
  */
 interface FeatureProps {
   flag: FeatureFlagName;
-  children: React.ReactNode;
-  fallback?: React.ReactNode;
+  children: ReactNode;
+  fallback?: ReactNode;
 }
 
 export function Feature({
   flag,
   children,
   fallback = null,
-}: FeatureProps): React.JSX.Element {
+}: FeatureProps): JSX.Element {
   const isEnabled = useFeatureFlag(flag);
   return <>{isEnabled ? children : fallback}</>;
 }

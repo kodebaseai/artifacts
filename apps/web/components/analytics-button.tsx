@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import type { ComponentProps, JSX, ReactNode } from "react";
+import type { ComponentProps, JSX, MouseEvent, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { analytics } from "./analytics";
 
@@ -22,7 +21,7 @@ export function AnalyticsButton({
   onClick,
   ...buttonProps
 }: AnalyticsButtonProps): JSX.Element {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     // Track the analytics event
     analytics.track(eventName, eventProperties);
 

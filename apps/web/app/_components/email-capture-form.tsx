@@ -1,6 +1,6 @@
 "use client";
 
-import React, { type JSX, useState } from "react";
+import { type JSX, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   AnalyticsCategories,

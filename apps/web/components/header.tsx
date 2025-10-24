@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 import type { JSX } from "react";
 import KodebaseLogo from "@/components/kodebase-logo";
 import {

@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
-import React, { type JSX, useEffect, useRef } from "react";
+import { type JSX, useEffect, useId, useRef } from "react";
 
 interface ScreenData {
   text: string;
@@ -111,7 +111,7 @@ export function SolutionSection(): JSX.Element {
   return (
     <section
       ref={containerRef}
-      id="solution"
+      id={useId()}
       className="container max-w-screen-xl mx-auto px-base relative"
       style={{ height: "320vh" }} // 3.2x viewport height for scroll tracking
     >

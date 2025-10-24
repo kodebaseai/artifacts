@@ -5,7 +5,13 @@ import useEmblaCarousel, {
 } from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ComponentProps, KeyboardEvent } from "react";
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

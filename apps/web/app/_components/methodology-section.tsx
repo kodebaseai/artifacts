@@ -9,7 +9,7 @@ import {
 } from "motion/react";
 import Image from "next/image";
 import type { JSX } from "react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import LaptopScreen from "@/components/device-screens/laptop";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -82,7 +82,7 @@ export function MethodologySection(): JSX.Element {
   }, [scrollYProgress]);
 
   return (
-    <section id="methodology" ref={containerRef} className="relative h-[300vh]">
+    <section id={useId()} ref={containerRef} className="relative h-[300vh]">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         <MovementBackground progress={scrollYProgress} index={index} />
 

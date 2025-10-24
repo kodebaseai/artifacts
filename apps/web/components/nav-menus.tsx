@@ -1,7 +1,11 @@
 import { Zap } from "lucide-react";
 import Link from "next/link";
-import React from "react";
-import type { JSX } from "react";
+import type {
+  ComponentPropsWithoutRef,
+  ElementType,
+  JSX,
+  ReactNode,
+} from "react";
 import { Button } from "@/components/ui/button";
 import {
   MAIN_NAV_MENU_ITEMS,
@@ -82,9 +86,9 @@ function ListItem({
   href,
   Icon,
   ...props
-}: React.ComponentPropsWithoutRef<"li"> & {
+}: ComponentPropsWithoutRef<"li"> & {
   href: string;
-  Icon?: React.ElementType;
+  Icon?: ElementType;
 }) {
   return (
     <li {...props} className="p-2 hover:bg-black/4 rounded-md">
@@ -172,7 +176,7 @@ export function MenuLink({
   className,
 }: {
   href: string;
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }): JSX.Element {
   return (

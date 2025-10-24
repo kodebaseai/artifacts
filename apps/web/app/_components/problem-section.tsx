@@ -8,7 +8,7 @@ import {
   ShieldUser,
 } from "lucide-react";
 import type { JSX } from "react";
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
