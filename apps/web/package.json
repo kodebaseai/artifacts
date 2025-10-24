@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-beta.1",
-    "@kodebase/ui": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-navigation-menu": "^1.2.13",
     "@radix-ui/react-separator": "^1.1.7",
