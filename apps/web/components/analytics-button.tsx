@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { ComponentProps, JSX, ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
-import { analytics } from './analytics';
+import type { ComponentProps, JSX, ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import { analytics } from "./analytics";
 
 interface AnalyticsButtonProps extends ComponentProps<typeof Button> {
   children: ReactNode;

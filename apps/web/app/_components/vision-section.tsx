@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { motion, useInView, type Variants } from 'motion/react';
-import Image from 'next/image';
-import { type JSX, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { motion, useInView, type Variants } from "motion/react";
+import Image from "next/image";
+import { type JSX, useRef } from "react";
+import { cn } from "@/lib/utils";
 
 export function VisionSection(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,7 +17,7 @@ export function VisionSection(): JSX.Element {
       transition: {
         delay: custom * 0.1,
         duration: 0.6,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     }),
   };
@@ -57,7 +57,7 @@ export function VisionSection(): JSX.Element {
             className="relative md:absolute md:top-[25%] md:right-0 w-[60%] md:w-[35%]"
             variants={slideVariants}
             initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
+            animate={isInView ? "visible" : "hidden"}
             custom={0}
           >
             <ToolCard
@@ -71,7 +71,7 @@ export function VisionSection(): JSX.Element {
             className="relative md:absolute md:top-[35%] md:left-0 w-[60%] md:w-[35%]"
             variants={slideVariants}
             initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
+            animate={isInView ? "visible" : "hidden"}
             custom={1}
           >
             <ToolCard
@@ -85,7 +85,7 @@ export function VisionSection(): JSX.Element {
             className="relative md:absolute md:bottom-[35%] md:right-0 w-[60%] md:w-[35%]"
             variants={slideVariants}
             initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
+            animate={isInView ? "visible" : "hidden"}
             custom={2}
           >
             <ToolCard
@@ -99,7 +99,7 @@ export function VisionSection(): JSX.Element {
             className="relative md:absolute md:bottom-[25%] md:left-0 w-[60%] md:w-[35%]"
             variants={slideVariants}
             initial="hidden"
-            animate={isInView ? 'visible' : 'hidden'}
+            animate={isInView ? "visible" : "hidden"}
             custom={3}
           >
             <ToolCard
@@ -121,30 +121,30 @@ function ToolCard({
 }: {
   title: string;
   description: string;
-  side?: 'left' | 'right';
+  side?: "left" | "right";
 }) {
   return (
     <div
       className={cn(
-        'flex flex-col gap-1',
-        side === 'left' && 'items-start lg:items-end',
-        side === 'right' && 'items-start md:items-end lg:items-start',
+        "flex flex-col gap-1",
+        side === "left" && "items-start lg:items-end",
+        side === "right" && "items-start md:items-end lg:items-start",
       )}
     >
       <h4
         className={cn(
-          'text-lg md:text-xl lg:text-2xl font-display font-normal md:font-semibold',
-          side === 'left' && 'text-start lg:text-end',
-          side === 'right' && 'text-start md:text-end lg:text-start',
+          "text-lg md:text-xl lg:text-2xl font-display font-normal md:font-semibold",
+          side === "left" && "text-start lg:text-end",
+          side === "right" && "text-start md:text-end lg:text-start",
         )}
       >
         {title}
       </h4>
       <p
         className={cn(
-          'text-xs md:text-sm max-w-[90%] md:max-w-[75% font-light',
-          side === 'left' && 'text-start lg:text-end',
-          side === 'right' && 'text-start md:text-end lg:text-start',
+          "text-xs md:text-sm max-w-[90%] md:max-w-[75% font-light",
+          side === "left" && "text-start lg:text-end",
+          side === "right" && "text-start md:text-end lg:text-start",
         )}
       >
         {description}

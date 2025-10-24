@@ -1,25 +1,25 @@
-import './globals.css';
-import type { Metadata } from 'next';
+import "./globals.css";
+import type { Metadata } from "next";
 import {
   Noto_Sans as NotoSans,
   Noto_Sans_Display as NotoSansDisplay,
-} from 'next/font/google';
-import type { JSX } from 'react';
-import Footer from '@/components/footer';
-import Header from '@/components/header';
-import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { PostHogProvider } from '../components/posthog-provider';
+} from "next/font/google";
+import type { JSX } from "react";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { PostHogProvider } from "../components/posthog-provider";
 
 // Load fonts and expose CSS variables we can use in Tailwind or plain CSS.
-const notoSans = NotoSans({ subsets: ['latin'], variable: '--font-sans' });
+const notoSans = NotoSans({ subsets: ["latin"], variable: "--font-sans" });
 const notoDisplay = NotoSansDisplay({
-  subsets: ['latin'],
-  variable: '--font-display',
+  subsets: ["latin"],
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
-  title: 'Web',
-  description: 'Web app for Kodebase',
+  title: "Web",
+  description: "Web app for Kodebase",
 };
 
 export default function RootLayout({

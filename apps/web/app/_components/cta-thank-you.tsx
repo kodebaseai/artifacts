@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { BookOpen, CheckCircle, GitBranch } from 'lucide-react';
-import type { JSX } from 'react';
-import { Button } from '@/components/ui/button';
+import { BookOpen, CheckCircle, GitBranch } from "lucide-react";
+import type { JSX } from "react";
+import { Button } from "@/components/ui/button";
 import {
   AnalyticsCategories,
   AnalyticsEvents,
   analytics,
-} from '../../components/analytics';
+} from "../../components/analytics";
 
 export function CTAThankYou(): JSX.Element {
   return (
@@ -36,9 +36,9 @@ export function CTAThankYou(): JSX.Element {
               onClick={() => {
                 analytics.track(AnalyticsEvents.DOCUMENTATION_CLICK, {
                   event_category: AnalyticsCategories.ENGAGEMENT,
-                  source: 'cta_thank_you',
+                  source: "cta_thank_you",
                 });
-                window.open('https://docs.kodebase.ai', '_blank');
+                window.open("https://docs.kodebase.ai", "_blank");
               }}
             >
               <BookOpen className="mr-2 h-4 w-4" />
@@ -51,9 +51,9 @@ export function CTAThankYou(): JSX.Element {
               onClick={() => {
                 analytics.track(AnalyticsEvents.GITHUB_CLICK, {
                   event_category: AnalyticsCategories.ENGAGEMENT,
-                  source: 'cta_thank_you',
+                  source: "cta_thank_you",
                 });
-                window.open('https://github.com/kodebaseai', '_blank');
+                window.open("https://github.com/kodebaseai", "_blank");
               }}
             >
               <GitBranch className="mr-2 h-4 w-4" />

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion, useScroll, useTransform } from 'motion/react';
-import Image from 'next/image';
-import { type JSX, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from "motion/react";
+import Image from "next/image";
+import { type JSX, useEffect, useRef } from "react";
 
 interface ScreenData {
   text: string;
@@ -14,24 +14,24 @@ interface ScreenData {
 
 const screens: ScreenData[] = [
   {
-    text: 'Every line of code tells a story—not just of what your software does, but of every problem solved, every decision made, every lesson learned.',
+    text: "Every line of code tells a story—not just of what your software does, but of every problem solved, every decision made, every lesson learned.",
     image: {
-      src: '/assets/images/stone-story.png',
-      alt: 'Your Codebase is Your Knowledge Base',
+      src: "/assets/images/stone-story.png",
+      alt: "Your Codebase is Your Knowledge Base",
     },
   },
   {
-    text: 'Hidden within your commits, pull requests, and conversations lies the collective intelligence of your entire team: the reasoning behind architectural choices, the context of critical decisions, the hard-won insights from debugging sessions at 2 AM.',
+    text: "Hidden within your commits, pull requests, and conversations lies the collective intelligence of your entire team: the reasoning behind architectural choices, the context of critical decisions, the hard-won insights from debugging sessions at 2 AM.",
     image: {
-      src: '/assets/images/collective-intelligence.png',
-      alt: 'Git as Source of Truth',
+      src: "/assets/images/collective-intelligence.png",
+      alt: "Git as Source of Truth",
     },
   },
   {
-    text: 'Yet most of this profound knowledge remains buried, inaccessible, forgotten. What if...',
+    text: "Yet most of this profound knowledge remains buried, inaccessible, forgotten. What if...",
     image: {
-      src: '/assets/images/what-if.png',
-      alt: 'Structured Knowledge with Artifacts',
+      src: "/assets/images/what-if.png",
+      alt: "Structured Knowledge with Artifacts",
     },
   },
 ];
@@ -50,7 +50,7 @@ export function SolutionSection(): JSX.Element {
   // Set up scroll tracking - 4x viewport height for extended third screen
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start 16px', 'end start'], // Start when h2 becomes sticky (top-base)
+    offset: ["start 16px", "end start"], // Start when h2 becomes sticky (top-base)
   });
 
   // Create smooth transforms for each screen
@@ -76,8 +76,8 @@ export function SolutionSection(): JSX.Element {
   );
 
   // Image translations - slide up from bottom
-  const screen2Y = useTransform(scrollYProgress, [0.2, 0.25], ['42%', '0%']);
-  const screen3Y = useTransform(scrollYProgress, [0.45, 0.5], ['42%', '0%']);
+  const screen2Y = useTransform(scrollYProgress, [0.2, 0.25], ["42%", "0%"]);
+  const screen3Y = useTransform(scrollYProgress, [0.45, 0.5], ["42%", "0%"]);
 
   // Floating text animations for screen 3
   const floatingText1Opacity = useTransform(
@@ -100,11 +100,11 @@ export function SolutionSection(): JSX.Element {
   const titleY = useTransform(
     scrollYProgress,
     [0, 0.725, 0.75, 1],
-    ['0%', '0%', '-140%', '-140%'],
+    ["0%", "0%", "-140%", "-140%"],
   );
 
   // Last image exit animation - accelerates out
-  const exitY = useTransform(scrollYProgress, [0.99, 1], ['0%', '-150%'], {
+  const exitY = useTransform(scrollYProgress, [0.99, 1], ["0%", "-150%"], {
     ease: (t) => t * t, // Quadratic easing for acceleration
   });
 
@@ -113,7 +113,7 @@ export function SolutionSection(): JSX.Element {
       ref={containerRef}
       id="solution"
       className="container max-w-screen-xl mx-auto px-base relative"
-      style={{ height: '320vh' }} // 3.2x viewport height for scroll tracking
+      style={{ height: "320vh" }} // 3.2x viewport height for scroll tracking
     >
       <motion.h2
         className="sticky top-base z-20 font-display text-4xl font-semibold mb-4 text-center py-4"
@@ -154,8 +154,8 @@ export function SolutionSection(): JSX.Element {
             style={{ opacity: screen1Opacity }}
           >
             <Image
-              src={screens[0]?.image.src || ''}
-              alt={screens[0]?.image.alt || ''}
+              src={screens[0]?.image.src || ""}
+              alt={screens[0]?.image.alt || ""}
               width={640}
               height={640}
               className="w-full h-full object-contain"
@@ -174,8 +174,8 @@ export function SolutionSection(): JSX.Element {
             }}
           >
             <Image
-              src={screens[1]?.image.src || ''}
-              alt={screens[1]?.image.alt || ''}
+              src={screens[1]?.image.src || ""}
+              alt={screens[1]?.image.alt || ""}
               width={640}
               height={640}
               className="w-full h-full object-contain"
@@ -193,8 +193,8 @@ export function SolutionSection(): JSX.Element {
             }}
           >
             <Image
-              src={screens[2]?.image.src || ''}
-              alt={screens[2]?.image.alt || ''}
+              src={screens[2]?.image.src || ""}
+              alt={screens[2]?.image.alt || ""}
               width={640}
               height={640}
               className="w-full h-full object-contain"

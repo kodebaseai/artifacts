@@ -1,21 +1,21 @@
-import { Zap } from 'lucide-react';
-import Link from 'next/link';
-import type { JSX } from 'react';
-import { Button } from '@/components/ui/button';
+import { Zap } from "lucide-react";
+import Link from "next/link";
+import type { JSX } from "react";
+import { Button } from "@/components/ui/button";
 import {
   MAIN_NAV_MENU_ITEMS,
   type MainNavMenuItem,
   type MainNavMenuItemLink,
   NAV_MENU_ITEMS,
-} from '@/lib/constants';
-import { cn } from '@/lib/utils';
+} from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from './ui/navigation-menu';
+} from "./ui/navigation-menu";
 
 export function MainHeaderMenu({
   className,
@@ -26,7 +26,7 @@ export function MainHeaderMenu({
     <NavigationMenu viewport={true}>
       <NavigationMenuList
         className={cn(
-          'flex flex-col md:flex-row items-start md:items-center gap-base font-normal leading-none text-white',
+          "flex flex-col md:flex-row items-start md:items-center gap-base font-normal leading-none text-white",
           className,
         )}
       >
@@ -81,20 +81,20 @@ function ListItem({
   href,
   Icon,
   ...props
-}: React.ComponentPropsWithoutRef<'li'> & {
+}: React.ComponentPropsWithoutRef<"li"> & {
   href: string;
   Icon?: React.ElementType;
 }) {
   return (
     <li {...props} className="p-2 hover:bg-black/4 rounded-md">
       <Link href={href}>
-        <div className={cn('flex gap-2', !children && 'items-center')}>
+        <div className={cn("flex gap-2", !children && "items-center")}>
           {Icon && <Icon size={16} strokeWidth={1.5} className="m-2" />}
-          <div className={cn('flex flex-col gap-1', children && 'pt-2')}>
+          <div className={cn("flex flex-col gap-1", children && "pt-2")}>
             <span
               className={cn(
-                'text-sm leading-none font-medium',
-                !children && 'py-2',
+                "text-sm leading-none font-medium",
+                !children && "py-2",
               )}
             >
               {title}
@@ -115,7 +115,7 @@ export function MainMenu({ className }: { className?: string }): JSX.Element {
   return (
     <nav
       className={cn(
-        'flex flex-col md:flex-row items-start md:items-center gap-base font-normal leading-none',
+        "flex flex-col md:flex-row items-start md:items-center gap-base font-normal leading-none",
         className,
       )}
     >
@@ -135,7 +135,7 @@ export function FooterMenu({ className }: { className?: string }): JSX.Element {
   return (
     <nav
       className={cn(
-        'grid grid-cols-2 lg:flex md:flex-row items-start lg:items-center gap-base font-normal leading-none',
+        "grid grid-cols-2 lg:flex md:flex-row items-start lg:items-center gap-base font-normal leading-none",
         className,
       )}
     >
@@ -176,7 +176,7 @@ export function MenuLink({
 }): JSX.Element {
   return (
     <Link href={href}>
-      <span className={cn('text-sm', className)}>{children}</span>
+      <span className={cn("text-sm", className)}>{children}</span>
     </Link>
   );
 }

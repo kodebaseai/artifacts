@@ -1,7 +1,7 @@
-import type { JSX } from 'react';
+import type { JSX } from "react";
 
 export default function KodebaseLogo({
-  color = 'white',
+  color = "white",
 }: {
   color?: string;
 }): JSX.Element {

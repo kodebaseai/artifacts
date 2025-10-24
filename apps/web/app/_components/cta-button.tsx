@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import Script from 'next/script';
-import { type JSX, useCallback, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import Script from "next/script";
+import { type JSX, useCallback, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   AnalyticsCategories,
   AnalyticsEvents,
   analytics,
-} from '../../components/analytics';
+} from "../../components/analytics";
 
 // Tally form configuration
-const TALLY_FORM_ID = process.env.NEXT_PUBLIC_TALLY_FORM_ID || 'wg6YBD';
+const TALLY_FORM_ID = process.env.NEXT_PUBLIC_TALLY_FORM_ID || "wg6YBD";
 const _TALLY_FORM_URL =
   process.env.NEXT_PUBLIC_TALLY_FORM_URL ||
   `https://tally.so/r/${TALLY_FORM_ID}`;
@@ -47,8 +47,8 @@ export function CTAButton({
     // Track analytics event
     analytics.track(AnalyticsEvents.CTA_CLICK, {
       event_category: AnalyticsCategories.ENGAGEMENT,
-      event_label: 'waitlist_signup_start',
-      method: 'tally_modal',
+      event_label: "waitlist_signup_start",
+      method: "tally_modal",
     });
 
     // Show overlay
@@ -66,8 +66,8 @@ export function CTAButton({
           // Track completion
           analytics.track(AnalyticsEvents.CTA_SUBMIT, {
             event_category: AnalyticsCategories.ENGAGEMENT,
-            event_label: 'waitlist_signup_complete',
-            method: 'tally_modal',
+            event_label: "waitlist_signup_complete",
+            method: "tally_modal",
           });
         },
         onClose: () => {
@@ -91,7 +91,7 @@ export function CTAButton({
         onClick={openTallyModal}
         disabled={!tallyLoaded}
       >
-        {!tallyLoaded ? 'Loading...' : 'Join the Waitlist'}
+        {!tallyLoaded ? "Loading..." : "Join the Waitlist"}
       </Button>
     </>
   );

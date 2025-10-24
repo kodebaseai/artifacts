@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import posthog from 'posthog-js';
-import { PostHogProvider as PHProvider } from 'posthog-js/react';
-import type * as React from 'react';
-import { useEffect, useState } from 'react';
-import { FeatureFlagsProvider } from './feature-flags';
+import posthog from "posthog-js";
+import { PostHogProvider as PHProvider } from "posthog-js/react";
+import type * as React from "react";
+import { useEffect, useState } from "react";
+import { FeatureFlagsProvider } from "./feature-flags";
 
 export function PostHogProvider({
   children,
@@ -15,16 +15,16 @@ export function PostHogProvider({
 
   useEffect(() => {
     // Only initialize on the client side
-    if (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    if (typeof window !== "undefined" && process.env.NEXT_PUBLIC_POSTHOG_KEY) {
       posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
-        api_host: '/ingest',
-        ui_host: 'https://eu.posthog.com',
+        api_host: "/ingest",
+        ui_host: "https://eu.posthog.com",
         capture_pageleave: false, // Disable automatic page leave tracking
         capture_exceptions: true,
-        debug: process.env.NODE_ENV === 'development',
+        debug: process.env.NODE_ENV === "development",
         loaded: (posthog) => {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('PostHog loaded', posthog);
+          if (process.env.NODE_ENV === "development") {
+            console.log("PostHog loaded", posthog);
             posthog.debug();
           }
           setIsPostHogReady(true);

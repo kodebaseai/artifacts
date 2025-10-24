@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Tabs as TabsPrimitive } from '@base-ui-components/react/tabs';
-import type * as React from 'react';
+import { Tabs as TabsPrimitive } from "@base-ui-components/react/tabs";
+import type * as React from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 function Tabs({
   className,
-  orientation = 'horizontal',
+  orientation = "horizontal",
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Root>) {
   return (
@@ -15,8 +15,8 @@ function Tabs({
       data-slot="tabs"
       orientation={orientation}
       className={cn(
-        'flex gap-2',
-        orientation === 'vertical' ? 'flex-row' : 'flex-col',
+        "flex gap-2",
+        orientation === "vertical" ? "flex-row" : "flex-col",
         className,
       )}
       {...props}
@@ -50,13 +50,13 @@ function TabsTrigger({
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        'text-foreground dark:text-muted-foreground inline-flex items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow,background-color]',
+        "text-foreground dark:text-muted-foreground inline-flex items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap transition-[color,box-shadow,background-color]",
         // 'data-[selected]:bg-background',
         "disabled:pointer-events-none disabled:opacity-50 data-[selected]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 [&_svg]:text-current",
-        'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1',
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1",
         // 'dark:data-[selected]:border-input dark:data-[selected]:bg-input/30 dark:data-[selected]:text-foreground',
-        'data-[orientation=horizontal]:h-[calc(100%-6px)] data-[orientation=horizontal]:flex-1',
-        'data-[orientation=vertical]:w-full data-[orientation=vertical]:justify-start',
+        "data-[orientation=horizontal]:h-[calc(100%-6px)] data-[orientation=horizontal]:flex-1",
+        "data-[orientation=vertical]:w-full data-[orientation=vertical]:justify-start",
         className,
       )}
       {...props}
@@ -71,7 +71,7 @@ function TabsContent({
   return (
     <TabsPrimitive.Panel
       data-slot="tabs-content"
-      className={cn('flex-1 outline-none', className)}
+      className={cn("flex-1 outline-none", className)}
       {...props}
     />
   );
@@ -85,9 +85,9 @@ function TabsIndicator({
     <TabsPrimitive.Indicator
       data-slot="tabs-indicator"
       className={cn(
-        'absolute bg-primary rounded-md transition-all duration-200',
-        'data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:bottom-0',
-        'data-[orientation=vertical]:w-0.5 data-[orientation=vertical]:left-0',
+        "absolute bg-primary rounded-md transition-all duration-200",
+        "data-[orientation=horizontal]:h-0.5 data-[orientation=horizontal]:bottom-0",
+        "data-[orientation=vertical]:w-0.5 data-[orientation=vertical]:left-0",
         className,
       )}
       {...props}

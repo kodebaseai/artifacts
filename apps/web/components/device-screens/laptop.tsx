@@ -1,18 +1,18 @@
-'use-client';
+"use-client";
 
-import Image from 'next/image';
-import type { JSX } from 'react';
-import { cn } from '@/lib/utils';
+import Image from "next/image";
+import type { JSX } from "react";
+import { cn } from "@/lib/utils";
 
 export default function LaptopScreen({
-  className = '',
+  className = "",
   children,
 }: {
   className?: string;
   children?: React.ReactNode;
 }): JSX.Element {
   return (
-    <div className={cn('inline-block w-full', className)}>
+    <div className={cn("inline-block w-full", className)}>
       <div className="max-w-full max-h-full w-auto h-auto object-contain rounded-lg">
         {children}
         <Image

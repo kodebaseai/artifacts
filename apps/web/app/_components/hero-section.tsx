@@ -1,11 +1,11 @@
-import type { JSX } from 'react';
-import LaptopScreen from '@/components/device-screens/laptop';
-import { Button } from '@/components/ui/button';
+import type { JSX } from "react";
+import LaptopScreen from "@/components/device-screens/laptop";
+import { Button } from "@/components/ui/button";
 import {
   AnalyticsCategories,
   AnalyticsEvents,
-} from '../../components/analytics';
-import { AnalyticsLink } from '../../components/analytics-link';
+} from "../../components/analytics";
+import { AnalyticsLink } from "../../components/analytics-link";
 
 export function HeroSection(): JSX.Element {
   return (
@@ -45,11 +45,11 @@ export function HeroSection(): JSX.Element {
               eventName={AnalyticsEvents.CTA_CLICK}
               eventProperties={{
                 event_category: AnalyticsCategories.ENGAGEMENT,
-                event_label: 'hero_cta',
-                source: 'hero_section',
+                event_label: "hero_cta",
+                source: "hero_section",
               }}
             >
-              <Button size={'lg'} variant="secondary">
+              <Button size={"lg"} variant="secondary">
                 Request early access
               </Button>
             </AnalyticsLink>

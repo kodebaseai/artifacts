@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Blocks,
@@ -6,62 +6,62 @@ import {
   Brain,
   Microscope,
   ShieldUser,
-} from 'lucide-react';
-import type { JSX } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
+} from "lucide-react";
+import type { JSX } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 const tabs = [
   {
-    value: 'context-decay',
-    bg: 'bg-kb-purple',
-    color: 'text-kb-purple',
+    value: "context-decay",
+    bg: "bg-kb-purple",
+    color: "text-kb-purple",
     icon: <Brain size={32} strokeWidth={1} />,
-    title: 'Context Decay',
+    title: "Context Decay",
     description:
-      'Over time, critical decisions, trade-offs, and project rules slip out of view - lost in Slack threads or forgotten by departed engineers. Kodebase preserves every piece of context alongside your code in a single, version-controlled source of truth.',
-    asset: '/assets/videos/Context_Decay.mp4',
+      "Over time, critical decisions, trade-offs, and project rules slip out of view - lost in Slack threads or forgotten by departed engineers. Kodebase preserves every piece of context alongside your code in a single, version-controlled source of truth.",
+    asset: "/assets/videos/Context_Decay.mp4",
   },
   {
-    value: 'fragmented-workflows',
-    bg: 'bg-kb-teal',
-    color: 'text-kb-teal',
+    value: "fragmented-workflows",
+    bg: "bg-kb-teal",
+    color: "text-kb-teal",
     icon: <Blocks size={32} strokeWidth={1} />,
-    title: 'Fragmented Workflows',
+    title: "Fragmented Workflows",
     description:
-      'Specs in Documentation folders. Tickets in Project Managers. Decisions in Push Request comments. Discussions in Comms. Switching among tools wastes hours and breaks your focus. Kodebase unifies all artifacts - docs, code, decisions - into one AI-accessible repo.',
-    asset: '/assets/videos/Fragmented_Workflows.mp4',
+      "Specs in Documentation folders. Tickets in Project Managers. Decisions in Push Request comments. Discussions in Comms. Switching among tools wastes hours and breaks your focus. Kodebase unifies all artifacts - docs, code, decisions - into one AI-accessible repo.",
+    asset: "/assets/videos/Fragmented_Workflows.mp4",
   },
   {
-    value: 'human-agent-collaboration',
-    bg: 'bg-kb-orange',
-    color: 'text-kb-orange',
+    value: "human-agent-collaboration",
+    bg: "bg-kb-orange",
+    color: "text-kb-orange",
     icon: <BotMessageSquare size={32} strokeWidth={1} />,
-    title: 'Human-Agent Collaboration',
+    title: "Human-Agent Collaboration",
     description:
-      'Today AI helpers churn out code but cannot coordinate with humans or enforce your project rules. Kodebase provides a shared conductor podium: humans define intent and constraints; agents execute tasks with full, real-time context.',
-    asset: '/assets/videos/Human-Agent_Collaboration.mp4',
+      "Today AI helpers churn out code but cannot coordinate with humans or enforce your project rules. Kodebase provides a shared conductor podium: humans define intent and constraints; agents execute tasks with full, real-time context.",
+    asset: "/assets/videos/Human-Agent_Collaboration.mp4",
   },
   {
-    value: 'knowledge-distillation',
-    bg: 'bg-kb-lime',
-    color: 'text-kb-lime',
+    value: "knowledge-distillation",
+    bg: "bg-kb-lime",
+    color: "text-kb-lime",
     icon: <Microscope size={32} strokeWidth={1} />,
-    title: 'Knowledge Distillation',
+    title: "Knowledge Distillation",
     description:
-      'Raw implementation details are noisy and hard to parse for strategic insights. Kodebase Task to Milestone to Plan hierarchy automatically rolls up granular data into progressively higher-level summaries for developers, architects, and executives.',
-    asset: '/assets/videos/Knowledge_Distillation.mp4',
+      "Raw implementation details are noisy and hard to parse for strategic insights. Kodebase Task to Milestone to Plan hierarchy automatically rolls up granular data into progressively higher-level summaries for developers, architects, and executives.",
+    asset: "/assets/videos/Knowledge_Distillation.mp4",
   },
   {
-    value: 'trust-and-governance',
-    bg: 'bg-kb-fuchsia',
-    color: 'text-kb-fuchsia',
+    value: "trust-and-governance",
+    bg: "bg-kb-fuchsia",
+    color: "text-kb-fuchsia",
     icon: <ShieldUser size={32} strokeWidth={1} />,
-    title: 'Trust and Governance',
+    title: "Trust and Governance",
     description:
-      'As code and AI agents modify your repo, it is easy for subtle policy violations or architectural anti-patterns to creep in. Kodebase enforces compliance and governance rules on every human or automated change, preventing shadow decisions that drift your codebase off course.',
-    asset: '/assets/videos/Trust_and_Governance.mp4',
+      "As code and AI agents modify your repo, it is easy for subtle policy violations or architectural anti-patterns to creep in. Kodebase enforces compliance and governance rules on every human or automated change, preventing shadow decisions that drift your codebase off course.",
+    asset: "/assets/videos/Trust_and_Governance.mp4",
   },
 ];
 
@@ -83,7 +83,7 @@ export function ProblemSection(): JSX.Element {
       const activeTabRect = activeTabElement.getBoundingClientRect();
 
       const activeTabIndex = tabs.findIndex((tab) => tab.value === activeTab);
-      const activeColor = tabs[activeTabIndex]?.bg || 'bg-kb-purple';
+      const activeColor = tabs[activeTabIndex]?.bg || "bg-kb-purple";
 
       // Check if we're in mobile mode (horizontal layout) or desktop mode (vertical layout)
       const isHorizontal = window.innerWidth < 1024; // lg breakpoint is 1024px
@@ -132,10 +132,10 @@ export function ProblemSection(): JSX.Element {
         ? `translateX(${offsetLeft}px)`
         : `translateY(${offsetTop}px)`;
       const positionClass = isHorizontal
-        ? 'absolute top-[13px]'
-        : 'absolute left-[13px]';
+        ? "absolute top-[13px]"
+        : "absolute left-[13px]";
 
-      if (!skipViewTransition && 'startViewTransition' in document) {
+      if (!skipViewTransition && "startViewTransition" in document) {
         (
           document as Document & {
             startViewTransition: (callback: () => void) => void;
@@ -176,9 +176,9 @@ export function ProblemSection(): JSX.Element {
       }, 100);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       clearTimeout(resizeTimeout);
     };
   }, [updateBackgroundPosition]);
@@ -202,7 +202,7 @@ export function ProblemSection(): JSX.Element {
             ref={backgroundRef}
             className="transition-all duration-300 ease-in-out text-black bg-kb-purple"
             style={{
-              viewTransitionName: 'tab-background',
+              viewTransitionName: "tab-background",
             }}
           />
 
@@ -226,7 +226,7 @@ export function ProblemSection(): JSX.Element {
           >
             <div className="w-full flex flex-col self-start justify-start gap-base basis-1/2 lg:pt-32 lg:h-full text-center lg:text-left">
               <div>
-                <h4 className={cn('text-sm lg:text-md font-normal', color)}>
+                <h4 className={cn("text-sm lg:text-md font-normal", color)}>
                   We're solving
                 </h4>
                 <h3 className="text-2xl lg:text-3xl font-bold">{title}</h3>

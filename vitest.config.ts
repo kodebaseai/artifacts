@@ -1,11 +1,11 @@
-import { sharedConfig } from '@kodebase/vitest-config';
-import { defineConfig } from 'vitest/config';
+import { sharedConfig } from "@kodebase/vitest-config";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   ...sharedConfig,
   test: {
     projects: [
-      'packages/*',
+      "packages/*",
       {
         extends: true,
         test: {
@@ -13,15 +13,15 @@ export default defineConfig({
           // Project-specific configuration for shared
         },
       },
-      'apps/*',
+      "apps/*",
       {
         extends: true,
         test: {
           ...sharedConfig.test,
           // Project-specific configuration for shared
-          setupFiles: ['./vitest-setup.ts'],
+          setupFiles: ["./vitest-setup.ts"],
           globals: true,
-          environment: 'jsdom',
+          environment: "jsdom",
           css: true,
         },
       },

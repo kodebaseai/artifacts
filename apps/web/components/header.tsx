@@ -1,14 +1,14 @@
-import Link from 'next/link';
-import type { JSX } from 'react';
-import KodebaseLogo from '@/components/kodebase-logo';
+import Link from "next/link";
+import type { JSX } from "react";
+import KodebaseLogo from "@/components/kodebase-logo";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarTrigger,
-} from '@/components/ui/sidebar';
-import { MainHeaderMenu, MainMenu, SubMenu } from './nav-menus';
+} from "@/components/ui/sidebar";
+import { MainHeaderMenu, MainMenu, SubMenu } from "./nav-menus";
 
 export default function Header(): JSX.Element {
   return (

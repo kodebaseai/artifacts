@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import type { ComponentProps, JSX } from 'react';
-import { analytics } from './analytics';
+import Link from "next/link";
+import type { ComponentProps, JSX } from "react";
+import { analytics } from "./analytics";
 
 interface AnalyticsLinkProps extends ComponentProps<typeof Link> {
   eventName: string;

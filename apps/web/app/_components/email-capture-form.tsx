@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { type JSX, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { type JSX, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   AnalyticsCategories,
   AnalyticsEvents,
   analytics,
-} from '../../components/analytics';
+} from "../../components/analytics";
 
 interface EmailCaptureFormProps {
   onSubmit: () => void;
@@ -15,7 +15,7 @@ interface EmailCaptureFormProps {
 export function EmailCaptureForm({
   onSubmit,
 }: EmailCaptureFormProps): JSX.Element {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -25,8 +25,8 @@ export function EmailCaptureForm({
     // Track analytics
     analytics.track(AnalyticsEvents.CTA_SUBMIT, {
       event_category: AnalyticsCategories.ENGAGEMENT,
-      event_label: 'email_capture',
-      method: 'internal_form',
+      event_label: "email_capture",
+      method: "internal_form",
     });
 
     // Simulate API call
@@ -55,7 +55,7 @@ export function EmailCaptureForm({
         className="h-12 md:h-16 px-6 md:px-12 bg-linear-to-tr hover:bg-linear-to-br from-kb-purple to-kb-teal text-black will-change-transform transition-all hover:scale-105"
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Submitting...' : 'Join the Waitlist'}
+        {isSubmitting ? "Submitting..." : "Join the Waitlist"}
       </Button>
     </form>
   );

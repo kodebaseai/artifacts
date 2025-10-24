@@ -1,5 +1,5 @@
-import type { JSX } from 'react';
-import { FooterMenu } from './nav-menus';
+import type { JSX } from "react";
+import { FooterMenu } from "./nav-menus";
 
 export default function Footer(): JSX.Element {
   const currentYear = new Date().getFullYear();

@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
-import { describe, expect, it, vi } from 'vitest';
-import Home from './page';
+import { render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
+import { describe, expect, it, vi } from "vitest";
+import Home from "./page";
 
 interface MockImageProps {
   src: string;
@@ -17,7 +17,7 @@ interface MockButtonProps {
 }
 
 // Mock next/image
-vi.mock('next/image', () => ({
+vi.mock("next/image", () => ({
   default: ({ src, alt, ...props }: MockImageProps) => {
     // biome-ignore lint/performance/noImgElement: This is a test mock for next/image
     return <img src={src} alt={alt} {...props} />;
@@ -25,18 +25,18 @@ vi.mock('next/image', () => ({
 }));
 
 // Mock @kodebase/ui/button
-vi.mock('@kodebase/ui/button', () => ({
+vi.mock("@kodebase/ui/button", () => ({
   Button: ({ children, ...props }: MockButtonProps) => (
     <button {...props}>{children}</button>
   ),
 }));
 
-describe('Home page', () => {
-  it('renders the first li with correct text about editing page.tsx', () => {
+describe("Home page", () => {
+  it("renders the first li with correct text about editing page.tsx", () => {
     render(<Home />);
 
     // Find all list items
-    const listItems = screen.getAllByRole('listitem');
+    const listItems = screen.getAllByRole("listitem");
 
     // Check that we have at least one list item
     expect(listItems.length).toBeGreaterThan(0);
@@ -47,13 +47,13 @@ describe('Home page', () => {
 
     if (firstListItem) {
       expect(firstListItem.textContent).toContain(
-        'Get started by editing apps/docs/app/page.tsx',
+        "Get started by editing apps/docs/app/page.tsx",
       );
 
       // Also check that it contains the code element
-      const codeElement = firstListItem.querySelector('code');
+      const codeElement = firstListItem.querySelector("code");
       expect(codeElement).toBeTruthy();
-      expect(codeElement?.textContent).toBe('apps/docs/app/page.tsx');
+      expect(codeElement?.textContent).toBe("apps/docs/app/page.tsx");
     }
   });
 });

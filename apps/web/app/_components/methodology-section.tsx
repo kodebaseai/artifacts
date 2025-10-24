@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   AnimatePresence,
@@ -6,13 +6,13 @@ import {
   motion,
   useScroll,
   useTransform,
-} from 'motion/react';
-import Image from 'next/image';
-import type { JSX } from 'react';
-import { useEffect, useRef, useState } from 'react';
-import LaptopScreen from '@/components/device-screens/laptop';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+} from "motion/react";
+import Image from "next/image";
+import type { JSX } from "react";
+import { useEffect, useRef, useState } from "react";
+import LaptopScreen from "@/components/device-screens/laptop";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface Movement {
   background: string;
@@ -25,32 +25,32 @@ interface Movement {
 
 const movements: Movement[] = [
   {
-    background: '/assets/backgrounds/bg-1.png',
-    title: 'Define',
-    subtitle: 'Setting the Foundation',
+    background: "/assets/backgrounds/bg-1.png",
+    title: "Define",
+    subtitle: "Setting the Foundation",
     challenge:
-      'Every project starts with scattered requirements, unclear scope, and missing context.',
-    solution: 'Structured Capture from Day One.',
+      "Every project starts with scattered requirements, unclear scope, and missing context.",
+    solution: "Structured Capture from Day One.",
     paragraph:
-      'Transform vague ideas into precise, trackable artifacts. Issues, milestones, and initiatives become your source of truth—not afterthoughts in project management tools.',
+      "Transform vague ideas into precise, trackable artifacts. Issues, milestones, and initiatives become your source of truth—not afterthoughts in project management tools.",
   },
   {
-    background: '/assets/backgrounds/bg-4.png',
-    title: 'Execute',
-    subtitle: 'Building with Context',
+    background: "/assets/backgrounds/bg-4.png",
+    title: "Execute",
+    subtitle: "Building with Context",
     challenge:
       "Development happens in isolation. Decisions get lost. Knowledge lives in people's heads.",
-    solution: 'Development with Perfect Memory.',
+    solution: "Development with Perfect Memory.",
     paragraph:
-      'Every commit, every decision, every architectural choice connects back to the original intent. Your repository becomes a living knowledge base that grows smarter with each change.',
+      "Every commit, every decision, every architectural choice connects back to the original intent. Your repository becomes a living knowledge base that grows smarter with each change.",
   },
   {
-    background: '/assets/backgrounds/bg-3.png',
-    title: 'Distill',
-    subtitle: 'Learning from Reality',
+    background: "/assets/backgrounds/bg-3.png",
+    title: "Distill",
+    subtitle: "Learning from Reality",
     challenge:
-      'Projects end, but wisdom vanishes. Teams repeat the same mistakes. Knowledge dies with departing engineers.',
-    solution: 'Institutional Memory That Compounds.',
+      "Projects end, but wisdom vanishes. Teams repeat the same mistakes. Knowledge dies with departing engineers.",
+    solution: "Institutional Memory That Compounds.",
     paragraph:
       "Capture what worked, what didn't, and why. Transform project completion into organizational learning. Build a knowledge base that makes every future project faster and smarter.",
   },
@@ -62,12 +62,12 @@ export function MethodologySection(): JSX.Element {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start start', 'end end'],
+    offset: ["start start", "end end"],
   });
 
   // Update index based on scroll progress
   useEffect(() => {
-    const unsubscribe = scrollYProgress.on('change', (latest) => {
+    const unsubscribe = scrollYProgress.on("change", (latest) => {
       // Divide scroll into thirds for 3 movements
       if (latest < 0.333) {
         setIndex(0);
@@ -93,7 +93,7 @@ export function MethodologySection(): JSX.Element {
                 How Philosophy Becomes Practice
               </h2>
               <p className="text-md lg:text-lg font-light max-w-screen-md leading-relaxed">
-                The Kodebase methodology in three movements: <b>Define</b>,{' '}
+                The Kodebase methodology in three movements: <b>Define</b>,{" "}
                 <b>Execute</b>, <b>Distill</b>. Each step powered by
                 purpose-built tools that work as one unified system.
               </p>
@@ -184,8 +184,8 @@ function Pagination({ index }: { index: number }) {
         >
           <div
             className={cn(
-              'h-2 rounded-full',
-              index === i ? 'w-[5rem] bg-white/42' : 'w-8 bg-black/42',
+              "h-2 rounded-full",
+              index === i ? "w-[5rem] bg-white/42" : "w-8 bg-black/42",
             )}
           />
         </Button>
@@ -203,18 +203,18 @@ function MovementContent({ index }: { index: number }) {
 
   const { title, subtitle, challenge, solution, paragraph } = movement;
 
-  const colors = ['text-kb-purple', 'text-kb-teal', 'text-kb-lime'];
+  const colors = ["text-kb-purple", "text-kb-teal", "text-kb-lime"];
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <div className="flex flex-col gap-4 md:gap-base">
         <div className="relative flex flex-col font-display leading-none">
-          <h3 className={cn('text-5xl lg:text-6xl font-bold', colors[index])}>
+          <h3 className={cn("text-5xl lg:text-6xl font-bold", colors[index])}>
             {title}
           </h3>
           <h4 className="text-xl lg:text-2xl font-normal">{subtitle}</h4>

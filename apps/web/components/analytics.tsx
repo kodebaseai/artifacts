@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import posthog from 'posthog-js';
-import { useEffect } from 'react';
+import posthog from "posthog-js";
+import { useEffect } from "react";
 
 export type AnalyticsEvent = {
   name: string;
@@ -18,7 +18,7 @@ export const analytics = {
    */
   track: (eventName: string, properties?: Record<string, unknown>) => {
     // PostHog tracking
-    if (typeof window !== 'undefined' && posthog) {
+    if (typeof window !== "undefined" && posthog) {
       posthog.capture(eventName, properties);
     }
 
@@ -30,7 +30,7 @@ export const analytics = {
    * Identify a user
    */
   identify: (userId: string, traits?: Record<string, unknown>) => {
-    if (typeof window !== 'undefined' && posthog) {
+    if (typeof window !== "undefined" && posthog) {
       posthog.identify(userId, traits);
     }
   },
@@ -39,8 +39,8 @@ export const analytics = {
    * Track a page view
    */
   page: (_pageName?: string, properties?: Record<string, unknown>) => {
-    if (typeof window !== 'undefined' && posthog) {
-      posthog.capture('$pageview', {
+    if (typeof window !== "undefined" && posthog) {
+      posthog.capture("$pageview", {
         $current_url: window.location.href,
         ...properties,
       });
@@ -51,7 +51,7 @@ export const analytics = {
    * Set user properties
    */
   setUserProperties: (properties: Record<string, unknown>) => {
-    if (typeof window !== 'undefined' && posthog) {
+    if (typeof window !== "undefined" && posthog) {
       posthog.people.set(properties);
     }
   },
@@ -60,7 +60,7 @@ export const analytics = {
    * Reset/clear user session
    */
   reset: () => {
-    if (typeof window !== 'undefined' && posthog) {
+    if (typeof window !== "undefined" && posthog) {
       posthog.reset();
     }
   },
@@ -87,33 +87,33 @@ export function useAnalytics() {
  */
 export const AnalyticsEvents = {
   // CTA Events
-  CTA_CLICK: 'cta_click',
-  CTA_SUBMIT: 'cta_submit',
-  WAITLIST_SIGNUP_START: 'waitlist_signup_start',
-  WAITLIST_SIGNUP_COMPLETE: 'waitlist_signup_complete',
+  CTA_CLICK: "cta_click",
+  CTA_SUBMIT: "cta_submit",
+  WAITLIST_SIGNUP_START: "waitlist_signup_start",
+  WAITLIST_SIGNUP_COMPLETE: "waitlist_signup_complete",
 
   // Navigation Events
-  NAV_CLICK: 'nav_click',
-  SCROLL_TO_SECTION: 'scroll_to_section',
+  NAV_CLICK: "nav_click",
+  SCROLL_TO_SECTION: "scroll_to_section",
 
   // Engagement Events
-  VIDEO_PLAY: 'video_play',
-  VIDEO_COMPLETE: 'video_complete',
-  DOCUMENTATION_CLICK: 'documentation_click',
-  GITHUB_CLICK: 'github_click',
+  VIDEO_PLAY: "video_play",
+  VIDEO_COMPLETE: "video_complete",
+  DOCUMENTATION_CLICK: "documentation_click",
+  GITHUB_CLICK: "github_click",
 
   // Form Events
-  FORM_START: 'form_start',
-  FORM_ABANDON: 'form_abandon',
-  FORM_ERROR: 'form_error',
+  FORM_START: "form_start",
+  FORM_ABANDON: "form_abandon",
+  FORM_ERROR: "form_error",
 } as const;
 
 /**
  * Common event properties for consistency
  */
 export const AnalyticsCategories = {
-  ENGAGEMENT: 'engagement',
-  NAVIGATION: 'navigation',
-  CONVERSION: 'conversion',
-  ERROR: 'error',
+  ENGAGEMENT: "engagement",
+  NAVIGATION: "navigation",
+  CONVERSION: "conversion",
+  ERROR: "error",
 } as const;
