@@ -3,6 +3,7 @@
 import posthog from "posthog-js";
 import {
   createContext,
+  type JSX,
   type ReactNode,
   useContext,
   useEffect,
