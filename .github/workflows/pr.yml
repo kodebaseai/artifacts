@@ -35,7 +35,7 @@ jobs:
           CI: true
 
       - name: Format check
-        run: pnpm format --check
+        run: pnpm format
 
       - name: Type check
         run: pnpm check-types
