@@ -4,9 +4,34 @@
   "main": "./dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./base": "./dist/configs/base-config.js",
-    "./ui": "./dist/configs/ui-config.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./base": {
+      "types": "./dist/configs/base-config.d.ts",
+      "import": "./dist/configs/base-config.js",
+      "default": "./dist/configs/base-config.js"
+    },
+    "./ui": {
+      "types": "./dist/configs/ui-config.d.ts",
+      "import": "./dist/configs/ui-config.js",
+      "default": "./dist/configs/ui-config.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "base": [
+        "dist/configs/base-config.d.ts"
+      ],
+      "ui": [
+        "dist/configs/ui-config.d.ts"
+      ],
+      "*": [
+        "dist/*.d.ts"
+      ]
+    }
   },
   "scripts": {
     "build": "tsc",
