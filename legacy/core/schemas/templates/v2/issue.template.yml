@@ -1,0 +1,64 @@
+# Issue Template v2
+# 
+# Quick start:
+# 1. Copy this file and rename to your issue ID (e.g., A.1.5.yml)
+# 2. Fill in the required fields (marked with ##)
+# 3. Delete these comments and any optional sections you don't need
+# 4. Run validation: kodebase validate <issue-id>
+
+metadata:
+  title: ## Clear, specific title (what are you doing?)
+  priority: medium  # critical | high | medium | low
+  estimation: S     # XS(1-2h) | S(2-4h) | M(1-2d) | L(3-5d) | XL(1-2w)
+  created_by: ## Your Name (your.email@example.com)
+  assignee: ## Your Name (your.email@example.com)  # Usually same as created_by
+  schema_version: 2.0.0
+  relationships:
+    blocks: []      # Add IDs of issues that depend on this one
+    blocked_by: []  # Add IDs of issues that must complete first
+  events:
+    - timestamp: ## Use: date -u +"%Y-%m-%dT%H:%M:%SZ"
+      event: draft
+      actor: ## Your Name (your.email@example.com)
+
+content:
+  summary: >
+    ## What needs to be done and why? Include any important context.
+    ## Example: Update the login form validation to prevent SQL injection 
+    ## attacks by sanitizing user input and using parameterized queries.
+    
+  acceptance_criteria:
+    - ## Specific, testable criterion (how do we know it's done?)
+    - ## Another criterion (what must work?)
+    - ## Final criterion (what's the definition of success?)
+    # Examples:
+    # - "User input is sanitized before database queries"
+    # - "Parameterized queries used for all user data"  
+    # - "Security scan shows no SQL injection vulnerabilities"
+
+# Optional: Implementation hints or important context
+notes: |
+  ## Any gotchas, dependencies, or helpful context
+  ## Example: The current form uses raw SQL - need to migrate to ORM
+
+# === Optional Sections Below (delete if not needed) ===
+
+# Fill during development if you discover something worth sharing:
+# development_process:
+#   alternatives_considered:
+#     - "Considered approach X but chose Y because..."
+#   challenges_encountered:
+#     - challenge: "Hit problem Z"
+#       solution: "Solved by doing ABC"
+
+# Fill after completion if you learned something valuable:
+# completion_analysis:
+#   key_insights:
+#     - "Pattern X works great for this type of problem"
+#     - "Watch out for edge case Y"
+#   implementation_approach: "Used factory pattern to handle different validator types"
+#   manual_testing_steps:
+#     - "Run 'pnpm dev'"
+#     - "Navigate to /login"
+#     - "Try SQL injection in username field"
+#     - "Verify it's blocked with user-friendly error"

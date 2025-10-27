@@ -1,0 +1,114 @@
+# Initiative Schema v2.0.0
+# Schema for Initiative artifacts in Kodebase
+#
+# v2.0 Changes:
+# - Made completion_summary optional (many initiatives are ongoing)
+# - Simplified success criteria structure
+# - Added practical examples
+# - Focused on strategic value over process
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/initiative.schema.v2.yml
+
+title: Initiative Schema v2
+description: Schema for strategic initiatives - the big picture
+type: object
+required:
+  - metadata
+  - content
+
+properties:
+  metadata:
+    $ref: ./artifact-metadata.schema.v2.yml
+    
+  content:
+    type: object
+    description: The strategic vision and boundaries
+    required:
+      - vision
+      - scope
+      - success_criteria
+    properties:
+      vision:
+        type: string
+        description: The inspiring future state this initiative creates (think big!)
+        minLength: 10
+        examples:
+          - "Establish Kodebase as the standard methodology for AI-assisted development, enabling 10x productivity gains."
+          - "Create a development environment where AI agents and humans collaborate seamlessly on complex software projects."
+          - "Build the foundation for autonomous software development where intent translates directly to working code."
+        
+      scope:
+        type: string
+        description: Clear boundaries - what's IN and what's OUT of this initiative
+        minLength: 10
+        examples:
+          - "IN: Core methodology, CLI tooling, documentation. OUT: Cloud hosting, team features, enterprise integration."
+          - "IN: Local development tools, AI agent integration. OUT: CI/CD pipelines, deployment automation."
+        
+      success_criteria:
+        type: array
+        description: How we'll know this initiative succeeded (measurable outcomes)
+        minItems: 1
+        items:
+          type: string
+          minLength: 5
+        examples:
+          - ["Methodology reduces development overhead to <5%", "AI agents can complete 80% of issues autonomously", "100 early adopters actively using the system"]
+          - ["10x productivity improvement measured", "Zero context loss between sessions", "Adoption by 3 major open source projects"]
+          
+  notes:
+    type: string
+    description: Strategic context, assumptions, or risks (optional)
+    examples:
+      - "This initiative assumes continued advancement in LLM capabilities"
+      - "Success depends on developer willingness to adopt new workflows"
+      
+  # Optional - for completed or pivoted initiatives
+  completion_summary:
+    type: object
+    description: Strategic retrospective (only for completed/pivoted initiatives)
+    properties:
+      business_impact:
+        type: string
+        description: The actual impact on business/project goals
+        examples:
+          - "Reduced development time by 60%, enabling 2x feature velocity"
+          - "Failed to achieve adoption targets but discovered valuable niche in documentation automation"
+        
+      strategic_achievements:
+        type: array
+        description: Major wins and accomplishments
+        items:
+          type: string
+        examples:
+          - ["Achieved 60% productivity improvement", "Successfully onboarded 100 early adopters", "Reduced context switching by 80%"]
+          
+      organizational_learning:
+        type: string
+        description: What the organization/team learned
+        examples:
+          - "AI-assisted development requires rethinking traditional workflows"
+          - "Developers embrace automation when it reduces tedious work"
+          
+      architecture_evolution:
+        type: string
+        description: How the system architecture changed (optional)
+        examples:
+          - "Moved from monolithic to plugin-based architecture"
+          - "Introduced event-driven patterns throughout the system"
+          
+      future_roadmap_impact:
+        type: string
+        description: Impact on future product direction (optional)
+        maxLength: 500
+        examples:
+          - "Focus on gradual adoption paths rather than requiring full methodology buy-in"
+          - "The real opportunity is in knowledge management, not just code generation"
+
+# Philosophy for v2:
+# - Initiatives are about vision and strategy, not tactics
+# - Success criteria should be ambitious but measurable  
+# - Scope clarity prevents scope creep
+# - Most initiatives won't have completion summaries (that's OK)
+# - Keep the focus on outcomes that matter to users/business

@@ -1,0 +1,76 @@
+# Initiative Schema v0.1.0
+# Schema for Initiative artifacts in Kodebase
+#
+# ⚠️ DEPRECATED: This schema is deprecated as of 2025-07-10
+# Please use initiative.schema.v2.yml for new artifacts
+# See DEPRECATION_NOTICE.md for migration timeline
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/initiative.schema.yml
+
+title: Initiative Schema
+description: Schema for strategic initiative artifacts
+type: object
+required:
+  - metadata
+  - content
+
+properties:
+  metadata:
+    $ref: ./artifact-metadata.schema.yml
+    
+  content:
+    type: object
+    description: Initiative-specific content
+    required:
+      - vision
+      - scope
+      - success_criteria
+    properties:
+      vision:
+        type: string
+        description: Long-term vision and strategic purpose
+        minLength: 10
+        
+      scope:
+        type: string
+        description: What is included and excluded from this initiative
+        minLength: 10
+        
+      success_criteria:
+        type: array
+        description: Measurable criteria for initiative success
+        minItems: 1
+        items:
+          type: string
+          minLength: 5
+          
+  completion_summary:
+    type: object
+    description: Summary filled upon initiative completion
+    properties:
+      business_impact:
+        type: string
+        description: Impact on business objectives and metrics
+        
+      strategic_achievements:
+        type: array
+        description: Key strategic wins and accomplishments
+        items:
+          type: string
+          
+      organizational_learning:
+        type: string
+        description: What the organization learned
+        
+      architecture_evolution:
+        type: string
+        description: How the system architecture evolved
+        
+      future_roadmap_impact:
+        type: string
+        description: Impact on future product direction
+        
+  notes:
+    type: string
+    description: Additional notes or context

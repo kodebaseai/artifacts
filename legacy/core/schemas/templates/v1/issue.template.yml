@@ -1,0 +1,42 @@
+# Issue Template
+# ⚠️ DEPRECATED: Use issue.template.v2.yml for new issues
+# This template uses the old v0.1.0 schema format
+# Copy this template when creating a new issue
+
+metadata:
+  title: # Clear, specific title describing the task
+  priority: # critical | high | medium | low
+  estimation: # XS | S | M | L | XL
+  created_by: # Name (email)
+  assignee: # Name (email)
+  schema_version: 0.1.0
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - timestamp: # ISO 8601 timestamp
+      event: draft
+      actor: # Name (email)
+
+content:
+  summary: >
+    # Detailed description of what needs to be done
+    # Include context and any important constraints
+  acceptance_criteria:
+    - # Specific, testable criterion 1
+    - # Specific, testable criterion 2
+    - # Specific, testable criterion 3
+
+notes: # Optional implementation hints or context
+
+# Fill these sections upon completion:
+# completion_analysis:
+#   key_insights:
+#     - # Important learning or insight from this work
+#     - # Reusable pattern or approach discovered
+#   implementation_approach: # Brief summary of technical approach taken
+#   knowledge_generated: # New knowledge or patterns created for reuse
+#   manual_testing_steps:
+#     - # Step 1: Concrete action to test the implementation
+#     - # Step 2: Command or process to verify functionality
+#     - # Step 3: How to validate the acceptance criteria

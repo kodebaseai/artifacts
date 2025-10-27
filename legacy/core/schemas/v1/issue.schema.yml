@@ -1,0 +1,120 @@
+# Issue Schema v0.1.0
+# Schema for Issue artifacts in Kodebase
+#
+# ⚠️ DEPRECATED: This schema is deprecated as of 2025-07-10
+# Please use issue.schema.v2.yml for new artifacts
+# See DEPRECATION_NOTICE.md for migration timeline
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/issue.schema.yml
+
+title: Issue Schema
+description: Schema for atomic work unit artifacts
+type: object
+required:
+  - metadata
+  - content
+
+properties:
+  metadata:
+    $ref: ./artifact-metadata.schema.yml
+    
+  content:
+    type: object
+    description: Issue-specific content
+    required:
+      - summary
+      - acceptance_criteria
+    properties:
+      summary:
+        type: string
+        description: Clear description of what needs to be done
+        minLength: 10
+        
+      acceptance_criteria:
+        type: array
+        description: Testable criteria that define completion
+        minItems: 1
+        items:
+          type: string
+          minLength: 5
+          
+  development_process:
+    type: object
+    description: Information captured during development
+    properties:
+      spikes_generated:
+        type: array
+        description: Research spikes or investigations conducted
+        items:
+          type: string
+          
+      alternatives_considered:
+        type: array
+        description: Alternative approaches evaluated
+        items:
+          type: string
+          
+      challenges_encountered:
+        type: array
+        description: Challenges faced and their solutions
+        items:
+          type: object
+          required:
+            - challenge
+            - solution
+          properties:
+            challenge:
+              type: string
+              description: Description of the challenge
+            solution:
+              type: string
+              description: How the challenge was resolved
+              
+  completion_analysis:
+    type: object
+    description: Analysis filled upon issue completion
+    properties:
+      key_insights:
+        type: array
+        description: Important learnings from this issue
+        items:
+          type: string
+          
+      implementation_approach:
+        type: string
+        description: Technical approach taken
+        
+      knowledge_generated:
+        type: string
+        description: New knowledge or patterns discovered
+        
+      manual_testing_steps:
+        type: array
+        description: Concrete steps to manually test what was created
+        items:
+          type: string
+        
+  review_details:
+    type: object
+    description: Pull request review information
+    properties:
+      url:
+        type: string
+        description: URL of the pull request
+        format: uri
+        
+      approved_by:
+        type: array
+        description: Reviewers who approved
+        items:
+          type: string
+          pattern: "^.+ \\(.+@.+\\)$"
+          
+  notes:
+    type: string
+    description: Additional notes or context
+    
+  technical_approach:
+    type: string
+    description: High-level technical approach (deprecated - use completion_analysis.implementation_approach)

@@ -1,0 +1,157 @@
+# Artifact Metadata Schema v0.1.0
+# Common metadata schema shared by all artifact types (Initiative, Milestone, Issue)
+#
+# ⚠️ DEPRECATED: This schema is deprecated as of 2025-07-10
+# Please use artifact-metadata.schema.v2.yml for new artifacts
+# See DEPRECATION_NOTICE.md for migration timeline
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/artifact-metadata.schema.yml
+
+title: Artifact Metadata Schema
+description: Common metadata structure for all Kodebase artifacts
+type: object
+required:
+  - title
+  - priority
+  - estimation
+  - created_by
+  - assignee
+  - schema_version
+  - relationships
+  - events
+
+properties:
+  title:
+    type: string
+    description: Human-readable title of the artifact
+    minLength: 3
+    maxLength: 100
+    
+  priority:
+    type: string
+    description: Priority level of the artifact
+    enum:
+      - critical
+      - high
+      - medium
+      - low
+      
+  estimation:
+    type: string
+    description: T-shirt size estimation
+    enum:
+      - XS  # 1-2 hours
+      - S   # 2-4 hours
+      - M   # 1-2 days
+      - L   # 3-5 days
+      - XL  # 1-2 weeks
+      
+  created_by:
+    type: string
+    description: Creator in format "Name (email)"
+    pattern: "^.+ \\(.+@.+\\)$"
+    
+  assignee:
+    type: string
+    description: Assignee in format "Name (email)"
+    pattern: "^.+ \\(.+@.+\\)$"
+    
+  schema_version:
+    type: string
+    description: Version of the schema used
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    
+  relationships:
+    type: object
+    description: Dependency relationships between artifacts
+    required:
+      - blocks
+      - blocked_by
+    properties:
+      blocks:
+        type: array
+        description: Array of artifact IDs that this artifact blocks
+        items:
+          type: string
+          pattern: "^[A-Z](\\.[0-9]+)*$"
+      blocked_by:
+        type: array
+        description: Array of artifact IDs that block this artifact
+        items:
+          type: string
+          pattern: "^[A-Z](\\.[0-9]+)*$"
+          
+  events:
+    type: array
+    description: Event log tracking artifact lifecycle
+    items:
+      type: object
+      required:
+        - timestamp
+        - event
+        - actor
+      properties:
+        event_id:
+          type: string
+          description: Unique identifier for the event
+          
+        timestamp:
+          type: string
+          description: ISO 8601 timestamp
+          format: date-time
+          
+        event:
+          type: string
+          description: Event type
+          enum:
+            - draft
+            - ready
+            - blocked
+            - cancelled
+            - in_progress
+            - in_review
+            - completed
+            - archived
+            
+        actor:
+          type: string
+          description: Actor in format "Name (email)" or agent pattern
+          pattern: "^(.+ \\(.+@.+\\)|agent\\.[A-Za-z]+\\.[A-Za-z0-9]+@[A-Za-z0-9]+\\.kodebase\\.ai)$"
+          
+        commit_hash:
+          type: string
+          description: Git commit hash associated with this event
+          pattern: "^[a-f0-9]{40}$"
+          
+        correlation_id:
+          type: string
+          description: ID linking related events across artifacts
+          
+        parent_event_id:
+          type: string
+          description: Event ID that triggered this event (for cascades)
+          
+        metadata:
+          type: object
+          description: Additional event context
+          properties:
+            trigger:
+              type: string
+              description: What triggered this event
+              enum:
+                - manual
+                - git_hook
+                - cli
+                - cascade
+                - github_action
+            session_id:
+              type: string
+              description: Session identifier for grouping related events
+            pr_url:
+              type: string
+              description: Pull request URL (for in_review events)
+              format: uri
+            validation_results:
+              type: object
+              description: Results of any validation performed

@@ -1,0 +1,156 @@
+# Artifact Metadata Schema v2.0.0
+# Common metadata schema shared by all artifact types (Initiative, Milestone, Issue)
+# 
+# v2.0 Changes:
+# - Removed rarely-used fields: event_id, correlation_id, parent_event_id
+# - Made relationships optional with empty defaults
+# - Simplified actor pattern for better human readability
+# - Added helpful examples in descriptions
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/artifact-metadata.schema.v2.yml
+
+title: Artifact Metadata Schema v2
+description: Common metadata structure for all Kodebase artifacts - streamlined for productivity
+type: object
+required:
+  - title
+  - priority
+  - estimation
+  - created_by
+  - assignee
+  - schema_version
+  - events
+
+properties:
+  title:
+    type: string
+    description: Human-readable title of the artifact (3-100 chars)
+    minLength: 3
+    maxLength: 100
+    examples:
+      - "Update Artifact Schemas and Templates"
+      - "Implement Email Validation"
+      - "Fix Login Bug on Mobile"
+    
+  priority:
+    type: string
+    description: Priority level - use your judgment, not everything is critical
+    enum:
+      - critical  # Blocking other work or breaking production
+      - high      # Important but not blocking
+      - medium    # Standard priority
+      - low       # Nice to have
+    default: medium
+      
+  estimation:
+    type: string
+    description: T-shirt size estimation (err on the side of smaller tasks)
+    enum:
+      - XS  # 1-2 hours
+      - S   # 2-4 hours (half day)
+      - M   # 1-2 days
+      - L   # 3-5 days (one week)
+      - XL  # 1-2 weeks (avoid if possible - break down instead)
+    default: S
+      
+  created_by:
+    type: string
+    description: Creator in format "Name (email)" - use git config values
+    pattern: "^.+ \\(.+@.+\\)$"
+    examples:
+      - "Jane Smith (jane@example.com)"
+      - "AI Agent Alpha (agent.alpha.123@acme.kodebase.ai)"
+    
+  assignee:
+    type: string
+    description: Assignee in format "Name (email)" - usually same as creator
+    pattern: "^.+ \\(.+@.+\\)$"
+    
+  schema_version:
+    type: string
+    description: Version of this schema (use 2.0.0 for new artifacts)
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    const: "2.0.0"
+    
+  relationships:
+    type: object
+    description: Dependencies between artifacts (optional - start empty, fill as needed)
+    properties:
+      blocks:
+        type: array
+        description: IDs of artifacts that depend on this one completing
+        items:
+          type: string
+          pattern: "^[A-Z](\\.[0-9]+)*$"
+        default: []
+        examples:
+          - ["A.3.5", "A.3.6"]
+          - ["B.1.2"]
+      blocked_by:
+        type: array
+        description: IDs of artifacts that must complete before this can start
+        items:
+          type: string
+          pattern: "^[A-Z](\\.[0-9]+)*$"
+        default: []
+    default:
+      blocks: []
+      blocked_by: []
+          
+  events:
+    type: array
+    description: Event log tracking artifact lifecycle (automation will handle most of this)
+    items:
+      type: object
+      required:
+        - timestamp
+        - event
+        - actor
+      properties:
+        timestamp:
+          type: string
+          description: ISO 8601 timestamp (use 'date -u +"%Y-%m-%dT%H:%M:%SZ"' or let automation handle)
+          format: date-time
+          examples:
+            - "2025-07-10T14:30:00Z"
+            
+        event:
+          type: string
+          description: State transition type
+          enum:
+            - draft       # Initial creation
+            - ready       # Fully specified, can be worked on
+            - blocked     # Waiting on dependencies
+            - cancelled   # Abandoned (can be reactivated)
+            - in_progress # Work has started
+            - in_review   # PR is ready for review
+            - completed   # Work is done and merged
+            - archived    # Cancelled artifact whose parent completed
+            
+        actor:
+          type: string
+          description: Who triggered this event (Name (email) format)
+          pattern: "^.+ \\(.+@.+\\)$"
+          
+        metadata:
+          type: object
+          description: Optional context for special events
+          properties:
+            reason:
+              type: string
+              description: Explanation (mainly for blocked/cancelled events)
+              examples:
+                - "Waiting for design approval"
+                - "Requirement changed - no longer needed"
+            pr_url:
+              type: string
+              description: Pull request URL (added automatically for in_review)
+              format: uri
+          additionalProperties: true
+
+# Validation hints for implementers:
+# - Actor format should match git config user.name and user.email
+# - Timestamps should use UTC (Z suffix)
+# - Event transitions should follow state machine rules
+# - Empty relationships are fine - only add when actual dependencies exist

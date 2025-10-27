@@ -1,0 +1,117 @@
+# Milestone Schema v2.0.0
+# Schema for Milestone artifacts in Kodebase
+#
+# v2.0 Changes:
+# - Made completion_summary optional
+# - Removed rarely-filled issue_breakdown_rationale
+# - Simplified validation criteria
+# - Added practical examples throughout
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/milestone.schema.v2.yml
+
+title: Milestone Schema v2
+description: Schema for milestone artifacts that group related issues
+type: object
+required:
+  - metadata
+  - content
+
+properties:
+  metadata:
+    $ref: ./artifact-metadata.schema.v2.yml
+    
+  content:
+    type: object
+    description: What this milestone aims to achieve
+    required:
+      - summary
+      - deliverables
+    properties:
+      summary:
+        type: string
+        description: Overview of what this milestone accomplishes and why it matters
+        minLength: 10
+        examples:
+          - "Validate and refine the methodology based on real usage, creating v2.0 that reduces friction while maintaining value."
+          - "Build the core package with essential data structures and algorithms that all other packages will depend on."
+          
+      deliverables:
+        type: array
+        description: Concrete outputs from this milestone (what will exist when done)
+        minItems: 1
+        items:
+          type: string
+          minLength: 5
+        examples:
+          - ["Productivity metrics report", "Friction points documentation", "Refined methodology v2", "CLI automation requirements"]
+          - ["User authentication system", "API documentation", "Integration tests", "Deployment guide"]
+          
+      validation:
+        type: array
+        description: How to verify this milestone is truly complete (optional but recommended)
+        items:
+          type: string
+          minLength: 5
+        examples:
+          - ["All deliverables exist and are documented", "Stakeholder approval received", "Integration tests passing"]
+          - ["Methodology overhead reduced by >50%", "All identified friction points addressed", "Ready for CLI implementation"]
+          
+  notes:
+    type: string
+    description: Additional context, constraints, or considerations (optional)
+    examples:
+      - "This milestone is critical for unblocking the CLI development work"
+      - "Focus on developer experience over feature completeness"
+      
+  # Optional - only fill if you have valuable insights to share
+  completion_summary:
+    type: object
+    description: Synthesis of learnings from this milestone (fill when done if valuable)
+    properties:
+      key_achievements:
+        type: array
+        description: The 2-3 most important things accomplished
+        items:
+          type: string
+        maxItems: 3
+        examples:
+          - ["Reduced methodology overhead from 29% to <5%", "Identified 20 automation opportunities", "Created actionable roadmap"]
+          
+      strategic_decisions:
+        type: array
+        description: Important decisions made during this milestone (optional)
+        items:
+          type: string
+        examples:
+          - ["Chose TypeScript over JavaScript for type safety", "Decided to use monorepo structure", "Opted for local-first architecture"]
+          
+      knowledge_generated:
+        type: array
+        description: New insights or patterns discovered
+        items:
+          type: string
+        examples:
+          - ["Event-driven cascades work well for status propagation", "YAML is sufficient for artifact storage", "Git hooks enable seamless automation"]
+          
+      team_impact:
+        type: string
+        description: How this affected team dynamics or capabilities (optional)
+        examples:
+          - "Team now comfortable with TDD approach"
+          - "Established shared vocabulary through glossary"
+        
+      next_milestone_insights:
+        type: string
+        description: Key advice for the next milestone based on what we learned
+        maxLength: 500
+        examples:
+          - "Start with the quick wins identified in the friction analysis - they'll provide immediate value"
+          - "Don't over-automate - some manual steps add valuable thinking time"
+
+# Philosophy for v2:
+# - Milestones are about outcomes, not process
+# - Focus on deliverables that matter
+# - Validation criteria should be objective
+# - Capture strategic insights, not tactical details
+# - Keep it lean - most fields are optional

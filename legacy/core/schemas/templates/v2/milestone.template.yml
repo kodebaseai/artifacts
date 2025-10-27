@@ -1,0 +1,67 @@
+# Milestone Template v2
+#
+# Quick start:
+# 1. Copy this file and rename to your milestone ID (e.g., A.1.yml) 
+# 2. Fill in required fields (marked with ##)
+# 3. Delete these comments and any optional sections
+# 4. This represents a collection of related issues working toward concrete deliverables
+
+metadata:
+  title: ## What does this milestone accomplish? (e.g., "Complete User Authentication")
+  priority: high      # critical | high | medium | low
+  estimation: L       # M(1-2d) | L(3-5d) | XL(1-2w) - sum of child issues
+  created_by: ## Your Name (your.email@example.com)
+  assignee: ## Your Name (your.email@example.com)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []        # Other milestones that need this one done first
+    blocked_by: []    # Milestones that must complete before this can start
+  events:
+    - timestamp: ## Use: date -u +"%Y-%m-%dT%H:%M:%SZ"
+      event: draft
+      actor: ## Your Name (your.email@example.com)
+
+content:
+  summary: >
+    ## What does this milestone achieve? Why does it matter?
+    ## Example: Implement complete user authentication system including 
+    ## registration, login, password reset, and session management to 
+    ## enable secure access to the application.
+    
+  deliverables:
+    - ## Concrete output 1 (what will exist when done?)
+    - ## Concrete output 2 (what can people use?)
+    - ## Concrete output 3 (what's the tangible result?)
+    # Examples:
+    # - "Working login/registration forms"
+    # - "Password reset email flow"
+    # - "Session management with JWT tokens"
+    # - "API documentation for auth endpoints"
+    # - "Integration test suite"
+    
+  # Optional but recommended: How do we verify success?
+  validation:
+    - "All auth endpoints have >90% test coverage"
+    - "Security audit passes with no critical issues"
+    - "5 users successfully complete registration flow"
+
+# Optional: Any important context or constraints
+notes: |
+  ## Example: Must integrate with existing LDAP system
+  ## Example: Performance target: <200ms response time
+
+# === Optional Section (delete if not needed) ===
+
+# Fill after milestone completion if you have strategic insights:
+# completion_summary:
+#   key_achievements:
+#     - "Reduced authentication time by 50%"
+#     - "Zero security vulnerabilities in pen test"
+#   strategic_decisions:
+#     - "Chose JWT over sessions for stateless auth"
+#     - "Implemented rate limiting at API gateway level"
+#   knowledge_generated:
+#     - "JWT rotation strategy prevents token theft"
+#     - "Bcrypt with 12 rounds optimal for our use case"
+#   team_impact: "Team now proficient with OAuth2 flows"
+#   next_milestone_insights: "Start with the user profile schema design based on auth token structure"

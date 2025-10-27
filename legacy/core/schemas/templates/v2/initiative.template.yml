@@ -1,0 +1,65 @@
+# Initiative Template v2
+#
+# Quick start:
+# 1. Copy this file and rename to your initiative ID (e.g., B.yml)
+# 2. Fill in required fields (marked with ##)
+# 3. Delete these comments and any optional sections
+# 4. Think big - this is your north star!
+
+metadata:
+  title: ## Strategic initiative name (e.g., "AI-Powered Development Platform")
+  priority: high      # critical | high | medium | low (most initiatives are high/critical)
+  estimation: XL      # L(3-5d) | XL(1-2w) - initiatives are typically XL
+  created_by: ## Your Name (your.email@example.com)
+  assignee: ## Your Name (your.email@example.com)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []        # Initiatives that depend on this one's completion
+    blocked_by: []    # Initiatives that must complete first (rare)
+  events:
+    - timestamp: ## Use: date -u +"%Y-%m-%dT%H:%M:%SZ"
+      event: draft
+      actor: ## Your Name (your.email@example.com)
+
+content:
+  vision: >
+    ## The inspiring future state this creates (dream big!)
+    ## Example: Create a world where developers focus purely on intent 
+    ## while AI handles all implementation details, reducing time from 
+    ## idea to production by 100x and making software development 
+    ## accessible to billions of new creators.
+    
+  scope: >
+    ## Clear boundaries - what's IN and OUT
+    ## IN: What this initiative WILL deliver
+    ## OUT: What it explicitly WON'T do (helps prevent scope creep)
+    ## Example:
+    ## IN: Natural language to code, AI pair programming, automated testing
+    ## OUT: Cloud deployment, team collaboration features, enterprise SSO
+    
+  success_criteria:
+    - ## Measurable outcome 1 (how do we know we succeeded?)
+    - ## Measurable outcome 2 (what impact will we see?)
+    - ## Measurable outcome 3 (what changes in the world?)
+    # Examples:
+    # - "Developers report 10x productivity improvement"
+    # - "80% of routine coding tasks handled by AI"
+    # - "1000 active users building production apps"
+    # - "Time from idea to MVP reduced from weeks to hours"
+
+# Optional: Strategic context, assumptions, or risks
+notes: |
+  ## Example: Assumes continued exponential improvement in LLM capabilities
+  ## Example: Primary risk is developer adoption resistance
+
+# === Very Optional Section (only for completed initiatives) ===
+
+# completion_summary:
+#   business_impact: "Achieved 50% reduction in development costs across portfolio"
+#   strategic_achievements:
+#     - "100+ teams actively using the platform"
+#     - "10x productivity improvement validated"
+#     - "Zero context loss between sessions achieved"
+#   organizational_learning: "Teams adapt quickly when tools solve real pain points"
+#   architecture_evolution: "Shifted from CLI-centric to API-first architecture"
+#   future_roadmap_impact: "Pivot to focus on team collaboration features based on user feedback"

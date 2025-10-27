@@ -1,0 +1,140 @@
+# Issue Schema v2.0.0
+# Schema for Issue artifacts in Kodebase
+#
+# v2.0 Changes:
+# - Made development_process and completion_analysis optional
+# - Removed deprecated technical_approach field
+# - Simplified required fields to reduce friction
+# - Added more helpful examples and descriptions
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/v2/issue.schema.yml
+
+title: Issue Schema v2
+description: Schema for atomic work units - focused on what matters
+type: object
+required:
+  - metadata
+  - content
+
+properties:
+  metadata:
+    $ref: ./artifact-metadata.schema.yml
+    
+  content:
+    type: object
+    description: The meat of the issue - what needs to be done
+    required:
+      - summary
+      - acceptance_criteria
+    properties:
+      summary:
+        type: string
+        description: Clear description of what needs to be done and why
+        minLength: 10
+        examples:
+          - "Update artifact schemas to remove unused fields and simplify the developer experience based on real usage patterns."
+          - "Add email validation to the user registration form to prevent invalid signups."
+          - "Fix the navigation menu on mobile devices - currently overlaps with content."
+        
+      acceptance_criteria:
+        type: array
+        description: Specific, testable criteria that define "done" - be concrete!
+        minItems: 1
+        items:
+          type: string
+          minLength: 5
+        examples:
+          - ["Email field rejects invalid formats", "Valid emails are accepted", "Error message is user-friendly"]
+          - ["Schema v2 removes unused fields", "Templates include helpful examples", "Migration guide provided"]
+          
+  # Optional sections - only fill if they add value
+  notes:
+    type: string
+    description: Implementation hints, context, or gotchas (optional)
+    examples:
+      - "Watch out for the regex - needs to handle international domains"
+      - "This is blocking the new user onboarding flow"
+    
+  development_process:
+    type: object
+    description: Capture useful info during development (optional - only if valuable)
+    properties:
+      alternatives_considered:
+        type: array
+        description: Other approaches you evaluated (helps future devs understand "why")
+        items:
+          type: string
+        examples:
+          - ["Used regex validation instead of external library (simpler)", "Considered async validation but overkill for this use case"]
+          
+      challenges_encountered:
+        type: array
+        description: Challenges faced and how you solved them (optional)
+        items:
+          type: object
+          required:
+            - challenge
+            - solution
+          properties:
+            challenge:
+              type: string
+              description: What problem did you encounter?
+            solution:
+              type: string
+              description: How did you solve it?
+        examples:
+          - [{challenge: "TypeScript generics complexity", solution: "Used conditional types to handle nested artifacts"}]
+          - [{challenge: "Race condition in tests", solution: "Added proper async/await handling"}]
+              
+  completion_analysis:
+    type: object
+    description: Fill when done IF you learned something worth sharing (optional)
+    properties:
+      key_insights:
+        type: array
+        description: Important learnings that would help others
+        items:
+          type: string
+        maxItems: 3  # Keep it focused
+        examples:
+          - ["Pattern X works better than Y for this type of problem", "Watch out for edge case Z"]
+          
+      implementation_approach:
+        type: string
+        description: Brief technical approach if non-obvious (1-2 sentences max)
+        maxLength: 500
+        examples:
+          - "Used factory pattern to generate validators dynamically based on schema type"
+          - "Implemented using native browser APIs instead of library to reduce bundle size"
+        
+      manual_testing_steps:
+        type: array
+        description: How to manually verify this works (if not obvious from tests)
+        items:
+          type: string
+        examples:
+          - ["Run 'pnpm dev'", "Navigate to /register", "Try submitting invalid email", "Verify error appears"]
+        
+  review_details:
+    type: object
+    description: PR information (usually auto-populated)
+    properties:
+      url:
+        type: string
+        description: Pull request URL
+        format: uri
+        
+      approved_by:
+        type: array
+        description: Who reviewed and approved
+        items:
+          type: string
+          pattern: "^.+ \\(.+@.+\\)$"
+
+# Philosophy for v2:
+# - Start minimal - only summary and acceptance criteria are required
+# - Add optional fields only when they provide value
+# - Let automation handle mechanical stuff (timestamps, status, etc.)
+# - Focus on capturing knowledge that helps future developers
+# - One-liners are fine - don't write essays

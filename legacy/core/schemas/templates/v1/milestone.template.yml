@@ -1,0 +1,37 @@
+# Milestone Template
+# ⚠️ DEPRECATED: Use milestone.template.v2.yml for new milestones
+# This template uses the old v0.1.0 schema format
+# Copy this template when creating a new milestone
+
+metadata:
+  title: # Descriptive title of what this milestone delivers
+  priority: # critical | high | medium | low
+  estimation: # XS | S | M | L | XL
+  created_by: # Name (email)
+  assignee: # Name (email)
+  schema_version: 0.1.0
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - timestamp: # ISO 8601 timestamp
+      event: draft
+      actor: # Name (email)
+
+content:
+  summary: >
+    # Brief overview of what this milestone accomplishes
+    # and how it contributes to the parent initiative
+  deliverables:
+    - # Concrete deliverable 1
+    - # Concrete deliverable 2
+    - # Concrete deliverable 3
+  validation:
+    - # How to verify deliverable 1 is complete
+    - # How to verify deliverable 2 is complete
+    - # How to verify deliverable 3 is complete
+
+notes: # Optional context
+
+issue_breakdown_rationale: >
+  # Explain how you decided to break this milestone into issues

@@ -1,0 +1,49 @@
+{
+  "name": "@kodebase/core",
+  "version": "0.1.0",
+  "description": "Core TypeScript package for Kodebase artifact management",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "schemas"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./schemas/*": "./schemas/*"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsup",
+    "check-types": "tsc --noEmit",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch"
+  },
+  "dependencies": {
+    "glob": "^11.0.3",
+    "yaml": "^2.8.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@kodebase/typescript-config": "workspace:*",
+    "@types/glob": "^9.0.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.0.14",
+    "@vitest/coverage-istanbul": "^3.0.7",
+    "tsup": "^8.3.6",
+    "typedoc": "^0.28.7",
+    "typescript": "5.8.2",
+    "vitest": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

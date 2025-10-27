@@ -1,0 +1,85 @@
+# Milestone Schema v0.1.0
+# Schema for Milestone artifacts in Kodebase
+#
+# ⚠️ DEPRECATED: This schema is deprecated as of 2025-07-10
+# Please use milestone.schema.v2.yml for new artifacts
+# See DEPRECATION_NOTICE.md for migration timeline
+
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://kodebase.ai/schemas/milestone.schema.yml
+
+title: Milestone Schema
+description: Schema for milestone artifacts that group related issues
+type: object
+required:
+  - metadata
+  - content
+
+properties:
+  metadata:
+    $ref: ./artifact-metadata.schema.yml
+    
+  content:
+    type: object
+    description: Milestone-specific content
+    required:
+      - summary
+      - deliverables
+      - validation
+    properties:
+      summary:
+        type: string
+        description: Overview of what this milestone accomplishes
+        minLength: 10
+        
+      deliverables:
+        type: array
+        description: Concrete deliverables produced by this milestone
+        minItems: 1
+        items:
+          type: string
+          minLength: 5
+          
+      validation:
+        type: array
+        description: How to validate milestone completion
+        minItems: 1
+        items:
+          type: string
+          minLength: 5
+          
+  completion_summary:
+    type: object
+    description: Summary filled upon milestone completion
+    properties:
+      key_achievements:
+        type: array
+        description: Primary accomplishments of this milestone
+        items:
+          type: string
+          
+      strategic_decisions:
+        type: array
+        description: Important decisions made during this milestone
+        items:
+          type: string
+          
+      knowledge_generated:
+        type: string
+        description: New knowledge or insights gained
+        
+      team_impact:
+        type: string
+        description: Impact on team dynamics, skills, or processes
+        
+      next_milestone_insights:
+        type: string
+        description: Insights that inform the next milestone
+        
+  notes:
+    type: string
+    description: Additional notes or context
+    
+  issue_breakdown_rationale:
+    type: string
+    description: Explanation of how and why issues were structured
