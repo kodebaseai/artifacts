@@ -106,14 +106,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53
-        with:
-          name: build-artifacts-${{ matrix.node-version }}
-          path: |
-            apps/web/.next/
-            packages/*/dist/
-
       - name: Run tests
         run: pnpm test
 
