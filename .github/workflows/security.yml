@@ -60,7 +60,8 @@ jobs:
       contents: read
       pull-requests: read
     timeout-minutes: 5
-    if: github.event_name == 'pull_request' || github.event_name == 'schedule'
+    # Dependency Review requires GHAS on private repos. Skip for private repos to avoid failures.
+    if: github.event_name == 'pull_request' && github.event.repository.private == false
     steps:
       - name: Checkout
         uses: actions/checkout@v5
