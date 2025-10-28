@@ -21,6 +21,9 @@
     "format": "biome format .",
     "test": "vitest run"
   },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
   "devDependencies": {
     "@kodebase/typescript-config": "workspace:*",
     "@vitest/coverage-istanbul": "^3.0.7"
