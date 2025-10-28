@@ -1,0 +1,111 @@
+metadata:
+  title: Implement kodebase pr command
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.2.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-19T14:33:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-19T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: D.2.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-19T16:46:27Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-19T19:45:07Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: completed
+      timestamp: 2025-07-19T20:43:42Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement the 'kodebase pr' command that creates or updates a pull request
+    for the current artifact branch. This command uses PRManager from git-ops to
+    generate PR context from artifact data and automate PR creation with proper
+    title, description, and metadata.
+  acceptance_criteria:
+    - Command detects current branch and maps to artifact ID
+    - Uses PRManager from git-ops for PR operations
+    - Generates PR title from artifact title
+    - Creates PR description with artifact context and acceptance criteria
+    - Supports --ready flag to mark PR as ready for review
+    - Creates draft PR by default
+    - Updates existing PR if one already exists
+    - Shows PR URL after creation/update
+  technical_notes: >
+    PRManager handles GitHub API interactions and PR template generation. The
+    CLI command focuses on gathering artifact context and user options.
+    Integration with PR context generator ensures consistent PR format.
+
+notes:
+  implementation_details: >
+    1. Create src/commands/pr.ts with React component 2. Detect current git
+    branch and validate artifact ID 3. Load artifact data for PR context 4.
+    Generate PR title and description from artifact 5. Call
+    PRManager.createOrUpdatePR() with context 6. Handle --ready flag for PR
+    status 7. Display PR URL and next steps
+  friction_point_addressed: >
+    Eliminates manual PR creation and ensures consistent PR format with all
+    artifact context included. Saves 5-10 minutes per PR and reduces context
+    switching.
+
+development_process:
+  alternatives_considered:
+    - "Template-based PR creation: Less flexible than context generation"
+    - "Interactive PR builder: Too time-consuming for routine use"
+    - "Separate create/update commands: Unnecessary complexity"
+    - "Auto-ready PRs: Could bypass important review preparation"
+  challenges_encountered:
+    - challenge: "Detecting current branch artifact ID reliably"
+      solution: "Use git-ops branch detection with fallback to user input"
+    - challenge: "Generating meaningful PR descriptions from artifacts"
+      solution: "Create structured template that includes all key artifact fields"
+    - challenge: "Handling PR updates vs creation"
+      solution: "Use GitHub API to check for existing PR and update if found"
+
+completion_analysis:
+  key_insights:
+    - "TypeScript union types for artifacts required careful type guards for
+      content access"
+    - "React Ink async patterns need proper loading states and error boundaries"
+    - "Mock testing for git operations requires understanding simple-git API
+      surface"
+    - "PRManager from git-ops provides excellent abstraction for GitHub API
+      complexity"
+  implementation_approach:
+    - "Followed existing CLI command patterns for consistency (Start, Ready,
+      etc.)"
+    - "Used React hooks (useState, useEffect) for async state management"
+    - "Implemented proper TypeScript typing with Artifact union types"
+    - "Created comprehensive test suite following existing test patterns"
+    - "Added structured documentation matching other command docs"
+  knowledge_generated:
+    - "Git-ops PRManager supports both create and update operations seamlessly"
+    - "Artifact content structure varies by type requiring dynamic field access"
+    - "CLI testing requires memfs for file operations and proper mock setup"
+    - "Help text integration requires both App.tsx updates and inline help"
+    - "Biome linting enforces consistent code style across the project"
+  manual_testing_steps:
+    - "Verify command shows in help: kodebase --help"
+    - "Test branch detection: git checkout -b A.1.5, then kodebase pr"
+    - "Test PR creation: run on branch with no existing PR"
+    - "Test PR updates: run again on same branch to update existing PR"
+    - "Test --ready flag: kodebase pr --ready marks PR ready for review"
+    - "Test error cases: invalid branch names, missing artifacts"

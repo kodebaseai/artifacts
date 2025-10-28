@@ -1,0 +1,35 @@
+metadata:
+  title: Create installation documentation
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.4.4 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:28:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Write comprehensive setup and usage documentation for end users. This
+    includes installation instructions, configuration options, integration
+    guides for different AI assistants (Claude, Cursor), troubleshooting
+    information, and usage examples.
+
+  acceptance_criteria:
+    - "Clear installation instructions for npm package"
+    - "Configuration guide with all available options explained"
+    - "Integration tutorials for Claude Desktop and Cursor"
+    - "Troubleshooting section with common issues and solutions"
+    - "Usage examples showing typical MCP tool interactions"
+    - "API reference documentation for all available tools"
+
+notes: |
+  Documentation is critical for adoption. Must be clear, comprehensive,
+  and tested with actual users to ensure the setup process is smooth
+  and understandable for developers of all skill levels.

@@ -1,0 +1,102 @@
+metadata:
+  title: Sliding Solution Section - "Your Codebase is Your Knowledge Base"
+  priority: medium
+  estimation: L
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ G.1.2 ]
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-22T15:55:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-22T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-24T13:08:25Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-24T22:54:12Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-24T22:55:38Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create a 3-part sliding screen solution section with scroll-triggered
+    animations. Content fades out as user scrolls, revealing new screens from
+    below with fresh content and imagery. Design:
+    .kodebase/docs/product/design/marketing landing page/Homepage.jpg
+  acceptance_criteria:
+    - Section title "Your Codebase is Your Knowledge Base" prominently displayed
+    - Three distinct "screens" that transition with scroll
+    - Screen 1: Introduction to the solution concept + supporting image
+    - Screen 2: How it works in practice + supporting image
+    - Screen 3: The transformation/outcome + supporting image
+    - Smooth fade-out/fade-in animations triggered by scroll position
+    - Images are high-quality and optimized for web (<500KB each)
+    - Content is concise but compelling (≤80 words per screen)
+    - Mobile version adapts gracefully with simplified transitions
+    - Scroll position indicators or progress bar
+    - Accessibility considerations for motion-sensitive users
+
+development_process:
+  alternatives_considered:
+    - "CSS-only transitions: Considered pure CSS scroll-snap but lacked
+      fine-grained control"
+    - "GSAP: Popular animation library but adds 90KB+ to bundle size"
+    - "Intersection Observer API: Native but less smooth than Framer Motion"
+    - "React Spring: Good alternative but Framer Motion already in use"
+  challenges_encountered:
+    - challenge: "Scroll offset synchronization with sticky header positioning"
+      solution: "Used offset: ['start 16px', 'end start'] to match sticky top-base
+        (16px)"
+    - challenge: "Exit animation acceleration feeling unnatural"
+      solution: "Applied quadratic easing (t * t) and increased travel distance to -150%"
+    - challenge: "Floating text elements overlapping on smaller screens"
+      solution: "Responsive positioning with md: and lg: breakpoints for text placement"
+    - challenge: "Images flashing during transitions"
+      solution: "Preloaded all images in useEffect and added eager loading priority"
+
+completion_analysis:
+  key_insights:
+    - "Framer Motion's useScroll with container refs provides precise scroll
+      tracking"
+    - "Section height of 320vh creates ideal pacing for three-screen narrative"
+    - "Offset values must match CSS sticky positioning for seamless transitions"
+    - "Exit animations benefit from acceleration curves vs linear movement"
+  implementation_approach:
+    - "Used Framer Motion's declarative API for maintainable scroll animations"
+    - "Structured content as data array for easy future updates"
+    - "Layered absolute positioning for smooth cross-fade effects"
+    - "Progressive enhancement: core content visible without JS"
+  knowledge_generated:
+    - "Scroll-triggered animations work best with extended viewport heights
+      (3-4x)"
+    - "Transform percentages (42% slide-up) create more natural entry than 100%"
+    - "Floating UI elements need careful responsive design to avoid overlap"
+    - "useTransform with array breakpoints enables complex multi-stage
+      animations"
+  manual_testing_steps:
+    - "Scroll through entire section checking transition smoothness"
+    - "Test on mobile devices for simplified transitions"
+    - "Verify images load without flash or layout shift"
+    - "Check exit animation acceleration feels natural"
+    - "Test with reduced motion preferences enabled"
+    - "Verify floating text readability on various screen sizes"
+
+notes: >
+  This is where we transition from problem to solution. Each screen should build
+  upon the previous, creating a narrative arc that leads naturally to the
+  methodology section. Focus on benefits and transformation.

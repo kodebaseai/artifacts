@@ -1,0 +1,24 @@
+metadata:
+  title: Enforce same-parent constraints for milestones and issues
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.3.3]
+    blocked_by: [A.3.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T09:57:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Ensure milestone dependencies are limited to milestones within the same initiative (A.X ↔ A.*),
+    and issue dependencies are limited to issues within the same milestone (A.X.Y ↔ A.X.*)
+    using ID prefix comparisons.
+  acceptance_criteria:
+    - Validator checks ID prefixes to assert same-parent relationships
+    - Violations produce specific error codes and actionable messages
+    - Unit tests cover valid and invalid same-parent scenarios

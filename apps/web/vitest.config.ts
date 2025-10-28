@@ -1,14 +1,19 @@
 import { join } from "node:path";
-import { uiConfig } from "@kodebase/vitest-config";
-import { defineConfig, mergeConfig } from "vitest/config";
+import { defineConfig } from "vitest/config";
 
-export default mergeConfig(
-  uiConfig,
-  defineConfig({
-    resolve: {
-      alias: {
-        "@": join(__dirname, "./"),
-      },
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: "jsdom",
+    coverage: {
+      provider: "istanbul",
+      reporter: ["text", "json", "html"],
+      enabled: true,
     },
-  }),
-);
+  },
+  resolve: {
+    alias: {
+      "@": join(__dirname, "./"),
+    },
+  },
+});

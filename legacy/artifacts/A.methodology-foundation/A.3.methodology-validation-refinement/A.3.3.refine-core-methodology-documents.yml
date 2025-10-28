@@ -1,0 +1,145 @@
+metadata:
+  title: Refine Core Methodology Documents
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ A.3.1, A.3.2 ]
+    blocks: [ A.3.7 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.3.1
+            resolved: true
+            resolved_at: 2025-07-09T23:40:08Z
+          - artifact_id: A.3.2
+            resolved: true
+            resolved_at: 2025-07-10T09:20:08Z
+    - event: ready
+      timestamp: 2025-07-10T09:20:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-10T09:29:41Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-10T09:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-10T09:42:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Update AGENTIC_CONSTITUTION.mdc and AGENTIC_KODEBASE_METHODOLOGY.mdc based
+    on practical experience. Incorporate lessons learned and streamline
+    processes where possible.
+  acceptance_criteria:
+    - Documents updated with learnings:
+        - Pain points addressed with new guidance
+        - Successful patterns codified
+        - Ambiguities clarified
+        - Real examples added
+        - Gotchas documented
+    - Simplified workflows implemented:
+        - Remove unnecessary steps
+        - Combine redundant processes
+        - Streamline state transitions
+        - Reduce required fields
+        - Automate obvious decisions
+    - Edge cases addressed:
+        - Circular dependencies
+        - Orphaned artifacts
+        - Incomplete cascades
+        - State conflicts
+        - Recovery procedures
+    - Clarifications added for:
+        - Confusing terminology
+        - Overlapping concepts
+        - Decision criteria
+        - Role responsibilities
+        - Tool boundaries
+    - Version 2.0 release includes:
+        - Semantic versioning applied
+        - Breaking changes documented
+        - Migration guide provided
+        - Deprecation notices
+        - Compatibility notes
+    - Change log documents:
+        - What changed and why
+        - Impact on existing workflows
+        - Benefits of changes
+        - Known limitations
+        - Future considerations
+
+notes: >
+  This is our chance to fix what didn't work in practice. Be bold about
+  simplifying - if it added no value, remove it. Maintain backwards
+  compatibility where possible.
+
+development_process:
+  implementation_approach: >
+    Analyzed friction analysis (A.3.2) and productivity metrics (A.3.1) to
+    identify key pain points. Created v2.0 versions of both core documents with
+    targeted refinements. Focused on reducing manual overhead while preserving
+    core benefits. Created comprehensive changelog and migration guide for
+    smooth transition.
+  alternatives_considered:
+    - Complete rewrite vs incremental refinement (chose incremental)
+    - Removing states vs simplifying transitions (chose simplifying)
+    - Mandatory automation vs optional helpers (chose optional to start)
+    - Single document vs separate changelog (chose separate for clarity)
+  challenges_encountered:
+    - challenge: Balancing simplification with maintaining rigor
+      solution: Used friction data to guide decisions, keeping rules that prevent
+        errors while removing those that add overhead
+    - challenge: Deciding which rules to relax vs preserve
+      solution: Applied "value vs friction" test - preserved quality standards,
+        relaxed process ceremony
+    - challenge: Making migration path clear without overwhelming teams
+      solution: Created step-by-step guide with quick wins first and gradual adoption
+        path
+
+completion_analysis:
+  summary: >
+    Successfully refined both core methodology documents to v2.0, addressing all
+    major friction points while maintaining the core philosophy. Created
+    comprehensive documentation of changes and clear migration path. The refined
+    methodology should reduce overhead from 29% to under 5% when combined with
+    automation.
+  key_insights:
+    - Rigid rules created more friction than value for non-code issues
+    - Test requirements for documentation were counterproductive
+    - Branch naming simplification enables better automation
+    - Flexibility in commit style maintains clarity without overhead
+    - Progressive enhancement principle allows gradual adoption
+  implementation_approach: >
+    Systematic review of each section against friction data. Added new
+    "Practical Balance" section to Constitution acknowledging real-world needs.
+    Streamlined Methodology to focus on what developers do, not process details.
+    Created actionable migration guide with concrete examples.
+  knowledge_generated:
+    - Clear delineation of required vs flexible practices
+    - Pragmatic quality guidelines matching issue types
+    - Quick reference materials for easy adoption
+    - Comprehensive changelog documenting all decisions
+    - One-page migration cheat sheet for teams
+  manual_testing_steps:
+    - Reviewed all changes against friction points from A.3.2
+    - Verified no breaking changes to core philosophy
+    - Checked migration guide covers common scenarios
+    - Validated quick reference accuracy
+    - Ensured backwards compatibility where claimed

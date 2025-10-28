@@ -62,7 +62,7 @@
   * Must run on a clean working tree.
   * Parent context: If `<parent-id>` is omitted, a **new Initiative** is created. If provided, the parent artifact (Initiative or Milestone) must exist and be in `ready` state.
 * **Side-effects:**
-  * Creates or resumes an `add-<slug>` working branch (wizard session).
+  * Creates or resumes an `add/<context-id>` working branch (wizard session). See "Branch Naming" below.
   * Interactive wizard prompts for minimal fields (title/slug, optional description).
   * **When parent is a Milestone** → generates a new Issue `X.Y.Z` where `Z = max(sibling-issues)+1`.
   * **When parent is an Initiative** → generates a new Milestone `X.Y+1` **and** its first Issue `X.Y+1.1`.
@@ -149,6 +149,22 @@ Hook | When | CLI invocation | Resulting Event
 `post-merge` | PR merged into `main` | `kodebase complete <artifact>` | `completed` event + cascades
 
 Webhooks (CI) should call `status`/`validate` for PR gates.
+
+---
+
+## 5.1 Branch Naming
+For authoring sessions that add artifacts (via `kodebase create`), use create-session branches:
+- New Initiative: `add/<initiative-id>` (e.g., `add/A`).
+- Issues for a Milestone: `add/<milestone-id>` (e.g., `add/A.1`) — create at least `A.1.1`.
+- Multiple Milestones (sequential): `add/<initiative-id>.<start>-<end>` (e.g., `add/A.1-4`) — create A.1..A.4 with at least one issue each.
+- Single Issue on a Milestone: `add/<issue-id>` (e.g., `add/A.1.5`).
+
+Work branches for implementing Issues are named exactly as the artifact ID (e.g., `A.1.3`).
+
+Completion branches (human-authored completion info) use:
+- `complete/<artifact-id>` (e.g., `complete/A.2` to complete Milestone A.2; `complete/A` to complete Initiative A).
+
+Reference: `.kodebase/docs/specs/artifacts/README.md` (Artifacts Specification – Authoring and Conventions).
 
 ---
 

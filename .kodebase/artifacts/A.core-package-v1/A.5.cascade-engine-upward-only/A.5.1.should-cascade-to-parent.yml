@@ -1,0 +1,25 @@
+metadata:
+  title: Implement shouldCascadeToParent (upward cascade rules)
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.5.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:12:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Determine when a parent should progress based on child states: move parent to
+    in_progress when the first active child starts; move to in_review when all
+    active children complete. Exclude cancelled children from counts.
+  acceptance_criteria:
+    - "Returns { shouldCascade: true, newState: in_progress } when any active child is in_progress/in_review/completed and parent is ready"
+    - "Returns { shouldCascade: true, newState: in_review } when all active children are completed"
+    - "Returns { shouldCascade: false, reason } otherwise; cancelled children do not affect counts"
+    - "Deterministic outputs for identical child state inputs"

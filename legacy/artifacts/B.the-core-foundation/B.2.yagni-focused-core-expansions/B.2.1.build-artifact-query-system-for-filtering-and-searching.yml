@@ -1,0 +1,82 @@
+metadata:
+  title: Build artifact query system for filtering and searching
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ B.1.2, B.1.3, B.1.4, B.1.5 ]
+    blocked_by: [ ]
+  events:
+    - event: draft
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-15T09:22:12Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-15T09:35:17Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-15T09:47:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+
+content:
+  summary: >
+    Simple, chainable query API for common CLI operations. Examples:
+    query.byStatus('ready'), query.inMilestone('A.3').ofType('issue').
+    Addresses FP-009 (dependency tracking - 15 min). No complex DSL, just
+    practical methods for list/filter/search commands.
+  acceptance_criteria:
+    - Query API supports filtering by status (byStatus method)
+    - Query API supports filtering by milestone (inMilestone method)
+    - Query API supports filtering by artifact type (ofType method)
+    - Queries are chainable for combined filters
+    - Query results include all matching artifacts with full metadata
+    - Performance is acceptable for CLI usage (sub-100ms for typical queries)
+    - TypeScript types provide full intellisense for query methods
+
+notes: >
+  This addresses friction point FP-009 from the analysis, which showed that
+  dependency tracking takes 10-15 minutes per analysis. The query system will
+  enable CLI commands like 'kodebase list --status ready --milestone A.3' to
+  work efficiently. Keep it simple - no GraphQL, no complex DSL, just
+  practical filter methods that compose well.
+
+development_process:
+  alternatives_considered:
+    - "Considered using a SQL-like DSL but rejected for complexity"
+    - "Evaluated GraphQL but overkill for CLI use case"
+    - "Thought about regex-based filtering but chainable API is clearer"
+  challenges_encountered:
+    - challenge: "Artifacts don't store their own IDs internally"
+      solution: "Added temporary workaround with type casting, documented limitation for future fix"
+
+completion_analysis:
+  key_insights:
+    - "Chainable API pattern works well for composable filters"
+    - "Type guards provide clean way to identify artifact types"
+    - "Performance requirement easily met with simple array filtering"
+  implementation_approach: >
+    Followed MVP principle strictly - implemented only the three required
+    filter methods (byStatus, inMilestone, ofType) with simple array
+    filtering. No premature optimization or complex query planning.
+  knowledge_generated:
+    - "Current artifact structure limitation: IDs not stored within artifacts"
+    - "Query builder pattern scales well for future filter additions"
+    - "Sub-100ms performance achieved even with 1000+ artifacts"
+  manual_testing_steps:
+    - "Run tests: pnpm --filter @kodebase/core test src/query/query.test.ts"
+    - "Type check: pnpm --filter @kodebase/core check-types"
+    - "Build: pnpm --filter @kodebase/core build"
+    - "All tests pass, types check, and build succeeds"

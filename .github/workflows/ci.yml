@@ -106,6 +106,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Build packages (ensure local dist)
+        run: pnpm build
+
       - name: Run tests
         run: pnpm test
 

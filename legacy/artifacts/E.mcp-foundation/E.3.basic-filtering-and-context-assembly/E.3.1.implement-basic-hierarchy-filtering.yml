@@ -1,0 +1,100 @@
+metadata:
+  title: Implement basic hierarchy filtering
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.3.4 ]
+    blocked_by: [ E.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T13:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        all_issues_completed: true
+    - event: in_progress
+      timestamp: 2025-07-31T12:33:38Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: E.3.1
+    - event: in_review
+      timestamp: 2025-07-31T12:48:32Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-31T13:07:22Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Filter artifacts by hierarchy relationships and relevance to current query.
+    This filtering system uses the artifact relationship graph to identify
+    relevant initiatives, milestones, and issues based on dependencies, blocking
+    relationships, and hierarchical proximity to the requested context.
+
+  acceptance_criteria:
+    - "Filters artifacts based on hierarchical relationships"
+    - "Includes blocked_by and blocks relationships in relevance scoring"
+    - "Prioritizes artifacts in the same milestone or initiative"
+    - "Excludes completed or archived artifacts unless specifically requested"
+    - "Provides configurable depth limits for relationship traversal"
+    - "Returns filtered results in relevance-ranked order"
+
+development_process:
+  alternatives_considered:
+    - "Complex graph traversal algorithms for deep relationship analysis"
+    - "Machine learning-based relevance scoring"
+    - "External service calls for advanced filtering"
+  challenges_encountered:
+    - challenge: "TypeScript generics complexity when handling nested artifacts"
+      solution: "Used simple type constraints and clear interface definitions"
+    - challenge: "Score normalization hitting ceiling of 1.0 for multiple artifacts"
+      solution: "Accepted this limitation and focused on relevance reasons for debugging"
+
+completion_analysis:
+  key_insights:
+    - "Simple scoring system is more maintainable than complex algorithms"
+    - "Relevance reasons provide valuable debugging information"
+    - "Hierarchical ID parsing enables efficient artifact categorization"
+  implementation_approach:
+    - "Created single HierarchyFilter class with clear public interface"
+    - "Implemented scoring system with base scores, proximity bonuses, and
+      priority weighting"
+    - "Used TypeScript strict typing throughout with no 'any' types"
+    - "Added comprehensive test suite covering all acceptance criteria"
+  knowledge_generated:
+    - "Artifact relationship patterns in the Kodebase system"
+    - "Effective strategies for relevance scoring in hierarchical systems"
+    - "Testing patterns for complex filtering logic"
+  manual_testing_steps:
+    - "Verified hierarchy detection works for A, A.1, A.1.1 patterns"
+    - "Tested relationship scoring with blocked_by/blocks arrays"
+    - "Confirmed status filtering excludes completed/archived by default"
+    - "Validated depth limiting functionality"
+    - "Ensured results are sorted by relevance score descending"
+
+notes: |
+  This basic filtering provides significant value without complex AI processing.
+  It leverages the structured relationships already present in the artifact
+  system to provide contextually relevant information.
+
+  Files created:
+  - packages/mcp-server/src/filtering/hierarchy-filter.ts: Core filtering implementation
+  - packages/mcp-server/src/filtering/hierarchy-filter.test.ts: Comprehensive test suite
+  - packages/mcp-server/src/filtering/index.ts: Module exports
+
+  Integration points:
+  - Integrates with existing @kodebase/core types and schemas
+  - Designed to be used by ContextAssemblyPipeline
+  - Follows MCP server architectural patterns

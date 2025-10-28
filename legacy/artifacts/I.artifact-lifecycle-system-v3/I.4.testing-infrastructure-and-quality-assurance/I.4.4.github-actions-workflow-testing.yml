@@ -1,0 +1,102 @@
+metadata:
+  title: "GitHub Actions Workflow Testing"
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: ["I.4.5"]
+    blocked_by: []
+  events:
+    - timestamp: "2025-08-04T18:15:00Z"
+      event: draft
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-08-04T18:20:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+
+content:
+  summary: "Create comprehensive test suite for GitHub Actions workflows ensuring all automation functions correctly under various conditions. Pre-merge workflow testing will validate trigger conditions, execution and status reporting, and branch protection integration. Post-merge workflow testing will verify event generation triggers, cascade processing execution, and automated commit generation. Error handling tests will simulate workflow failures to verify recovery mechanisms, test notification systems for critical failures, and validate manual intervention procedures. The testing infrastructure will use GitHub Actions testing frameworks (act or similar), mock repository setups for workflow simulation, and error injection techniques to test failure scenarios. All workflows will be tested with various PR and merge conditions to ensure performance targets are met and the system handles both success and failure cases appropriately."
+
+  acceptance_criteria:
+    - "All GitHub Actions workflows tested with success and failure scenarios"
+    - "Workflow triggers tested with various PR and merge conditions"
+    - "Error handling tested with comprehensive failure simulation"
+    - "Performance targets validated through workflow testing"
+    - "Tests validation workflow trigger conditions"
+    - "Tests validation execution and status reporting"
+    - "Tests branch protection integration"
+    - "Tests event generation workflow triggers"
+    - "Tests cascade processing workflow execution"
+    - "Tests automated commit generation"
+    - "Tests workflow failure scenarios and recovery"
+    - "Tests notification systems for critical failures"
+    - "Tests manual intervention procedures"
+    - "Uses GitHub Actions testing framework (act or similar)"
+    - "Sets up mock repository for workflow testing"
+    - "Includes workflow simulation and verification tools"
+    - "Implements error injection for failure scenario testing"
+
+notes: |
+  Technical Specifications from Initiative Planning:
+
+  **Pre-Merge Validation Workflow (I.2.1):**
+  - Trigger Conditions: PR updates targeting `.kodebase/artifacts/**` paths
+  - Integration with existing git-workflow.md patterns
+  - PR title conventions (artifact ID prefixed)
+  - Validation using existing CLI commands (`kodebase validate`)
+  - Schema validation from cli-automation-specs.md
+  - State transition validity using existing state machine
+  - Status reporting compatible with existing PR templates
+
+  **Post-Merge Automation Pipeline (I.3):**
+  - Event generation workflow triggers on main branch changes
+  - Cascade processing workflow execution with performance targets
+  - Automated commit generation for cascade events
+  - Actor attribution: "GitHub Actions (github-actions[bot]@users.noreply.github.com)"
+  - Commit message format: "cascade: Process events from PR #{pr-number}"
+
+  **Branch Protection and Repository Configuration (I.2.3):**
+  - Prevent direct commits to main for `.kodebase/artifacts/**`
+  - Require status checks from validation workflow
+  - Require at least one approval for artifact changes
+  - Dismiss stale reviews when PR is updated
+  - Enable auto-merge for approved PRs (optional)
+
+  **Performance Targets:**
+  - GitHub Actions workflow: <60 seconds total runtime
+  - Pre-merge validation: handles all validation in workflow time budget
+  - Post-merge cascade processing: <30 seconds for complex cascades
+  - Workflow failure recovery within performance bounds
+
+  **Error Handling and Recovery:**
+  - Workflow failure scenarios and automatic recovery
+  - Notification systems for critical failures
+  - Manual intervention procedures for persistent failures
+  - Retry transient failures with exponential backoff
+  - Error queue management for failed processing
+
+  **Repository Integration:**
+  - Integration with existing @kodebase/git-ops package
+  - GitHub Actions YAML workflows in workflows/ directory
+  - GitHub API utilities and PR automation in github/ directory
+  - Enhanced git hooks for PR-based workflow
+  - Scripts directory for workflow automation
+
+  **Testing Infrastructure:**
+  - GitHub Actions testing framework (act or similar)
+  - Mock repository setup for comprehensive workflow testing
+  - Workflow simulation and verification tools
+  - Error injection techniques for failure scenario testing
+  - Performance validation through workflow execution timing
+  - Various PR and merge condition testing
+
+  **Status Reporting and Feedback (I.2.4):**
+  - GitHub status checks with detailed descriptions
+  - PR comments with formatted validation reports
+  - Error message structure with severity levels (ERROR, WARNING, INFO)
+  - Progress tracking between validation runs
+  - Integration with CLI output for local validation

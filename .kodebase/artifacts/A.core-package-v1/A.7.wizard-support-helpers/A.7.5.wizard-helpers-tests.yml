@@ -1,0 +1,23 @@
+metadata:
+  title: Wizard helpers tests and examples
+  priority: medium
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.7.4]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:30:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Add tests and simple examples wiring layout, id allocation, scaffolding, and
+    runtime gating to confirm CLI integration path.
+  acceptance_criteria:
+    - End-to-end example: ensure layout → allocate ids → scaffold artifacts → write files
+    - Unit tests cover edge cases on id allocation and path resolution
+    - Gating helper tested for blocked/cancelled parent scenarios

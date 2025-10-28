@@ -1,0 +1,121 @@
+metadata:
+  title: Distribution and onboarding
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-18T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-18T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by D.3 - need interactive features before distribution
+        blocking_dependencies:
+          - artifact_id: D.3
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-22T09:19:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        completion_summary: All 5 D.3.x issues completed successfully with comprehensive
+          UX transformation
+    - event: in_progress
+      timestamp: 2025-07-22T10:22:59Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.4.1
+    - event: in_review
+      timestamp: 2025-07-30T13:31:13Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-30T13:53:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+      metadata:
+        completion_summary: All 4 D.4.x issues completed - CLI ready for distribution
+          with comprehensive onboarding
+
+content:
+  summary: >
+    Prepare the CLI for public distribution through npm and ensure smooth
+    onboarding for new users. This includes proper npm packaging, executable
+    configuration, installation documentation, and getting started guides that
+    help users succeed within minutes.
+  deliverables:
+    - npm package configuration with proper bin entries
+    - Global installation support (npm install -g @kodebase/cli)
+    - Interactive tutorial command (kodebase tutorial)
+    - Installation guide for different environments
+    - Quick start guide with common workflows
+    - Troubleshooting documentation
+    - Shell completion scripts (bash/zsh)
+    - First-run experience with setup wizard
+  validation:
+    - npm install -g @kodebase/cli works smoothly
+    - kodebase command available globally after install
+    - New users complete first issue in <5 minutes
+    - No permission issues on Mac/Linux
+
+completion_summary:
+  key_achievements:
+    - "CLI packaged and ready for npm distribution with proper global
+      installation"
+    - "Comprehensive documentation suite covering installation, usage, and
+      troubleshooting"
+    - "Interactive first-run setup wizard with Git configuration and preferences"
+    - "Enhanced tutorial system with achievement certificates and progress
+      tracking"
+    - "Seamless onboarding flow from installation to first successful workflow
+      in <5 minutes"
+  strategic_decisions:
+    - "Applied MVP principle in D.4.4 - enhanced existing tutorial rather than
+      rebuilding"
+    - "Integrated setup wizard with tutorial system for seamless user experience"
+    - "Prioritized global CLI availability over complex installation options"
+    - "Created comprehensive documentation to reduce support burden"
+  knowledge_generated:
+    - "Understanding of npm package distribution best practices for CLI tools"
+    - "Patterns for interactive setup wizards with multiple configuration steps"
+    - "User onboarding flow optimization techniques for developer tools"
+    - "Documentation structure that balances comprehensiveness with quick-start
+      needs"
+    - "Integration strategies between different CLI components (setup → tutorial
+      → work)"
+  team_impact:
+    - "Established distribution-ready CLI architecture that can scale to broader
+      adoption"
+    - "Created reusable patterns for interactive CLI experiences"
+    - "Built comprehensive documentation system that supports future feature
+      additions"
+    - "Reduced barrier to entry for new users with professional onboarding
+      experience"
+  next_milestone_insights:
+    - "Distribution infrastructure enables broader user testing and feedback
+      collection"
+    - "Tutorial system foundation can support additional learning paths for
+      advanced users"
+    - "Setup wizard architecture can accommodate future configuration needs"
+    - "Documentation patterns established can support API documentation and
+      advanced guides"
+    - "User experience feedback will inform future CLI enhancements and feature
+      priorities"
+
+notes:
+  implementation_priority: >
+    Start with npm package configuration and bin entries. Ensure global
+    installation works smoothly. Create interactive tutorial command leveraging
+    D.3's interactive features. Write comprehensive documentation including
+    installation guide, quick start, and troubleshooting. Add shell completion
+    scripts. Implement first-run setup wizard for configuration.

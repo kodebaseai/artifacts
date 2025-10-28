@@ -1,0 +1,24 @@
+metadata:
+  title: ESM exports and type declarations smoke tests
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.8.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:40:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Add smoke tests to ensure ESM consumers can import curated exports and that
+    generated type declarations are correct and complete.
+  acceptance_criteria:
+    - 'Minimal consumer project can import from @kodebase/core without bundler hacks'
+    - 'd.ts files contain the public API types; no missing/any typings'
+    - 'CI runs smoke tests as part of the core build pipeline'
+

@@ -1,0 +1,167 @@
+metadata:
+  title: Batch Artifact Creation Support
+  priority: high
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.1.0
+  relationships:
+    blocks: []
+    blocked_by: [ I.1.4 ]
+  events:
+    - event: draft
+      timestamp: 2025-08-06T20:47:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-06T20:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.1.4
+            resolved: true
+            ressolved_at: 2025-08-07T16:03:30Z
+    - event: ready
+      timestamp: 2025-08-07T16:03:30Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependency_completed
+    - event: in_progress
+      timestamp: 2025-08-07T16:07:05Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-08-07T16:29:49Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_ready
+    - event: completed
+      timestamp: 2025-08-07T16:37:28Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: |
+    Extend the --submit flag functionality to support batch artifact creation scenarios.
+    Currently, the submission system only handles single artifacts, but the intended design
+    should support creating multiple artifacts in a single PR (multiple issues under a
+    milestone, multiple milestones under an initiative). Additionally, implement
+    context-based PR descriptions for Start Flow using patterns from get-pr-context.sh.
+
+  acceptance_criteria:
+    - "Batch creation: Support creating multiple issues under same milestone in
+      single PR"
+    - "Batch creation: Support creating multiple milestones under same
+      initiative in single PR"
+    - "Start Flow: Replace static template approach with context-based PR
+      descriptions"
+    - "Start Flow: Integrate with existing get-pr-context.sh patterns for
+      meaningful PR content"
+    - "Maintain backward compatibility: Single artifact creation continues to
+      work unchanged"
+    - "Error handling: Clear feedback when batch operations encounter validation
+      failures"
+    - "Performance: Batch validation runs efficiently without redundant checks"
+
+notes:
+  llm_generation_prompt: "Add batch processing support to --submit functionality"
+  status: "Draft created - extends I.1.4 foundation with batch capabilities"
+  architectural_considerations: |
+    This issue addresses the gap identified during I.1.4 implementation where the
+    current single-artifact approach doesn't match the intended batch workflow for
+    related artifacts. The approach maintains I.1.4's solid foundation while adding
+    the necessary batch processing capabilities.
+    technical_approach: |
+    Building on the foundation provided by I.1.4:
+
+    1. **Batch Detection & Processing**:
+      - Extend submission.ts to detect when multiple artifacts share same parent
+      - Implement batch validation that aggregates results across related artifacts
+      - Update PR title generation to handle "Add milestones A.1, A.2, A.3" format
+
+    2. **Context-Based Start Flow**:
+      - Replace generatePRDescription() static template approach
+      - Integrate with get-pr-context.sh patterns for dynamic content generation
+      - Provide meaningful implementation context rather than generic guidance
+
+    3. **Enhanced Git Integration**:
+      - Support staging multiple artifact files in single commit
+      - Handle complex directory structures for batch operations
+      - Maintain clean commit history with appropriate grouping
+
+  dependencies:
+    - I.1.4 (PR Submission Flow via --submit Flags) - provides foundation
+    - Existing ValidationEngine from @kodebase/core
+    - GitHub CLI integration patterns
+    - get-pr-context.sh script patterns
+
+development_process:
+  alternatives_considered:
+    - "Approach 1: Create separate batch processing utility vs extending
+      existing submission.ts - chose extension for simplicity and backward
+      compatibility"
+    - "Approach 2: Static branch naming vs dynamic branch name generation -
+      chose dynamic generation following specific patterns per user
+      requirements"
+    - "Approach 3: Multiple validation calls per artifact vs single batch
+      validation - chose single call for performance optimization"
+    - "Approach 4: Complex error aggregation vs simple error collection - chose
+      simple approach following MVP principle"
+  challenges_encountered:
+    - challenge: "TypeScript compiler errors with undefined array access and implicit
+        any types"
+      solution: "Added proper null checks, type guards, and explicit typing throughout
+        batch processing functions"
+    - challenge: "Batch branch naming conventions required clarification
+        mid-implementation"
+      solution: "User provided specific patterns: add-I.1.3-5 for issue ranges,
+        add-I.1 for milestones, add-I.1-3 for milestone ranges, add-I for
+        initiatives"
+    - challenge: "Performance optimization needed for batch validation to avoid
+        redundant ValidationEngine calls"
+      solution: "Implemented single validateAll() call with result filtering by
+        artifact ID rather than multiple validation instances"
+
+completion_analysis:
+  key_insights:
+    - "Batch processing requires careful balance between performance
+      optimization and error specificity - single validation call with result
+      filtering achieved both goals"
+    - "User-driven branch naming conventions are more valuable than algorithmic
+      complexity - simple patterns that match mental models work better"
+    - "Context-based PR descriptions using artifact data provide far more
+      meaningful content than static templates"
+    - "TypeScript strict typing catches edge cases early - proper null checks
+      and type guards prevent runtime errors in batch operations"
+  implementation_approach: |
+    Extended the existing submission.ts utility following MVP principle with these key components:
+
+    1. **Batch Detection & Grouping**: Added detectBatchGroups() to identify related artifacts sharing common parents
+    2. **Performance-Optimized Validation**: Implemented validateArtifactBatch() using single ValidationEngine.validateAll() call with result filtering
+    3. **Dynamic Branch Naming**: Created generateBatchBranchName() supporting user-specified patterns (add-I.1.3-5, add-I.1, etc.)
+    4. **Context-Based PR Descriptions**: Replaced static templates with generateContextBasedPRDescription() using get-pr-context.sh patterns
+    5. **Enhanced Interface**: Extended SubmissionOptions to support string | string[] for artifactId with backward compatibility
+
+    The solution maintains I.1.4's solid foundation while adding batch capabilities without breaking existing single-artifact workflows.
+  knowledge_generated:
+    - "Batch validation pattern: Single ValidationEngine call with
+      artifact-specific error filtering is more efficient than multiple
+      validation instances"
+    - "User experience insight: Clear, predictable branch naming patterns are
+      more important than algorithmic optimization"
+    - "Integration pattern: get-pr-context.sh patterns can be successfully
+      adapted for programmatic PR description generation"
+    - "TypeScript safety: Proper type guards and null checks are essential for
+      array manipulation in batch processing scenarios"
+  manual_testing_steps:
+    - "Test single artifact submission: Verify backward compatibility with
+      existing --submit functionality remains unchanged"
+    - "Test batch issue creation: Submit multiple issues under same milestone,
+      verify single PR creation with proper title format"
+    - "Test batch milestone creation: Submit multiple milestones under same
+      initiative, verify grouping logic works correctly"
+    - "Test validation error handling: Submit batch with validation errors,
+      verify clear error reporting per artifact"
+    - "Test context-based PR descriptions: Verify PR descriptions contain
+      meaningful artifact data instead of generic templates"
+    - "Test branch naming patterns: Verify generated branch names match
+      user-specified conventions for different artifact combinations"

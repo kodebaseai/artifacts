@@ -1,0 +1,104 @@
+metadata:
+  title: "Branch Protection and Repository Configuration"
+  priority: critical
+  estimation: XS
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: []
+    blocked_by: [ "I.2.1" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T18:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T18:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.2.1
+            resolved: true
+            resolved_at: 2025-09-19T18:50:40Z
+    - event: ready
+      timestamp: 2025-09-19T18:50:40Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-09-23T10:00:46Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        event_id: evt_1bb0f005
+    - event: in_review
+      timestamp: 2025-09-24T11:23:15Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_ready
+
+content:
+  summary: "Configure GitHub repository settings to enforce PR-based workflow for
+    all artifact changes through branch protection rules. This includes
+    preventing direct commits to main branch for .kodebase/artifacts/**,
+    requiring validation status checks to pass before merge, enforcing at least
+    one approval for artifact changes, and dismissing stale reviews when PRs are
+    updated. The configuration will use GitHub's branch protection API to
+    programmatically set these rules, with optional auto-merge for approved PRs
+    and comprehensive documentation for manual setup in new repositories."
+
+  acceptance_criteria:
+    - "Completely prevents direct commits to main for artifact files"
+    - "Enforces validation requirements before any merges"
+    - "Maintains approval requirements for quality control"
+    - "Provides clear setup documentation for new repositories"
+    - "Prevents direct commits to main branch for .kodebase/artifacts/**"
+    - "Requires status checks from I.2.1 validation workflow"
+    - "Requires at least one approval for artifact changes"
+    - "Dismisses stale reviews when PR is updated"
+    - "Configures required status checks for 'Artifact Validation'"
+    - "Sets up branch protection rules via GitHub API or manual configuration"
+    - "Enables auto-merge for approved PRs (optional)"
+    - "Integrates with GitHub branch protection API"
+    - "Provides repository configuration scripts"
+    - "Defines status check requirements"
+    - "Documents manual setup steps"
+
+development_process:
+  alternatives_considered:
+    - "Rely solely on GitHub UI configuration guidance without automation; rejected to keep repositories consistent and scriptable."
+  challenges_encountered:
+    - challenge: "Matching the REST payload structure for required status checks while keeping backward compatibility."
+      solution: "Inspected Octokit request shape and explicitly set both contexts and checks arrays with the preview header."
+
+completion_analysis:
+  key_insights:
+    - "Branch protection enforcement needs contexts and checks entries to require the Artifact Validation workflow reliably."
+    - "Enabling repository auto-merge is a separate PATCH call outside of the branch protection endpoint."
+  implementation_approach:
+    - "Added a TypeScript script that auto-detects the repository, applies branch protection for main, and toggles auto-merge."
+    - "Documented an equivalent manual process for environments without automation access."
+  knowledge_generated:
+    - "Documented how Kodebase can replicate protections in new repos through either automation or manual GitHub UI flow."
+  manual_testing_steps:
+    - "pnpm quality"
+
+notes: |
+  Technical Implementation:
+  - GitHub branch protection API integration
+  - Repository configuration scripts for automation
+  - Status check requirement definitions
+  - Documentation for manual setup steps
+
+  Branch Protection Rules:
+  - Prevent direct commits to main branch for .kodebase/artifacts/**
+  - Require status checks from I.2.1 validation workflow
+  - Require at least one approval for artifact changes
+  - Dismiss stale reviews when PR is updated
+
+  Repository Settings:
+  - Configure required status checks for "Artifact Validation"
+  - Set up branch protection rules via GitHub API or manual configuration
+  - Enable auto-merge for approved PRs (optional feature)
+
+  This configuration ensures no invalid artifacts can bypass validation while maintaining flexibility for other repository changes.

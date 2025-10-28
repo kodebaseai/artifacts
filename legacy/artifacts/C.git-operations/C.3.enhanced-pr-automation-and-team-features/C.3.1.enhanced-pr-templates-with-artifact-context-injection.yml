@@ -1,0 +1,110 @@
+metadata:
+  title: Enhanced PR templates with artifact context injection
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.3.2, C.3.3, C.3.4, C.3.5 ]
+    blocked_by: [ C.2.1, C.2.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.2 CLI integration - need artifact parsing capabilities
+        blocking_dependencies:
+          - artifact_id: C.2.1
+            resolved: false
+          - artifact_id: C.2.2
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-17T15:39:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-17T18:04:56Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: C.3.1
+    - event: in_review
+      timestamp: 2025-07-17T19:11:39Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-17T19:26:21Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Enhance the existing PR creation automation in @kodebase/git-ops to
+    automatically inject artifact context into PR descriptions. This includes
+    artifact summaries, acceptance criteria, progress status, dependencies, and
+    related information to provide better team visibility and context.
+
+  problem_statement: >
+    Current PR automation creates basic PRs but lacks artifact context. Team
+    members need to manually lookup artifact details to understand the full
+    scope and context of changes. PR descriptions should automatically include
+    relevant artifact information for better review quality.
+
+  acceptance_criteria:
+    - PR templates automatically inject artifact context when creating PRs
+    - Artifact summary, acceptance criteria, and deliverables appear in PR body
+    - Related dependencies and blocking relationships are listed
+    - Progress status and milestone information is included
+    - Template supports both issue and milestone-level PRs
+    - Context injection works with existing pr-manager.ts functionality
+
+  deliverables:
+    - Enhanced PR template system with artifact context injection
+    - Integration with @kodebase/core artifact parsers
+    - Template customization for different artifact types
+    - Automated context gathering from artifact files
+    - Documentation for template customization
+
+  technical_notes: >
+    Extend the existing PRManager class in
+    packages/git-ops/src/automation/pr-manager.ts to integrate with
+    @kodebase/core parsers. Use ArtifactParser to read artifact files and inject
+    relevant metadata into PR descriptions. Template system should be
+    configurable and support different formats for issues vs milestones.
+
+  validation:
+    - PRs automatically include artifact context in descriptions
+    - Context includes summary, criteria, dependencies, and status
+    - Templates work for both issues and milestones
+    - Existing PR creation functionality remains intact
+    - Templates are customizable and configurable
+
+development_process:
+  implementation_approach: >
+    Implemented through 1 commits focusing on iterative development and testing.
+  alternatives_considered:
+    - Considered direct implementation without testing first
+    - Evaluated different architectural approaches during development
+  challenges_encountered:
+    - challenge: Ensuring compatibility with existing codebase patterns
+      solution: Followed established coding conventions and integration patterns
+
+completion_analysis:
+  key_insights: >
+    Successfully implemented C.3.1 following TDD principles and maintaining code
+    quality standards.
+  implementation_approach: >
+    Followed systematic approach with proper error handling and testing
+    integration.
+  knowledge_generated: >
+    Gained experience in CLI integration patterns and workflow automation.
+  manual_testing_steps:
+    - Verified all acceptance criteria are met
+    - Tested integration with existing systems
+    - Confirmed no regressions in related functionality

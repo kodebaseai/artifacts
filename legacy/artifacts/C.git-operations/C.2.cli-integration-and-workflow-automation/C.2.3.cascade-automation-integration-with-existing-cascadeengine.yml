@@ -1,0 +1,112 @@
+metadata:
+  title: Cascade automation integration with existing CascadeEngine
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.2.4 ]
+    blocked_by: [ C.2.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.2.2 - need artifact file updates first
+        blocking_dependencies:
+          - artifact_id: C.2.2
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-17T11:53:50Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-17T12:09:24Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: C.2.3
+    - event: in_review
+      timestamp: 2025-07-17T12:17:30Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        implementation_complete: true
+    - event: completed
+      timestamp: 2025-07-17T12:43:40Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Integrate git operations with @kodebase/core's CascadeEngine to enable
+    automatic state propagation. When git events update artifacts, trigger
+    cascade analysis and parent updates automatically. This brings the full
+    power of cascade automation to git workflows.
+  acceptance_criteria:
+    - Git hooks trigger CascadeEngine analysis after artifact state changes
+    - Parent artifacts are automatically updated when child states change
+    - Cascade events are properly created with correlation tracking
+    - CompletionCascadeAnalyzer integration for "what happens if I complete
+      this?"
+    - Cascade chains work correctly across complex artifact hierarchies
+    - Performance remains acceptable even for large artifact collections
+    - Error handling prevents cascade failures from breaking git operations
+
+notes:
+  cascade_integration_points: >
+    1. CascadeEngine.shouldCascadeToParent: Check if parent needs updating 2.
+    CascadeEngine.generateCascadeEvent: Create proper cascade events 3.
+    CompletionCascadeAnalyzer: Analyze completion impact 4. Event correlation:
+    Link cascade events to triggering git operations 5. Cascade metadata: Track
+    cascade triggers and reasoning
+  automation_scenarios: >
+    - Issue completion → Milestone in_review (if all issues complete) - First
+    issue starts → Milestone in_progress - Milestone completion → Initiative
+    in_review (if all milestones complete) - Cancelled artifact → Archive
+    cascades and dependency notifications - Branch creation → Parent artifact
+    auto-start cascades
+  performance_considerations: >
+    Cascade analysis can be expensive for large hierarchies. Implement efficient
+    cascade detection, batch operations where possible, and provide fallback
+    mechanisms if cascade analysis times out. Cache artifact relationships to
+    avoid repeated parsing.
+
+review_details:
+  url: https://github.com/kodebaseai/kodebase/pull/51
+
+completion_analysis:
+  key_insights:
+    - "Successfully replaced custom CascadeHelper with standardized
+      @kodebase/core CascadeEngine"
+    - "Implemented comprehensive artifact loading for intelligent cascade
+      analysis across entire hierarchies"
+    - "Added proper event correlation tracking between parent-child cascade
+      operations"
+    - "Performance optimizations (batched loading, warnings) handle large
+      repositories effectively"
+    - "Error handling ensures cascade failures never break git operations"
+  implementation_approach: >
+    Followed MVP principle by integrating existing CascadeEngine rather than
+    building new functionality. Enhanced both post-checkout (start cascades) and
+    post-merge (completion cascades) hooks with standardized @kodebase/core
+    patterns. Used comprehensive artifact discovery with glob patterns for
+    efficient parent-child relationships. Implemented proper TypeScript typing
+    and correlation tracking for full audit trails.
+  knowledge_generated:
+    - "CascadeEngine integration patterns for git hook automation"
+    - "Performance considerations for large artifact collection loading"
+    - "Error handling strategies that maintain git operation reliability"
+    - "Event correlation techniques for cascade audit trails"
+  manual_testing_steps:
+    - "Verified all 249 tests pass including cascade integration tests"
+    - "Confirmed linting and type checking pass with no errors"
+    - "Tested batched artifact loading performance optimization"
+    - "Validated error handling prevents git operation failures"
+    - "Checked proper correlation tracking in cascade events"

@@ -1,0 +1,148 @@
+metadata:
+  title: Implement Event Cascade System Fixes
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ A.2.6 ]
+    blocks: [ A.2.7 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-08T15:20:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: draft
+      timestamp: 2025-07-08T15:25:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.2.6
+            resolved: true
+            resolved_at: 2025-07-08T15:30:43Z
+    - event: ready
+      timestamp: 2025-07-08T15:30:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-08T18:39:19Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-09T19:53:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-09T19:55:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement the critical event cascade system fixes identified in A.2.6
+    validation report. This includes event identity system, correlation ID
+    tracking, state transition validation, and dependency chain management to
+    enable proper cascade automation.
+  acceptance_criteria:
+    - Event identity system implemented:
+        - Generate unique event_id for all new events (format: evt_<16-char-hex>)
+        - Add event_id field to event structure schema
+        - Ensure all new events get unique identifiers
+        - Backwards compatibility with existing events
+    - Correlation ID tracking system:
+        - Implement correlation_id generation (format: <parent-event-id>-<timestamp>)
+        - Add correlation_id field to event structure
+        - Link related cascade events through correlation IDs
+        - Enable cascade chain queries
+    - Parent event linking:
+        - Add parent_event_id field to event structure
+        - Link cascade-triggered events to their triggers
+        - Maintain causality chains across artifacts
+        - Support event propagation tracing
+    - State transition validation:
+        - Implement state transition rule engine
+        - Prevent invalid state combinations
+        - Validate parent-child consistency
+        - Enforce event ordering chronologically
+    - Dependency chain management:
+        - Detect cancelled dependency conflicts
+        - Provide dependency cleanup utilities
+        - Handle orphaned blocked artifacts
+        - Support dependency replacement workflows
+    - Event ordering enforcement:
+        - Sort events chronologically on read
+        - Validate timestamp consistency
+        - Prevent out-of-order event insertion
+        - Correct existing ordering violations
+    - Core package integration:
+        - Implement in packages/core/src/events/
+        - Add cascade logic to packages/core/src/cascade/
+        - Create validation utilities in packages/core/src/validation/
+        - Integrate with existing artifact management
+    - Testing and validation:
+        - Unit tests for all cascade scenarios
+        - Integration tests for event identity
+        - Validation of existing artifact migration
+        - Performance testing for large event logs
+
+notes: >
+  Based on comprehensive findings from A.2.6 validation report. Focus on core
+  functionality needed for cascade automation. Implementation should be in
+  packages/core to maintain cohesion. Reference:
+  .kodebase/docs/engineering/reports/A.2.6-event-cascade-validation.md
+
+development_process:
+  alternatives_considered:
+    - "Single monolithic cascade module vs modular architecture (chose modular
+      for better separation of concerns)"
+    - "UUID vs custom event ID format (chose custom evt_ prefix for better
+      identification)"
+    - "Storing correlation as array vs single parent reference (chose single
+      parent for simplicity)"
+    - "Runtime validation vs compile-time types only (chose both for robustness)"
+  challenges_encountered:
+    - challenge: "TypeScript strict null checks with optional event fields"
+      solution: "Added explicit undefined checks and proper type guards for all array
+        access"
+    - challenge: "Complex state machine with multiple artifact types"
+      solution: "Created const maps with exhaustive state transitions for each
+        artifact type"
+    - challenge: "Circular dependency detection algorithm complexity"
+      solution: "Implemented visited set + path tracking to detect cycles efficiently"
+    - challenge: "Integration test setup for cascade scenarios"
+      solution: "Built comprehensive mock artifact creation utilities with proper typing"
+    - challenge: "Biome linter formatting conflicts"
+      solution: "Let linter auto-fix formatting and adjusted code style to match"
+
+completion_analysis:
+  implementation_approach: >
+    Implemented a comprehensive event cascade system with modular architecture:
+    1. Event Identity System (events/identity.ts) - Unique ID generation with
+    evt_ prefix 2. Correlation Tracking (events/correlation.ts) - Links cascade
+    chains via parent references 3. State Machine Validation
+    (event-validation/state-machine.ts) - Enforces lifecycle rules 4. Dependency
+    Management (event-validation/dependencies.ts) - Circular dependency
+    detection 5. Cascade Engine (cascade/engine.ts) - Orchestrates all cascade
+    logic and automation 6. Event Ordering (events/ordering.ts) - Chronology
+    validation and sorting utilities All modules use TDD with 118 tests covering
+    edge cases and integration scenarios.
+  key_insights:
+    - "Event identity must be generated at creation time, not retroactively"
+    - "Correlation IDs enable powerful cascade chain debugging and tracing"
+    - "State machine complexity requires explicit mapping of all valid
+      transitions"
+    - "Backwards compatibility achieved by treating missing fields as undefined"
+    - "System actor identification crucial for distinguishing automated cascades"
+  knowledge_generated:
+    - "Cascade patterns follow predictable parent-child state relationships"
+    - "Archive cascades prevent orphaned cancelled work when parents complete"
+    - "Dependency validation must be bidirectional for consistency"
+    - "Event ordering validation prevents subtle timing bugs in cascades"
+  manual_testing_steps:
+    - "Create test artifacts with parent-child relationships in test environment"
+    - "Trigger child completion and verify parent cascades to in_review"
+    - "Start first child and confirm parent transitions to in_progress"
+    - "Cancel dependency and verify dependents are identified as blocked"
+    - "Complete parent with cancelled children and verify archive cascade"

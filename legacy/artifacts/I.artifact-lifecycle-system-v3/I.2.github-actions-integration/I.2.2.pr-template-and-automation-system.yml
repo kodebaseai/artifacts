@@ -1,0 +1,131 @@
+metadata:
+  title: "PR Template and Automation System"
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-08-04T18:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T18:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.2.1
+            resolved: false
+    - event: ready
+      timestamp: "2025-09-19T19:12:31Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+      metadata:
+        dependency_updates:
+          - artifact_id: I.2.1
+            resolved: true
+    - event: in_progress
+      timestamp: "2025-09-19T19:12:32Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        event_id: "evt_6590970a27fa4707b7034fbafa9ed6e9"
+    - event: in_review
+      timestamp: 2025-09-22T13:20:44Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_ready
+    - event: completed
+      timestamp: 2025-09-23T09:56:52Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+content:
+  summary: "Build an automated system that enhances pull requests with
+    comprehensive metadata, validation results, and impact analysis. The system
+    will generate artifact summaries showing type, ID, title, and priority,
+    display validation pass/fail status for each check, provide dependency
+    impact analysis, and create type-specific reviewer checklists. It will
+    automatically assign appropriate reviewers based on artifact type
+    (product/architecture for initiatives, technical leads for milestones, code
+    owners for issues) and maintain consistent PR title formatting. Integration
+    with GitHub API will enable dynamic PR updates when validation results
+    change."
+
+  acceptance_criteria:
+    - "Automatically generates comprehensive PR descriptions with validation
+      summary"
+    - "Assigns appropriate reviewers based on artifact type and content"
+    - "Maintains consistent PR title format across all submissions"
+    - "Updates PR content when validation results change"
+    - "Generates artifact summary (type, ID, title, priority)"
+    - "Shows validation results with pass/fail status for each check"
+    - "Provides impact analysis showing affected dependencies and potential
+      cascades"
+    - "Creates type-specific reviewer checklist (different for initiatives vs
+      issues)"
+    - "Assigns initiative artifacts to product/architecture reviewers"
+    - "Assigns technical milestones to technical leads"
+    - "Assigns implementation issues based on affected code areas"
+    - "Enforces title format matching submit command output"
+    - "Integrates with GitHub API for PR metadata updates"
+    - "Uses template system with dynamic content generation based on artifact
+      type"
+    - "Implements review assignment rules engine"
+    - "Integrates with validation results from I.2.1"
+
+notes: |
+  Technical Specifications:
+  - GitHub API integration for PR metadata updates
+  - Template system with dynamic content generation based on artifact type
+  - Review assignment rules engine implementation
+  - Integration with validation results from I.2.1
+
+  PR Description Template Structure:
+  - Artifact summary (type, ID, title, priority)
+  - Validation results with pass/fail status for each check
+  - Impact analysis showing affected dependencies and potential cascades
+  - Type-specific reviewer checklist (different for initiatives vs issues)
+
+  Review Assignment Logic:
+  - Initiative artifacts: Assign to product/architecture reviewers
+  - Technical milestones: Assign to technical leads
+  - Implementation issues: Assign based on affected code areas
+
+  PR Title Consistency:
+  - Enforce title format matching submit command output
+  - Format: "Add/Update {artifact-type} {artifact-id}: {title}"
+
+development_process:
+  implementation_approach: |
+    Extend the artifact validation helper to emit structured JSON, then assemble PR content through
+    a @kodebase/git-ops templating module that merges artifact metadata, validation checks, impact
+    analysis, and reviewer checklists. Drive the automation from a new tsx script invoked by the
+    GitHub workflow so each validation run refreshes the PR title, body, and reviewer assignments.
+  alternatives_considered:
+    - "Posting validation output as PR comments instead of updating the PR body."
+    - "Inlining reviewer rules directly in the workflow instead of a reusable module."
+  challenges_encountered:
+    - challenge: "Reusing validation results from I.2.1 without duplicating CLI logic."
+      solution: "Persist validation reports to disk and consume them from the PR automation script."
+    - challenge: "Mapping reviewer assignment to changed code areas without brittle conditionals."
+      solution: "Introduced minimatch-based rules backed by unit tests and a shared JSON config."
+    - challenge: "Keeping templated PR output readable while covering all acceptance criteria."
+      solution: "Split the template into helpers for summaries, validation, impact, and reviewer checklists."
+
+completion_analysis:
+  key_insights:
+    - "Persisted validation artifacts unlock richer automation without touching the CLI surface."
+    - "Centralised reviewer rules simplify evolving ownership across code areas."
+  implementation_approach:
+    - "Octokit-powered script updates PR metadata and reviewer requests after validation jobs."
+    - "Template helpers render consistent sections for initiatives, milestones, and issues."
+  knowledge_generated:
+    - "Minimatch-driven reviewer rules provide flexible code area mapping with minimal code."
+    - "`scripts/validate-artifacts.ts` can safely emit machine-readable reports alongside summary output."
+  manual_testing_steps:
+    - "pnpm test --filter @kodebase/git-ops"
+    - "pnpm quality (fails due to known @kodebase/cli SetupWizard tests)"

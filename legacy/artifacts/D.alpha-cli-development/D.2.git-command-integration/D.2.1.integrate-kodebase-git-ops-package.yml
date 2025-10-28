@@ -1,0 +1,126 @@
+metadata:
+  title: Integrate @kodebase/git-ops package
+  priority: critical
+  estimation: XS
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ D.2.2, D.2.3, D.2.4 ]
+    blocked_by: [ D.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-19T14:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-19T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-19T15:51:02Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.2.1
+    - event: in_review
+      timestamp: 2025-07-19T16:31:32Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-19T16:46:27Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Add @kodebase/git-ops as a dependency to the CLI package and set up the
+    foundational integration. This includes importing and configuring CLIBridge,
+    setting up git context detection, and establishing error handling patterns
+    that will be used by all git-related commands.
+  acceptance_criteria:
+    - Add @kodebase/git-ops as dependency in CLI package.json
+    - Import and configure CLIBridge in appropriate CLI module
+    - Set up git context detection to ensure commands run in git repositories
+    - Implement error handling wrapper for git-ops operations
+    - Create tests for integration points
+    - Ensure proper TypeScript types are exported and used
+  technical_notes: >
+    The git-ops package provides CLIBridge as the main integration point.
+    Context detection should verify git repository presence before allowing git
+    commands to execute. Error handling should translate git-ops errors into
+    user-friendly CLI messages.
+
+notes:
+  implementation_details: >
+    1. Add dependency: pnpm add @kodebase/git-ops --filter @kodebase/cli 2.
+    Create src/integrations/git-ops.ts for CLIBridge setup 3. Add git context
+    validation middleware 4. Implement error translation layer 5. Update CLI's
+    main command dispatcher
+  friction_point_addressed: >
+    This addresses the gap between CLI commands and git automation, providing
+    the foundation for all subsequent git-related commands.
+
+development_process:
+  implementation_approach: >
+    Started by adding @kodebase/git-ops as a workspace dependency to ensure
+    proper monorepo linking. Created a dedicated integration module at
+    src/integrations/git-ops.ts following the facade pattern to provide a clean
+    API surface. Implemented singleton pattern for CLIBridge to maintain
+    consistent state across CLI commands. Added helper functions for common
+    operations like git repository detection and error handling. Ensured all
+    functions have proper TypeScript types with no 'any' usage. Created
+    comprehensive test suite with mocked dependencies to avoid actual git
+    operations during testing.
+  alternatives_considered:
+    - "Direct git command execution: Would duplicate git-ops functionality and
+      lose type safety"
+    - "Subprocess spawning: Less integrated, harder to test, and no TypeScript
+      benefits"
+    - "External git library (simple-git): Would bypass our custom automation
+      logic and event system"
+    - "Monolithic integration: Would couple CLI too tightly to git-ops
+      implementation details"
+    - "Dynamic imports: Would complicate TypeScript types and break tree-shaking"
+  challenges_encountered:
+    - challenge: "Type compatibility between CLI and git-ops packages"
+      solution: "Updated to workspace:* dependency and ensured shared types through
+        @kodebase/core"
+    - challenge: "Error handling across package boundaries"
+      solution: "Created withGitOpsErrorHandling wrapper that translates structured
+        errors to CLI-friendly messages"
+    - challenge: "Testing integration without actual git operations"
+      solution: "Used vi.mock to create comprehensive mocks matching the git-ops API
+        surface"
+    - challenge: "CLIBridge and related types not exported from git-ops dist build"
+      solution: "Temporarily defined interfaces locally and coordinated with git-ops
+        package to add proper exports"
+    - challenge: "formatError function signature mismatch between expectation and
+        actual API"
+      solution: "Analyzed the actual function signature and adjusted integration code
+        to match"
+
+completion_analysis:
+  key_insights:
+    - "Singleton pattern for CLIBridge ensures consistent git operations state"
+    - "Error wrapping provides clean abstraction between packages"
+    - "Git context detection prevents commands from running outside repositories"
+    - "TypeScript type exports need attention in monorepo build configurations"
+  implementation_approach:
+    - "Created dedicated src/integrations/git-ops.ts module for clean separation"
+    - "Implemented helper functions for common operations (git detection, error
+      handling)"
+    - "Used dependency injection pattern for testability"
+    - "Maintained strict TypeScript typing throughout integration"
+  knowledge_generated:
+    - "Monorepo workspace dependencies require 'workspace:*' for proper linking"
+    - "Integration modules benefit from facade pattern to simplify external APIs"
+    - "Mock utilities in tests should match the actual API surface precisely"
+    - "Type exports from packages need explicit configuration in tsup.config.ts"
+  manual_testing_steps:
+    - "Verify git-ops dependency appears in CLI package.json"
+    - "Check TypeScript compilation passes without errors"
+    - "Run CLI tests to ensure integration doesn't break existing functionality"
+    - "Verify error messages are properly formatted when git operations fail"

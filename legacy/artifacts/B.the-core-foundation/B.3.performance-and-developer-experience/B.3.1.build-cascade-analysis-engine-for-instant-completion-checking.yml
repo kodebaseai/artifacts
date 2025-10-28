@@ -1,0 +1,81 @@
+metadata:
+  title: Build cascade analysis engine for instant completion checking
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-15T13:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-15T13:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-15T13:52:57Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-15T14:08:34Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-15T14:26:00Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build the cascade analysis engine that analyzes entire dependency trees to
+    determine what artifacts can be unblocked or completed. This is the single
+    highest impact feature - replacing 140 minutes of manual analysis with
+    sub-second automated checking.
+  acceptance_criteria:
+    - Engine analyzes complete dependency tree in <1 second
+    - Identifies all artifacts that can be unblocked when issue completes
+    - Detects circular dependencies and reports clear error messages
+    - Handles complex multi-level cascades (initiative → milestone → issue)
+    - Provides actionable completion recommendations
+    - Integrates with existing artifact query system from B.2.1
+    - Returns structured results for CLI consumption
+
+development_process:
+  alternatives_considered:
+    - "Considered building from scratch vs extending existing CascadeEngine (chose extend for MVP)"
+    - "Considered complex query optimization vs direct map iteration (chose direct for simplicity)"
+    - "Considered full parent-child cascade vs dependency-only analysis (chose dependency focus)"
+  challenges_encountered:
+    - challenge: "Query system integration required artifacts to have IDs attached in specific format"
+      solution: "Modified findDirectlyUnblocked method to work with existing query patterns and ID extraction"
+    - challenge: "Test failures revealed edge cases in blocked artifact detection logic"
+      solution: "Simplified blocked artifacts detection using direct map iteration instead of complex queries"
+    - challenge: "Performance requirements demanded efficient algorithms for large artifact sets"
+      solution: "Used O(n) artifact iteration instead of O(n²) nested queries for <1s performance"
+
+completion_analysis:
+  key_insights:
+    - "MVP principle crucial - focused on core acceptance criteria rather than complex features"
+    - "Direct map iteration often simpler and more performant than complex query chains"
+    - "Comprehensive testing essential for cascade logic - found multiple edge cases"
+    - "Integration with existing systems (query, validation) more complex than expected"
+  implementation_approach: >
+    Built CompletionCascadeAnalyzer extending existing CascadeEngine. Used TypeScript with
+    explicit types throughout. Implemented three core methods: analyzeCompletionCascade (finds
+    unblocked artifacts), getCompletionRecommendations (actionable suggestions), and
+    analyzeFullCascade (complete analysis). Focused on performance <1s and structured CLI output.
+  manual_testing_steps:
+    - "Tested performance with 60 artifacts (10 milestones × 5 issues each) - completed in <500ms"
+    - "Verified circular dependency detection with A.1.1 ↔ A.1.2 circular reference"
+    - "Confirmed blocked artifact detection with complex multi-dependency scenarios"
+    - "Validated structured output format for CLI consumption requirements"
+
+notes: >
+  Addresses FP-011 (cascade checking - 140 min/cascade!). This is the cornerstone
+  feature enabling true automation of milestone/initiative completion. Must be
+  performant enough to run on every state transition to provide real-time feedback.

@@ -1,0 +1,24 @@
+metadata:
+  title: Implement error formatter with path tips
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.2.4]
+    blocked_by: [A.2.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Format Zod errors into concise, actionable messages that include field paths
+    and human-readable hints, suitable for CLI output and logs.
+  acceptance_criteria:
+    - Error messages include field path, reason, and suggestion where possible
+    - Handles multiple errors and aggregates them cleanly
+    - Unit tests cover representative schema failures
+

@@ -1,0 +1,71 @@
+metadata:
+  title: Apply Methodology to Git Operations Package
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [A.2.7]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T13:52:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T20:01:06Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-09T15:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-09T16:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Use the methodology to develop the @kodebase/git-ops package. This will test
+    the methodology's effectiveness for infrastructure-type development work.
+  acceptance_criteria:
+    - Full artifact hierarchy created:
+        - Initiative for git-ops package
+        - Milestones for major features
+        - Issues for each component
+        - All properly linked and sequenced
+    - Branch automation patterns tested:
+        - Auto-creation on checkout
+        - Naming convention validation
+        - Protection rule compliance
+        - Clean-up procedures
+    - Hook implementations tracked:
+        - post-checkout hook (in_progress trigger)
+        - pre-commit hook (message validation)
+        - post-merge hook (completion trigger)
+        - Hook installation process
+    - Methodology compliance verified:
+        - All commits reference issues
+        - State transitions logged
+        - Events properly cascaded
+        - Documentation updated
+    - Integration points documented:
+        - How git-ops enables automation
+        - Hook and CLI interaction
+        - Error handling patterns
+        - Recovery procedures
+    - Lessons learned captured:
+        - What worked well
+        - Pain points encountered
+        - Deviations required
+        - Improvement suggestions
+
+notes: >
+  The git-ops package is meta - it helps automate the methodology itself. Pay
+  special attention to bootstrapping challenges. Location: packages/git-ops/

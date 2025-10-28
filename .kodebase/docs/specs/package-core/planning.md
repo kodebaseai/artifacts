@@ -15,6 +15,9 @@ Links: core-package-spec.md
   - Exposes wizard‑enabling helpers (layout, IDs, scaffolding, gating).
   - Consumed cleanly by CLI for create/start/status/validate.
 
+## Scoring Rubric
+For priority and estimation bands, see: `.kodebase/docs/specs/artifacts/README.md`.
+
 ## Milestones and Proposed Issues
 
 ### M1 – Core Types and Schemas

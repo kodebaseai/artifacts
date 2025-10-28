@@ -1,0 +1,106 @@
+metadata:
+  title: CLI integration and workflow automation
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.3 ]
+    blocked_by: [ C.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.1 - need integration foundation first
+        blocking_dependencies:
+          - artifact_id: C.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-16T17:36:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-16T17:38:30Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started
+    - event: in_review
+      timestamp: 2025-07-17T15:08:17Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-17T15:39:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build the missing CLI integration layer that connects git operations with
+    artifact management. While the git hooks exist, they need proper integration
+    with CLI commands and artifact file updates. This includes leveraging
+    @kodebase/core's performTransition and cascade engine for automated workflow
+    orchestration.
+  deliverables:
+    - CLI command integration for git operations
+    - Artifact file updates using @kodebase/core parsers
+    - Cascade automation integration (using existing CascadeEngine)
+    - Branch-to-artifact mapping improvements
+    - Workflow coordination between git and artifact states
+  validation:
+    - Git hooks update artifact YAML files correctly
+    - Cascade events propagate through @kodebase/core engine
+    - CLI commands work seamlessly with git operations
+    - Branch creation automatically updates parent artifacts
+
+completion_summary:
+  key_achievements:
+    - Successfully implemented comprehensive git-ops foundation with
+      cross-platform compatibility
+    - Built robust artifact loading and parsing system using @kodebase/core
+    - Created workflow coordination system for git and artifact state
+      synchronization
+    - Established branch mapping improvements and validation systems
+    - Implemented cascade automation integration with CascadeEngine
+  strategic_decisions:
+    - Chose modular architecture over monolithic approach for better
+      maintainability
+    - Prioritized cross-platform compatibility from the start to avoid future
+      technical debt
+    - Implemented comprehensive error handling and validation for production
+      readiness
+    - Used TypeScript strictly to ensure type safety across the entire system
+  knowledge_generated:
+    - Deep understanding of git hooks automation and workflow coordination
+      patterns
+    - Expertise in YAML parsing and artifact schema validation techniques
+    - Knowledge of cascade event propagation and state machine design
+    - Understanding of cross-platform file system and command execution
+      differences
+    - Insights into performance optimization for git operations and artifact
+      management
+  team_impact:
+    - "Established solid foundation for git-ops automation"
+    - "Enables seamless integration between git workflow and artifact management"
+    - "Reduces manual overhead through automated state management"
+    - "Ensures consistent state management across entire development lifecycle"
+  next_milestone_insights:
+    - "C.3 should focus on advanced automation features like intelligent
+      conflict resolution"
+    - "Automated testing integration capabilities now possible"
+    - "Performance monitoring foundation established"
+    - "Solid foundation enables more sophisticated workflow automation
+      capabilities"
+    - "Ready for enterprise-level git workflow management"
+
+notes:
+  implementation_priority: >
+    Start with CLI command integration to connect git operations with artifact
+    updates. Then implement artifact file updates using @kodebase/core parsers.
+    Focus on cascade automation integration using the existing CascadeEngine.
+    Finally, improve branch-to-artifact mapping and workflow coordination.

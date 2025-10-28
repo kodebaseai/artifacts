@@ -1,0 +1,141 @@
+metadata:
+  title: Create comprehensive documentation
+  priority: high
+  estimation: M
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.4.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-21T22:15:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-22T09:19:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: D.4.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-22T14:50:40Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-29T11:48:33Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.4.2
+    - event: in_review
+      timestamp: 2025-07-29T14:28:01Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-29T14:30:41Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create comprehensive documentation suite for @kodebase/cli to ensure smooth
+    onboarding and successful usage. This includes installation guides, quick
+    start tutorials, complete API reference, and troubleshooting documentation
+    that enables users to succeed within 5 minutes.
+  description: >
+    With the CLI functionality complete, users need clear documentation to
+    discover, install, and effectively use the tool. This documentation serves
+    as the primary resource for new users and should guide them from discovery
+    through their first successful workflow.
+  acceptance_criteria:
+    - Installation guide covering npm, yarn, and pnpm package managers
+    - Environment-specific setup instructions (macOS, Linux, Windows)
+    - Quick start guide with common workflow examples
+    - Complete API reference documenting all commands and options
+    - Troubleshooting section addressing common installation and usage issues
+    - Command examples with expected outputs for clarity
+    - Documentation is accessible and well-structured
+    - Links to tutorial system and additional resources
+  technical_requirements:
+    - Create packages/cli/README.md as main documentation entry point
+    - Document global installation process for each package manager
+    - Provide step-by-step first workflow example
+    - Document all CLI commands with syntax and examples
+    - Include common error scenarios and solutions
+    - Add links to shell completion setup instructions
+    - Document configuration options and environment variables
+    - Create troubleshooting flowchart for common issues
+  validation_steps:
+    - Documentation is clear and actionable for new users
+    - All command examples work as documented
+    - Installation instructions tested on different environments
+    - Troubleshooting guides resolve real user issues
+    - Documentation supports the "<5 minutes to success" goal
+
+development_process:
+  implementation_approach: >
+    Approached the documentation as a comprehensive user guide, structuring it
+    to support the "<5 minutes to success" goal. Started with a clear table of
+    contents for easy navigation, then built each section to progressively guide
+    users from installation through advanced usage. Used real command examples
+    with expected outputs throughout.
+  alternatives_considered:
+    - "Separate documentation files per command (rejected for single-file
+      simplicity)"
+    - "Minimal quick reference only (rejected as insufficient for new users)"
+    - "Wiki-style documentation (rejected to keep docs versioned with code)"
+    - "Generated API docs only (rejected as lacking context and examples)"
+  challenges_encountered:
+    - challenge: "Balancing comprehensive coverage with readability"
+      solution: "Used collapsible sections and clear hierarchy with table of contents"
+    - challenge: "Documenting commands that are still evolving"
+      solution: "Focused on stable command interfaces and patterns"
+    - challenge: "Making troubleshooting section genuinely helpful"
+      solution: "Anticipated real issues based on common npm/Git problems"
+
+completion_analysis:
+  key_insights:
+    - "Documentation structure directly impacts user success rate"
+    - "Real command examples with output are worth more than abstract
+      descriptions"
+    - "Troubleshooting section needs to address actual pain points, not
+      theoretical issues"
+    - "Progressive disclosure helps manage complexity without overwhelming new
+      users"
+  implementation_approach:
+    - "Created single comprehensive README.md following industry best practices"
+    - "Structured content to support quick scanning and deep reading"
+    - "Included platform-specific instructions for broad accessibility"
+    - "Added advanced usage section for power users without cluttering basics"
+  knowledge_generated:
+    - "The importance of testing documentation by actually running commands"
+    - "How to structure CLI documentation for different user personas"
+    - "The value of anticipating common issues in troubleshooting guides"
+  manual_testing_steps:
+    - "Verified all CLI commands work as documented using local build"
+    - "Tested installation instructions conceptually (would work with published
+      package)"
+    - "Validated command outputs match documentation"
+    - "Ensured all links and references are accurate"
+
+notes:
+  context: >
+    The CLI has sophisticated features (aliases, completion, interactive
+    components) that need clear explanation. Users should understand both basic
+    usage and advanced features without overwhelming complexity.
+  implementation_approach: >
+    Start with README.md covering installation and quick start. Add
+    comprehensive command reference with examples. Create troubleshooting
+    section based on likely user scenarios. Focus on clarity and actionability
+    over completeness.
+  documentation_structure: >
+    1. Installation (multiple package managers) 2. Quick Start (first workflow
+    in <5 minutes) 3. Command Reference (all commands with examples) 4. Shell
+    Integration (completion, aliases) 5. Troubleshooting (common issues and
+    solutions) 6. Advanced Usage (workflows, tips, integrations)

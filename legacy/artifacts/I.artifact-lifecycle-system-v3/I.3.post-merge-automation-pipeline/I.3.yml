@@ -1,0 +1,50 @@
+metadata:
+  title: "Post-Merge Automation Pipeline"
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [ "I.4" ]
+    blocked_by: [ "I.2" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T17:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T17:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.2
+            resolved: false
+
+content:
+  summary: "Complete automation of post-merge processing that generates events,
+    processes cascades, and maintains system consistency based on the event
+    system rules defined in I.1.1"
+
+  deliverables:
+    - "I.3.1: Automated Event Generation Engine - Smart event creation based on
+      merged artifact content analysis"
+    - "I.3.2: Cascade Processing Engine - Automatic cascade detection and
+      processing based on established cascade rules"
+    - "I.3.3: State Consistency and Integrity Validation - Post-processing
+      validation to ensure system integrity"
+    - "I.3.4: Automated Commit Generation and Git Integration - Commit
+      cascade-generated events back to main branch automatically"
+    - "I.3.5: Processing Monitoring and Error Recovery - Comprehensive
+      monitoring and error recovery for post-merge processing"
+
+  validation:
+    - "100% automatic event generation for merged artifacts"
+    - "Complete cascade processing in <30 seconds"
+    - "Zero manual intervention for standard cascades"
+    - "Full audit trail for all automated actions"
+    - "Correctly determines state transitions based on content analysis"
+    - "Implements all cascade rules from event-cascade.md specification"
+    - "Ensures 100% state consistency after all processing completes"
+    - "Successfully commits all cascade events back to main branch"

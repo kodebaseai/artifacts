@@ -1,0 +1,142 @@
+metadata:
+  title: Build shell auto-completion system
+  priority: medium
+  estimation: M
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.3.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-21T19:40:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-21T19:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        reason: D.2 completed - CLI is more advanced than anticipated, updating scope
+    - event: in_progress
+      timestamp: 2025-07-21T10:15:46Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.3.2
+    - event: in_review
+      timestamp: 2025-07-21T10:48:03Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-21T11:10:03Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement tab completion for the kodebase CLI to improve user experience.
+    Support completion for commands, subcommands, and artifact IDs across bash
+    and zsh shells with intelligent caching for performance.
+
+  description: >
+    Tab completion greatly improves CLI usability by allowing users to quickly
+    discover commands and avoid typing errors. This issue implements
+    comprehensive auto-completion for the kodebase CLI, including dynamic
+    artifact ID completion that integrates with the project's artifact system.
+
+  acceptance_criteria:
+    - Tab completion works for all commands and subcommands
+    - Artifact ID completion suggests available IDs from the project
+    - Completion scripts provided for bash and zsh shells
+    - Caching system improves performance for large projects
+    - Partial matches show relevant suggestions
+    - Installation instructions included in CLI help
+    - Works with both 'kodebase' and 'kb' aliases
+
+  technical_approach: >
+    Generate completion scripts using Commander.js completion support. Create
+    dynamic artifact ID completion by scanning .kodebase/artifacts directory.
+    Implement caching layer to avoid filesystem scanning on every completion.
+    Provide installation scripts for different shells.
+
+  files_affected:
+    - packages/cli/src/completion.ts (new completion logic)
+    - packages/cli/src/utils/artifacts.ts (artifact scanning)
+    - packages/cli/scripts/install-completion.sh (installation script)
+    - packages/cli/src/cli.ts (completion integration)
+
+development_process:
+  alternatives_considered:
+    - "Commander.js built-in completion support - rejected due to limited
+      flexibility for dynamic artifact ID completion"
+    - "External completion libraries (complete.js, omelette) - rejected to avoid
+      additional dependencies"
+    - "Manual shell function generation - chosen for maximum control and minimal
+      dependencies"
+    - "File-based completion lists - rejected due to poor performance for large
+      projects"
+  challenges_encountered:
+    - challenge: "React components cannot handle asynchronous side effects in render
+        without warnings"
+      solution: "Accepted warnings for completion handlers since they exit immediately
+        and don't affect functionality"
+    - challenge: "Shell completion parsing complexity with spaces and partial commands"
+      solution: "Implemented sophisticated parsing logic to handle different
+        completion scenarios (command typing vs argument completion)"
+    - challenge: "Performance concerns for large artifact hierarchies"
+      solution: "Implemented 5-minute TTL cache system to avoid repeated filesystem
+        scans"
+
+completion_analysis:
+  key_insights:
+    - "Shell completion requires careful command line parsing to distinguish
+      between typing commands vs providing arguments"
+    - "React-based CLI tools need special handling for synchronous completion
+      operations"
+    - "Caching is essential for completion performance but must be invisible to
+      users"
+  implementation_approach:
+    - "Built completion manager class with pluggable completion sources"
+    - "Used existing ArtifactLoader infrastructure to scan artifact directories
+      efficiently"
+    - "Generated separate bash and zsh completion scripts with proper error
+      handling"
+    - "Integrated completion commands as hidden CLI options (__complete,
+      __complete-bash, __complete-zsh)"
+  knowledge_generated:
+    - "Understanding of shell completion mechanics across bash and zsh"
+    - "Experience with React component side effects and their limitations"
+    - "Patterns for implementing performant filesystem-based completion in CLI
+      tools"
+  manual_testing_steps:
+    - "Tested command completion with 'kodebase <TAB>' showing all available
+      commands"
+    - "Verified partial command matching with 'kodebase c<TAB>' completing to
+      create/c"
+    - "Confirmed artifact ID completion with 'kodebase status D<TAB>' showing
+      D.* artifacts"
+    - "Validated kb alias works identically to kodebase for all completion
+      scenarios"
+    - "Tested completion script generation produces valid bash and zsh
+      completion code"
+
+notes:
+  implementation_details: >
+    Successfully leveraged existing artifact utilities from D.2 implementation.
+    Implemented completion cache file (~/.kodebase/completion-cache) with
+    5-minute TTL to avoid repeated filesystem operations. Installation
+    instructions provided in CLI help.
+
+  validation_approach: >
+    Tested completion in bash and zsh environments, verified artifact ID
+    suggestions are accurate and up-to-date, confirmed performance with large
+    artifact counts through caching system.
+
+  dependencies: >
+    Originally blocked by D.3.1 for alias support, but discovered that
+    package.json bin configuration already provides both 'kodebase' and 'kb'
+    command forms.

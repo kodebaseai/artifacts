@@ -1,0 +1,79 @@
+metadata:
+  title: PR milestone tracking and progress reporting
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ C.3.2, C.3.3, C.3.4 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.3.2, C.3.3, C.3.4 - need sync, generation, and assignment
+          features first
+        blocking_dependencies:
+          - artifact_id: C.3.2
+            resolved: false
+          - artifact_id: C.3.3
+            resolved: false
+          - artifact_id: C.3.4
+            resolved: false
+    - event: cancelled
+      timestamp: 2025-07-18T12:29:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: cancelled
+      metadata:
+        reason: Context system handles this
+
+content:
+  summary: >
+    Track PR progress in relation to milestones and initiatives. Provide
+    comprehensive progress reporting that shows how individual PRs contribute to
+    larger goals, milestone completion status, and overall initiative progress
+    with visual dashboards and automated reporting.
+
+  problem_statement: >
+    Individual PRs exist in isolation without clear connection to milestone
+    progress and initiative goals. Teams lack visibility into how code changes
+    relate to project completion. Progress reporting should connect PR-level
+    work to higher-level objectives with clear metrics and tracking.
+
+  acceptance_criteria:
+    - PR progress automatically tracked against related milestones
+    - Visual progress indicators showing milestone completion status
+    - Initiative-level reporting aggregating milestone and PR data
+    - Automated progress reports with completion metrics
+    - Integration with existing @kodebase/core analytics and metrics
+    - Dashboard views for team and stakeholder consumption
+
+  deliverables:
+    - PR-to-milestone tracking system
+    - Progress visualization and dashboard components
+    - Automated progress reporting with configurable schedules
+    - Integration with @kodebase/core analytics metrics
+    - Milestone completion prediction and timeline estimates
+    - Export capabilities for external reporting and dashboards
+
+  technical_notes: >
+    Leverage the existing @kodebase/core analytics and metrics system to track
+    PR progress. Build reporting dashboards that aggregate PR data into
+    milestone and initiative views. Use the bidirectional sync from C.3.2 to
+    maintain accurate progress tracking. Implement prediction algorithms based
+    on historical velocity and current progress.
+
+  validation:
+    - PRs correctly associated with milestones and initiatives
+    - Progress tracking accurately reflects completion status
+    - Visual dashboards provide clear milestone progress indicators
+    - Automated reports generate on schedule with accurate data
+    - Integration with core analytics functions properly
+    - Progress predictions are reasonably accurate based on historical data

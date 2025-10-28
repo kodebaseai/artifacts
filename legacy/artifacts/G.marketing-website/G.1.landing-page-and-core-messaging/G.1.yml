@@ -1,0 +1,110 @@
+metadata:
+  title: Landing Page and Core Messaging
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-07T21:12:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T22:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started
+    - event: in_review
+      timestamp: 2025-07-28T20:14:58Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-28T20:22:00
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Design and build the landing page that clearly communicates Kodebase's value
+    proposition. This includes hero section with primary CTA, problem/solution
+    narrative, key features grid, and social proof elements. Focus on compelling
+    copywriting and visual storytelling.
+  deliverables:
+    - Next.js marketing site setup
+    - Hero section with animated parallax
+    - Problem section
+    - Philosophy section
+    - Methodology section
+    - Vision section
+    - CTA sections using Tally
+  acceptance_criteria:
+    - Clear value proposition is understood within 10 seconds of landing
+    - Hero section animates at 60 fps and introduces zero cumulative layout
+      shift (CLS)
+    - Problem section effectively conveys pain points (≥4/5 average clarity
+      score in user testing)
+    - Philosophy, Methodology, and Vision sections each include an illustrative
+      graphic and pass your personal design/content checklist (or a quick peer
+      review where possible)
+    - CTA sections integrate with Tally; test submission succeeds in latest
+      Chrome, Firefox, and Safari, and analytics event "cta_submit" is logged
+    - CTA buttons are prominently displayed on desktop and mobile
+    - Mobile-responsive design passes manual review on common devices
+    - Lighthouse performance score ≥ 95 and page load time < 1 s globally
+      (synthetic tests)
+    - All copy reviewed against your clarity & tone checklist (optionally
+      verified by an external developer if available)
+    - Page meets WCAG AA accessibility standards
+
+completion_summary:
+  key_achievements:
+    - "Successfully built and launched a high-performance Next.js marketing site
+      with all planned sections"
+    - "Integrated Tally forms with both popup and modal implementations for
+      flexible A/B testing"
+    - "Achieved Lighthouse performance score > 95 with optimized loading and
+      animations"
+    - "Created compelling visual storytelling through animated sections and
+      gradients"
+    - "Implemented comprehensive analytics tracking for conversion funnel
+      optimization"
+  strategic_decisions:
+    - "Chose Tally over custom forms for faster time-to-market and built-in
+      analytics"
+    - "Implemented blur overlay pattern for better user focus during form
+      completion"
+    - "Used CSS Grid backgrounds instead of heavy images for performance"
+    - "Created reusable UI components library for consistent design language"
+  knowledge_generated:
+    - "Tally forms can be integrated via multiple approaches (popup vs embedded
+      modal)"
+    - "Blur overlays significantly improve form completion UX"
+    - "Environment-based configuration enables easy form management across
+      environments"
+    - "Tailwind CSS v4 with CSS-first approach simplifies theme management"
+    - "Component-driven development with Ladle speeds up UI iteration"
+  team_impact:
+    - "Established design system foundation with @kodebase/ui components"
+    - "Created reusable patterns for future marketing pages"
+    - "Documented Tally integration approach for future form needs"
+    - "Set performance benchmarks for all future web properties"
+  next_milestone_insights:
+    - "Documentation portal can leverage the same component library and design
+      patterns"
+    - "Blog platform should follow similar performance optimization strategies"
+    - "Consider implementing more sophisticated analytics for conversion
+      optimization"
+    - "Explore progressive enhancement for JavaScript-disabled scenarios"
+
+notes: >
+  This milestone is critical to make a strong first impression on potential
+  users. Leverage @kodebase/ui components for rapid development and consistent
+  design language. Collect qualitative feedback from at least 5 developers
+  before considering this milestone complete.

@@ -1,0 +1,128 @@
+metadata:
+  title: Create CLI Requirements Specification
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ A.3.5 ]
+    blocks: [ B ]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.3.5
+            resolved: true
+            resolved_at: 2025-07-10T10:41:08Z
+    - event: ready
+      timestamp: 2025-07-10T10:41:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-10T10:42:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-10T10:48:35Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-10T10:55:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Produce detailed requirements for the CLI tool based on all learnings. This
+    specification will guide the implementation in Initiative B.
+  acceptance_criteria:
+    - Functional requirements include:
+        - MUST have features (MVP)
+        - SHOULD have features (v1.0)
+        - COULD have features (future)
+        - WON'T have features (out of scope)
+        - MoSCoW prioritization
+    - Non-functional requirements cover:
+        - Performance targets (response times)
+        - Reliability standards
+        - Security requirements
+        - Compatibility matrix
+        - Accessibility needs
+    - User stories created:
+        - As a developer, I want to...
+        - As a team lead, I want to...
+        - As an AI agent, I want to...
+        - Acceptance criteria per story
+        - Priority and effort estimates
+    - Acceptance criteria specified:
+        - Testable requirements
+        - Success metrics
+        - Edge case handling
+        - Integration tests
+        - Performance benchmarks
+    - Priority ordering includes:
+        - Business value scoring
+        - Technical dependency order
+        - Risk mitigation priority
+        - Quick wins identified
+        - Critical path mapped
+    - Dependencies identified:
+        - Required libraries
+        - System prerequisites
+        - External services
+        - Development tools
+        - Runtime dependencies
+
+notes: >
+  This document is the contract for Initiative B. Be specific about MVP scope to
+  avoid scope creep. Include lessons learned from manual implementation.
+
+development_process:
+  approach: >
+    Created comprehensive requirements specification based on architectural
+    design from A.3.5 and learnings from manual methodology implementation. Used
+    MoSCoW prioritization to clearly separate MVP from future features.
+
+  alternatives_considered:
+    - "Full-featured CLI from start vs MVP approach - chose MVP for faster
+      validation"
+    - "Plugin system in v1 vs defer to future - deferred to maintain focus"
+    - "Database backend vs pure Git - stayed with Git for simplicity"
+    - "Multiple programming languages vs TypeScript - chose TS for consistency"
+
+  key_decisions:
+    - Structured requirements using MoSCoW method for clear prioritization
+    - Defined explicit 6-week implementation phases
+    - Created user stories for all stakeholder types (developers, leads, AI
+      agents)
+    - Set aggressive performance targets (sub-100ms for most operations)
+    - Specified clear success metrics for validation
+
+completion_insights:
+  implementation_approach: >
+    The specification balances comprehensive vision with pragmatic MVP scope.
+    Key insight was to defer complex features (plugins, Windows support,
+    enterprise) while ensuring the MVP delivers immediate value through
+    automation of the most painful manual tasks.
+
+  key_learnings:
+    - Performance is critical - developers won't adopt slow tools
+    - Git hooks provide seamless integration without changing workflow
+    - AI agents need structured, comprehensive context to be effective
+    - Clear phase boundaries prevent scope creep during implementation
+    - Success metrics must be measurable and tied to pain points
+
+  knowledge_captured:
+    - Complete command reference for MVP implementation
+    - Detailed acceptance criteria for each core command
+    - Priority-ordered implementation plan with weekly phases
+    - Dependencies clearly identified to prevent blockers
+    - Migration strategy from alpha to general availability

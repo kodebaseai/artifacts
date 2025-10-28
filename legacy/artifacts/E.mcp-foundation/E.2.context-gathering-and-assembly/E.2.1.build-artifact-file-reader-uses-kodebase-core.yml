@@ -1,0 +1,96 @@
+metadata:
+  title: Build artifact file reader (uses @kodebase/core)
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.2.4 ]
+    blocked_by: [ E.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T09:58:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-31T10:02:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-31T10:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-31T10:43:59Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create system to read and parse all artifact types (initiatives, milestones,
+    issues) using the existing @kodebase/core parsers and validators. This
+    reader will be the foundation for all context gathering, providing
+    structured access to the complete artifact hierarchy with full type safety
+    and validation.
+
+  acceptance_criteria:
+    - Reads all artifact types using @kodebase/core parsers
+    - Handles schema version migration automatically
+    - Provides typed interfaces for all artifact data
+    - Supports recursive directory scanning for .kodebase folders
+    - Validates artifact integrity during reading
+    - Handles parsing errors gracefully with detailed error reporting
+
+development_process:
+  alternatives_considered:
+    - "Reimplementing YAML parsing and validation from scratch"
+    - "Using different file reader approach with streaming"
+    - "Building custom schema validation instead of leveraging @kodebase/core"
+  challenges_encountered:
+    - challenge: "TypeScript type alignment between @kodebase/core schema types and
+        interface types"
+      solution: "Used ArtifactSchema union type from schemas instead of Interface
+        types to maintain compatibility"
+    - challenge: "ESM import paths requiring .js extensions in TypeScript"
+      solution: "Updated import paths to include .js extension for proper ESM resolution"
+
+completion_analysis:
+  key_insights:
+    - "@kodebase/core parsers already handle schema migration and validation
+      automatically"
+    - "Recursive directory scanning must skip common directories like
+      node_modules and .git"
+    - "Error categorization (parsing, validation, filesystem) provides better
+      debugging experience"
+    - "Type-safe artifact detection based on filename patterns enables proper
+      parser selection"
+  implementation_approach:
+    - "Leverage existing @kodebase/core ArtifactParser for all parsing and
+      validation"
+    - "Implement ArtifactReader class with both single-file and directory
+      scanning capabilities"
+    - "Use filename pattern analysis to determine artifact type
+      (initiative/milestone/issue)"
+    - "Provide comprehensive error handling with detailed error categorization"
+    - "Support recursive .kodebase folder discovery across project hierarchies"
+  knowledge_generated:
+    - "The @kodebase/core package provides complete schema validation and
+      migration"
+    - "Schema types (InitiativeSchema, MilestoneSchema, IssueSchema) are the
+      correct types to use"
+    - "File path patterns clearly indicate artifact type: A.yml=Initiative,
+      A.1.yml=Milestone, A.1.5.yml=Issue"
+    - "Error handling should categorize failures for better user experience and
+      debugging"
+
+notes: |
+  This is the foundation component that all other context gathering depends on.
+  Implementation successfully leverages @kodebase/core's robust parsing and validation
+  capabilities, providing a clean, type-safe interface for reading all artifact types.

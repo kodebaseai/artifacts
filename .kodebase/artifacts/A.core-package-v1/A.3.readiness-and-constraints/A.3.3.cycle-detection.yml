@@ -1,0 +1,23 @@
+metadata:
+  title: Implement cycle detection over relationships.blocked_by
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.3.4, A.3.5]
+    blocked_by: [A.3.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T09:58:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Detect circular dependencies across artifacts by traversing the blocked_by graph
+    and reporting cycles with the exact path for debugging.
+  acceptance_criteria:
+    - DFS-based or equivalent detection reports cycles with an ordered artifact path
+    - No false positives on DAG structures; handles disconnected graphs
+    - Clear error code and message for cycles; unit tests included

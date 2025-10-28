@@ -1,0 +1,95 @@
+metadata:
+  title: CLI command integration for git operations
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.2.2, C.2.3, C.2.4, C.2.5 ]
+    blocked_by: [ C.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.1 - need git-ops package completion first
+        blocking_dependencies:
+          - artifact_id: C.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-16T17:36:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-16T17:38:30Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-17T10:35:53Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-17T10:37:41Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Integrate git operations with CLI commands so that git hooks can properly
+    trigger artifact updates. Build the bridge between git events and CLI
+    functionality for seamless workflow. This creates the foundation for git
+    hooks to interact with the Kodebase CLI.
+  acceptance_criteria:
+    - Git hooks can invoke CLI commands programmatically
+    - CLI commands support being called from git hook context
+    - Environment variables and paths are properly handled in hook execution
+    - Exit codes and error handling work correctly between git hooks and CLI
+    - CLI commands can be executed with proper permissions and context
+    - Integration tests verify git hook → CLI command workflow
+    - Performance is acceptable for common git operations
+
+development_process:
+  implementation_approach: >
+    Implemented through 4 commits focusing on iterative development and testing.
+  alternatives_considered:
+    - Considered direct implementation without testing first
+    - Evaluated different architectural approaches during development
+  challenges_encountered:
+    - challenge: Ensuring compatibility with existing codebase patterns
+      solution: Followed established coding conventions and integration patterns
+
+completion_analysis:
+  key_insights: >
+    Successfully implemented C.2.1 following TDD principles and maintaining code
+    quality standards.
+  implementation_approach: >
+    Followed systematic approach with proper error handling and testing
+    integration.
+  knowledge_generated: >
+    Gained experience in CLI integration patterns and workflow automation.
+  manual_testing_steps:
+    - Verified all acceptance criteria are met
+    - Tested integration with existing systems
+    - Confirmed no regressions in related functionality
+
+notes:
+  integration_challenges: >
+    1. Environment setup: Git hooks run in minimal environment 2. Path
+    resolution: CLI commands need to be found from hook context 3. Permission
+    handling: Ensure CLI commands have necessary permissions 4. Error
+    propagation: Failed CLI commands should fail git operations appropriately 5.
+    Context passing: Git context (branch, commit, etc.) needs to reach CLI
+  implementation_approach: >
+    Create a bridge module that handles the communication between git hooks and
+    CLI commands. This should include environment setup, path resolution, error
+    handling, and context passing. Use existing CLI infrastructure where
+    possible and extend as needed.
+  dependencies: >
+    Requires completion of C.1 milestone for stable git-ops foundation. Will
+    integrate with future CLI commands from Initiative D.

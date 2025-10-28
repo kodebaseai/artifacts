@@ -1,0 +1,85 @@
+metadata:
+  title: Develop schema migration tools (v0.1.0 to v0.2.0)
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.2.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.2.1
+            resolved: true
+            resolved_at: 2025-07-15T09:47:00Z
+    - event: ready
+      timestamp: 2025-07-15T09:47:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-15T13:04:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-15T13:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-15T09:47:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Automated migration for schema changes. Handles event structure updates, new
+    required fields, format changes. Validates before/after, provides rollback.
+    Essential for smooth upgrades as methodology evolves.
+  acceptance_criteria:
+    - Migration tool identifies all v0.1.0 artifacts in repository
+    - Tool updates event structure to match v0.2.0 schema
+    - Tool adds any new required fields with sensible defaults
+    - Validation runs before and after migration
+    - Backup of original files created before migration
+    - Rollback command restores from backup if needed
+    - Migration report shows what changed in each file
+    - TypeScript types handle both schema versions
+
+completion_analysis:
+  key_insights:
+    - Enhanced existing migration script rather than building from scratch (MVP
+      principle)
+    - Comprehensive error handling and validation crucial for migration tools
+    - Detailed reporting significantly improves user experience and debugging
+    - Rollback functionality essential for safety in production environments
+  implementation_approach: >
+    Built upon existing migrate-v0.1-to-v0.2.ts script by adding missing
+    acceptance criteria features: backup system, validation integration,
+    rollback command, and enhanced reporting. Used TypeScript with comprehensive
+    test coverage (15 tests) to ensure reliability. Followed MVP principle by
+    enhancing rather than rebuilding.
+  knowledge_generated:
+    - Migration tools require careful state management and error recovery
+    - User experience design critical for developer tools adoption
+    - Test-driven approach essential for file manipulation operations
+    - Backup/rollback systems provide confidence for destructive operations
+  manual_testing_steps:
+    - Tested help output with no arguments
+    - Verified dry-run mode on repository artifacts (58 files processed)
+    - Confirmed all existing artifacts already at v0.2.0 schema
+    - Validated comprehensive test suite passes (15/15 tests)
+
+notes: >
+  As the Kodebase methodology evolves, schemas will change. This tool ensures
+  existing artifacts can be upgraded smoothly. Key changes from v0.1.0 to v0.2.0
+  include simplified event structure and new optional fields. The tool should be
+  reusable for future migrations.

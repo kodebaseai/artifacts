@@ -1,0 +1,111 @@
+metadata:
+  title: Implement command aliases and shortcuts
+  priority: medium
+  estimation: S
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-21T19:35:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-19T20:45:42Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-21T09:46:54Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.3.1
+    - event: in_review
+      timestamp: 2025-07-21T10:12:13Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-21T10:15:13Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-21T10:14:57Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Add command aliases and shortcuts to improve CLI user experience. Implement
+    'kb' as a global alias for 'kodebase' and create shortcut commands like 'kb
+    s' for status, 'kb c' for create, etc. This makes the CLI more convenient
+    for daily use.
+
+  description: >
+    The CLI currently requires typing the full 'kodebase' command name, which is
+    verbose for frequent usage. This issue implements a comprehensive alias
+    system that allows users to use 'kb' as a shortcut and provides common
+    command shortcuts.
+
+  acceptance_criteria:
+    - kb command works as drop-in replacement for 'kodebase'
+    - Shortcut commands work - 'kb s' (status), 'kb c' (create), 'kb l' (list)
+    - Aliases are registered with package managers (npm, pnpm, yarn)
+    - Help system shows available shortcuts and aliases
+    - Aliases work across different shell environments (bash, zsh, fish)
+    - Error messages mention both full and short command forms
+
+  technical_approach: >
+    Add alias registration to package.json bin field, create wrapper scripts for
+    shortcuts, update help system to display aliases, ensure command parsing
+    handles both full and short forms consistently.
+
+  files_affected:
+    - packages/cli/package.json (bin field updates)
+    - packages/cli/src/cli.ts (command parsing)
+    - packages/cli/src/commands/*.ts (help text updates)
+
+development_process:
+  alternatives_considered:
+    - "Complex command mapping with Commander.js subcommands - rejected for
+      simplicity"
+    - "Shell-level aliases via install scripts - rejected as it's too invasive"
+    - "Simple string replacement approach - chosen for MVP simplicity and
+      reliability"
+  challenges_encountered:
+    - challenge: "TypeScript complained about undefined command parameter when
+        resolving shortcuts"
+      solution: "Added null check with explicit type guard before accessing command
+        shortcut mapping"
+
+completion_analysis:
+  key_insights: "Simple string mapping proved most effective - aliases should be
+    transparent to users and maintainable for developers"
+  implementation_approach: "Added 'kb' binary to package.json, created command
+    shortcut mapping object in App.tsx, updated all help text with alias
+    information"
+  knowledge_generated: "Package manager binaries automatically work across all
+    shell environments, npm/pnpm/yarn handle this seamlessly without
+    shell-specific configuration"
+  manual_testing_steps:
+    - "Verified 'kb --help' shows same output as 'kodebase --help' with alias
+      information"
+    - "Tested 'kb s', 'kb c', 'kb l' shortcuts work identically to full commands"
+    - "Confirmed error messages include both full and short command forms"
+    - "Validated help examples show both 'kodebase' and 'kb' usage patterns"
+
+notes:
+  implementation_details: >
+    Should integrate cleanly with existing Commander.js structure. Consider
+    creating a mapping system for shortcuts to full commands to avoid code
+    duplication.
+
+  validation_approach: >
+    Test alias installation with different package managers, verify shortcuts
+    work in multiple shell environments, confirm help system accuracy.

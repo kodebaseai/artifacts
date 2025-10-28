@@ -1,0 +1,107 @@
+metadata:
+  title: Workflow coordination between git and artifact states
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ C.2.4 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.2.4 - need branch mapping improvements first
+        blocking_dependencies:
+          - artifact_id: C.2.4
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-17T14:17:56Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-17T14:28:09Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: C.2.5
+        automation_fallback: true
+    - event: in_review
+      timestamp: 2025-07-17T14:50:54Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready: true
+        automation_fallback: true
+    - event: completed
+      timestamp: 2025-07-17T15:08:17Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build coordination between git workflow state and artifact lifecycle state.
+    Ensure consistency and handle conflicts when git and artifact states diverge
+    or need synchronization. This creates a unified workflow experience where
+    git operations and artifact management work seamlessly together.
+  acceptance_criteria:
+    - Git workflow state stays synchronized with artifact lifecycle state
+    - Conflicts between git state and artifact state are detected and resolved
+    - Rollback mechanisms handle failed operations gracefully
+    - State synchronization works across team collaborations
+    - Workflow consistency is maintained during complex git operations (rebase,
+      merge)
+    - Recovery procedures handle divergent states effectively
+    - Performance impact on normal git operations is minimal
+
+development_process:
+  alternatives_considered:
+    - Direct implementation without testing first
+    - Event-driven architecture with complex state machines
+    - Synchronous coordination vs asynchronous coordination
+    - Single monolithic coordinator vs modular component approach
+  challenges_encountered:
+    - challenge: Ensuring compatibility with existing codebase patterns
+      solution: Followed established coding conventions and integration patterns
+    - challenge: Balancing comprehensive coordination with MVP simplicity
+      solution: Implemented modular components with clear interfaces and minimal overhead
+
+completion_analysis:
+  key_insights:
+    - Successfully implemented comprehensive workflow coordination system with 6
+      main components
+    - WorkflowCoordinator handles core state synchronization logic
+    - Modular architecture allows for focused testing and maintenance
+    - Coordination is about state synchronization, not complex workflow
+      enforcement
+    - Performance impact can be minimized through careful design and caching
+      strategies
+  implementation_approach: >
+    Followed systematic approach creating modular components with clear
+    interfaces. Implemented proper TypeScript types, error handling, and basic
+    test coverage. Built layered coordination system with specialized handlers
+    for different scenarios. Used actual Git operations instead of placeholders
+    after initial feedback.
+  knowledge_generated:
+    - Deep understanding of git-artifact coordination patterns
+    - Conflict resolution strategies and prioritization approaches
+    - Performance monitoring techniques for coordination systems
+    - Team collaboration patterns in distributed development environments
+  manual_testing_steps:
+    - Verified all acceptance criteria are met through implementation
+    - Tested basic WorkflowCoordinator functionality with unit tests
+    - Confirmed TypeScript types compile without errors
+    - Validated package builds successfully with all exports
+    - Ran existing git-ops test suite (285 tests passing)
+    - Validated actual Git operations work correctly with real commands
+
+review_details:
+  url: "https://github.com/kodebaseai/kodebase/pull/53"
+  approved_by: []

@@ -1,0 +1,153 @@
+metadata:
+  title: Simple Web Interface - Building @kodebase/web
+  status: draft
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ H ]
+    blocked_by: [ E ]
+  events:
+    - event: draft
+      timestamp: 2025-07-05T12:01:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-05T11:54:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by A, B, C, D and E
+        blocking_dependencies:
+          - artifact_id: E
+            resolved: false
+
+content:
+  vision: >
+    Build a read-only web interface that makes Kodebase accessible to
+    non-developers and provides a beautiful visualization of project knowledge.
+    This interface democratizes access to project context, allowing
+    stakeholders, designers, and managers to understand development progress
+    without command-line expertise. The web app serves as a window into the
+    Git-based knowledge base.
+  scope: >
+    This initiative focuses on building the @kodebase/web app as a Next.js
+    application with read-only capabilities. Includes: Artifact browsing, event
+    timeline visualization, status dashboards, and search functionality.
+    Excludes: Write operations, real-time updates, collaborative features,
+    authentication, and multi-tenancy.
+  success_criteria:
+    - Beautiful, intuitive interface accessible to non-technical users
+    - Sub-second page loads with proper caching
+    - Mobile-responsive design that works on all devices
+    - SEO-friendly with proper meta tags and sitemap
+    - Deployable to Vercel with one click
+
+notes:
+  progressive_enhancement: >
+    Start with static site generation (SSG) for maximum performance and SEO. Use
+    React Server Components for efficient data fetching. Progressive enhancement
+    ensures the site works without JavaScript while providing rich interactions
+    when available. Future versions can add client-side features without
+    breaking the foundation.
+
+  data_access_strategy: >
+    Direct file system access during build time for static generation. Use the
+    @kodebase/core package for parsing artifacts and maintaining consistency
+    with CLI and MCP. Cache processed data aggressively. Design data layer to
+    easily switch to API-based access in future versions.
+
+  design_philosophy: >
+    Embrace simplicity and clarity. Use Tailwind CSS with
+    @kodebase/tailwind-config for consistent design tokens. Focus on information
+    hierarchy and readability. Every page should answer a clear question: What's
+    the status? What's in progress? What's the history? Make complex data
+    approachable through thoughtful visualization.
+
+  milestone_details:
+    F.1:
+      title: Next.js foundation and routing
+      summary: >
+        Set up the Next.js 15 application with app router, TypeScript
+        configuration, and basic layout. Implement the routing structure that
+        mirrors the artifact hierarchy (/issues, /milestones, /initiatives).
+        Configure static site generation with proper data fetching patterns.
+      deliverables:
+        - Next.js project with app router setup
+        - Layout with navigation and @kodebase/ui components
+        - Static routes for artifact types
+        - 404 and error pages
+        - Tailwind CSS with @kodebase/tailwind-config
+      validation:
+        - Routes load without errors
+        - Navigation works correctly
+        - Responsive on mobile devices
+    F.2:
+      title: Artifact display and visualization
+      summary: >
+        Build the core pages for displaying artifacts with rich visualizations.
+        This includes list views with filtering and sorting, detailed artifact
+        pages with all metadata, and timeline views showing event history. Focus
+        on making data beautiful and understandable.
+      deliverables:
+        - Issue list page with status filters
+        - Milestone overview with progress visualization
+        - Initiative dashboard with hierarchy tree
+        - Individual artifact detail pages
+        - Event timeline component
+        - Status badge components
+      validation:
+        - All artifact types display correctly
+        - Filters and sorting work
+        - Timeline shows accurate history
+    F.3:
+      title: Search and discovery features
+      summary: >
+        Implement search functionality that helps users find artifacts quickly.
+        This includes full-text search across artifacts, filter by
+        status/assignee/dates, and smart suggestions. Build an intuitive search
+        experience that non-developers can use effectively.
+      deliverables:
+        - Search bar with autocomplete
+        - Advanced filter UI
+        - Search results page
+        - Recent searches feature
+        - Quick filters for common queries
+      validation:
+        - Search returns relevant results
+        - Filters combine correctly
+        - Performance remains fast
+    F.4:
+      title: Dashboard and analytics views
+      summary: >
+        Create dashboard views that provide at-a-glance project status and basic
+        analytics. This includes overview dashboards, status distribution
+        charts, and activity timelines. Use data visualization to make metrics
+        accessible to all stakeholders.
+      deliverables:
+        - Project overview dashboard
+        - Status distribution charts
+        - Activity heatmap
+        - Progress indicators
+        - Assignee workload view
+      validation:
+        - Dashboards load quickly
+        - Charts are accurate
+        - Mobile-friendly visualizations
+    F.5:
+      title: Production deployment and optimization
+      summary: >
+        Prepare the web application for production deployment with performance
+        optimization and monitoring. This includes build optimization, caching
+        strategies, and one-click deployment to Vercel or similar platforms.
+      deliverables:
+        - Production build configuration
+        - Performance optimization (images, fonts, code splitting)
+        - Vercel deployment configuration
+        - Basic analytics integration
+        - Documentation site
+      validation:
+        - Lighthouse score >95
+        - Deploys successfully to Vercel

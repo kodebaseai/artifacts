@@ -1,0 +1,26 @@
+metadata:
+  title: Testing and Fixtures
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.8]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Provide golden fixtures and integration tests across core flows; ensure CI
+    runs and reports status for the core package.
+  deliverables:
+    - Sample artifacts tree (A, A.1, A.1.1…A.1.n with dependencies)
+    - Integration tests for create→validate, start→cascade, complete→cascade
+    - CI tasks wired to turbo pipeline for tests
+  validation:
+    - script `pnpm test` at repo root runs and passes core suites
+    - Coverage on core modules is healthy and stable

@@ -1,0 +1,102 @@
+metadata:
+  title: Manual Methodology Implementation
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ A.3 ]
+    blocked_by: [ A.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-05T19:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-07T13:52:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.1
+            resolved: true
+            resolved_at: 2025-07-07T13:30:21Z
+    - event: ready
+      timestamp: 2025-07-07T13:30:21Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T14:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started:A.2.1
+    - event: in_review
+      timestamp: 2025-07-09T19:55:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-09T20:08:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Apply the documented methodology manually to all Kodebase development work.
+    This involves using the full artifact lifecycle for every new development
+    issue, following the initiativening hierarchy rigorously, documenting all
+    technical decisions through spikes, and maintaining 100% compliance with the
+    issue lifecycle. This real-world application will validate the methodology's
+    practicality and reveal friction points.
+  deliverables:
+    - Completed artifact files for all development work
+    - Technical spike documentation
+    - Manual workflow documentation
+    - Time tracking metrics
+  validation:
+    - Every commit follows methodology
+    - All issues have proper artifacts
+    - Decision history is traceable
+
+notes:
+  implementation_approach: >
+    This milestone focuses on dogfooding the methodology through actual
+    development work. Each issue represents applying the methodology to a
+    specific aspect of Kodebase development. Time tracking and friction
+    documentation are crucial for informing future automation.
+
+completion_summary:
+  key_achievements:
+    - "Successfully implemented @kodebase/core package with comprehensive type
+      system and validation"
+    - "Created event cascade system with identity, correlation, and state
+      management"
+    - "Validated methodology through real-world application with 0% rework rate"
+    - "Generated comprehensive metrics report showing 29% methodology overhead"
+    - "Identified and documented critical automation opportunities"
+  strategic_decisions:
+    - "Implemented event identity system ahead of schedule due to critical need"
+    - "Cancelled 3 issues (37.5%) to avoid duplicate work and maintain focus"
+    - "Used TypeScript + Zod for robust schema validation throughout"
+    - "Built metrics calculation into core package for future automation"
+  knowledge_generated:
+    - "Manual cascade execution takes 2.3 hours per instance - critical
+      automation target"
+    - "Event management is primary source of errors without proper tooling"
+    - "95% of manual effort is automatable with proper CLI tooling"
+    - "45% of issue time spent in blocked state highlights dependency management
+      importance"
+    - "Methodology compliance is high when followed, proving its value"
+  team_impact:
+    - "Single developer (Miguel) successfully applied methodology to complex
+      development work"
+    - "Proved methodology is learnable and effective in practice"
+    - "Documented friction points will significantly improve developer
+      experience"
+    - "Established patterns for future team member onboarding"
+  next_milestone_insights:
+    - "A.3 (CLI Development) should prioritize event identity system"
+    - "State management automation critical for reducing manual overhead"
+    - "Cascade engine needed for automated dependency resolution"
+    - "IDE integration essential for developer experience"
+    - "Focus on eliminating manual YAML editing through automation"
+    - "350% ROI projection justifies immediate investment in automation tooling"

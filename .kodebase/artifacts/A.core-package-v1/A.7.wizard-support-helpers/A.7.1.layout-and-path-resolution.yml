@@ -1,0 +1,24 @@
+metadata:
+  title: ensureArtifactsLayout and resolveArtifactPaths
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.7.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:26:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement helpers to ensure the `.kodebase/artifacts` layout exists and to resolve
+    canonical dir/file paths from an artifact id and optional slug.
+  acceptance_criteria:
+    - Layout helper creates `.kodebase/artifacts` if missing and is idempotent
+    - Path resolver returns dirPath and filePath for initiative, milestone, and issue ids
+    - Slug support included in file names without altering the id
+

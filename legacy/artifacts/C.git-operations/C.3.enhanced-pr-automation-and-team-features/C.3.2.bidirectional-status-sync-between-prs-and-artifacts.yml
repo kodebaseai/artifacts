@@ -1,0 +1,161 @@
+metadata:
+  title: Bidirectional status sync between PRs and artifacts
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.3.3 ]
+    blocked_by: [ C.3.1, C.2.2, C.2.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.3.1 and C.2 - need PR templates and artifact parsing first
+        blocking_dependencies:
+          - artifact_id: C.3.1
+            resolved: false
+          - artifact_id: C.2.2
+            resolved: false
+          - artifact_id: C.2.3
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-17T19:26:21Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-17T19:33:23Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: C.3.2
+        automation_fallback: true
+    - event: in_review
+      timestamp: 2025-07-17T20:02:52Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+        automation_fallback: true
+    - event: completed
+      timestamp: 2025-07-18T11:26:50Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement bidirectional synchronization between PR status changes and
+    artifact states. When PR status changes (draft→ready, merged, closed),
+    automatically update artifact states. When artifact states change, reflect
+    those changes in PR status, labels, and comments.
+
+  problem_statement: >
+    Currently PRs and artifacts exist in separate worlds. PR merges don't
+    automatically mark artifacts as completed, and artifact state changes don't
+    reflect in PRs. This creates manual overhead and potential inconsistencies
+    between git state and artifact tracking.
+
+  acceptance_criteria:
+    - PR status changes automatically trigger artifact state updates
+    - PR merge triggers artifact completion (with validation)
+    - PR closure triggers appropriate artifact state (cancelled/blocked)
+    - Artifact state changes reflect in PR labels and status
+    - Integration with existing CascadeEngine for automatic propagation
+    - Support for multiple artifacts per PR and multiple PRs per artifact
+
+  deliverables:
+    - GitHub webhook handlers for PR status changes
+    - Artifact state update automation using @kodebase/core events
+    - PR status update automation based on artifact changes
+    - Integration with existing git hooks (post-merge, pre-push)
+    - Configuration for sync behavior and validation rules
+    - Rollback mechanisms for failed synchronizations
+
+  technical_notes: >
+    Extend the existing pr-manager.ts to handle GitHub webhooks. Use
+    @kodebase/core event system and CascadeEngine for state transitions.
+    Implement bidirectional sync by listening to GitHub events and triggering
+    artifact updates, then monitor artifact changes and update PR status.
+    Leverage existing git hooks for local state synchronization.
+
+  validation:
+    - PR merge automatically marks related artifacts as completed
+    - PR draft/ready changes update artifact progress states
+    - Artifact completion updates PR labels and comments
+    - Failed syncs are handled gracefully with rollback
+    - Multiple artifact/PR relationships work correctly
+    - Integration with cascade automation functions properly
+
+development_process:
+  implementation_approach: >
+    Implemented bidirectional PR-artifact sync through three key components: 1)
+    GitHub webhook handler (.github/workflows/pr-status-sync.yml) for PR events
+    2) Python script (scripts/sync-pr-status.py) for processing PR status
+    changes 3) TypeScript PRSync class for reverse sync (artifact→PR updates)
+    Built on existing @kodebase/core event system and integrated with
+    PRManager/CascadeEngine.
+
+  alternatives_considered:
+    - Direct GitHub Actions integration vs webhook + script approach (chose
+      hybrid for flexibility)
+    - Monolithic sync service vs modular components (chose modular for
+      maintainability)
+    - Real-time vs batch sync processing (chose real-time for immediate feedback)
+
+  challenges_encountered:
+    - challenge: TypeScript type safety with complex artifact structures
+      solution: Implemented proper type guards and explicit casting with unknown types
+    - challenge: Integration with existing PRManager and CascadeEngine patterns
+      solution: Extended existing classes rather than creating parallel systems
+    - challenge: Handling GitHub API limitations (can't convert ready PR back to draft)
+      solution: Added graceful handling with informative action messages
+
+completion_analysis:
+  key_insights:
+    - Most bidirectional sync functionality was already implemented in existing
+      codebase
+    - Only needed to add GitHub webhook integration and reverse sync components
+    - Discovered existing post-merge hooks and CascadeEngine already handle many
+      requirements
+    - TypeScript strict typing helped catch edge cases during implementation
+
+  implementation_approach: >
+    Followed TDD approach with comprehensive test coverage for PRSync class.
+    Built incrementally: webhook handler → sync script → reverse sync → tests →
+    type fixes. Leveraged existing patterns from @kodebase/core for event
+    handling and state transitions.
+
+  knowledge_generated: >
+    Gained deep understanding of the existing git-ops automation infrastructure.
+    Learned how @kodebase/core event system integrates with GitHub webhooks.
+    Discovered the power of artifact-driven development where most functionality
+    already existed.
+
+  architecture_decisions:
+    - Used GitHub Actions webhook + Python script for PR→artifact sync
+      (leverages existing tooling)
+    - Extended PRSync class for artifact→PR sync (maintains TypeScript
+      consistency)
+    - Integrated with existing PRManager for GitHub CLI operations (reuses
+      proven patterns)
+    - Added comprehensive validation and error handling throughout sync pipeline
+
+  files_created:
+    - .github/workflows/pr-status-sync.yml: GitHub webhook handler for PR events
+    - scripts/sync-pr-status.py: Python script for processing PR status changes
+    - packages/git-ops/src/automation/pr-sync.ts: Bidirectional sync logic
+    - packages/git-ops/src/automation/pr-sync.test.ts: Comprehensive test suite
+
+  integration_points:
+    - "@kodebase/core": Event system and state transitions
+    - "PRManager": GitHub CLI operations and PR management
+    - "CascadeEngine": Automatic state propagation
+    - "ArtifactLoader": Reading and writing artifact files
+    - "BranchValidator": Artifact ID format validation

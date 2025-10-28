@@ -1,0 +1,101 @@
+metadata:
+  title: Develop context assembly pipeline
+  priority: high
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.3 ]
+    blocked_by: [ E.2.1, E.2.2, E.2.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:56:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T11:47:10Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-31T11:48:51Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-31T12:06:30Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-31T12:21:28Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Combine all gathered information from artifacts, documentation, and event
+    history into coherent context packages optimized for AI consumption. This
+    pipeline orchestrates the various data sources and creates structured,
+    relevant context that can be efficiently provided to AI assistants through
+    the MCP interface.
+
+  acceptance_criteria:
+    - "Combines data from artifact reader, documentation scanner, and event
+      analyzer"
+    - "Creates structured context packages with consistent format"
+    - "Optimizes context size and relevance for AI consumption"
+    - "Handles context assembly under 500ms performance target"
+    - "Provides different context levels (minimal, standard, comprehensive)"
+    - "Maintains data consistency and freshness across all sources"
+
+development_process:
+  alternatives_considered:
+    - "Event-driven architecture with message queues - rejected for unnecessary
+      complexity"
+    - "Streaming data processing - rejected as context needs are batch-oriented"
+    - "Microservice decomposition - rejected as coordination overhead outweighs
+      benefits"
+    - "Lazy loading with caching - considered but 500ms target favors direct
+      assembly"
+    - "Plugin-based extensibility - deferred to maintain MVP simplicity"
+  challenges_encountered:
+    - challenge: "TypeScript generics complexity when handling nested artifact types"
+      solution: "Used consistent interfaces across readers and simplified type unions"
+    - challenge: "Performance optimization without sacrificing data completeness"
+      solution: "Implemented progressive context level filtering and timeout-aware
+        processing"
+    - challenge: "Balancing AI consumption limits with comprehensive context"
+      solution: "Added relevance scoring and size estimation with adaptive reduction
+        strategies"
+
+completion_analysis:
+  key_insights:
+    - "Context assembly performance is dominated by file I/O operations, not
+      processing"
+    - "Relevance scoring at documentation level provides effective size
+      optimization"
+    - "Timeout-based processing enables predictable response times under load"
+    - "Three-tier context levels (minimal/standard/comprehensive) cover AI usage
+      patterns effectively"
+  implementation_approach:
+    - "Direct orchestration pattern following MVP principle - compose existing
+      readers without abstraction layers"
+    - "Performance-first design with timeout protection at each data gathering
+      stage"
+    - "Consistency validation through freshness tracking and integrity reporting"
+  knowledge_generated:
+    - "Context size estimation algorithms for multi-source data aggregation"
+    - "Progressive optimization strategies for AI consumption limits"
+    - "Performance profiling patterns for timeout-sensitive operations"
+  manual_testing_steps:
+    - "Verified context assembly completes under 500ms with various project
+      sizes"
+    - "Tested context level filtering produces expected data volumes"
+    - "Validated freshness tracking detects stale data across all source types"
+    - "Confirmed consistency reports identify data integrity issues"
+
+notes: |
+  This is the orchestration layer that brings together all the context gathering
+  components. It must be efficient and produce context that maximizes AI assistant
+  effectiveness while respecting performance constraints.

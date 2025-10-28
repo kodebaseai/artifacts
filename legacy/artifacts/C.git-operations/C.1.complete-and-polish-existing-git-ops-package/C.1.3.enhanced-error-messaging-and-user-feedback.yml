@@ -1,0 +1,116 @@
+metadata:
+  title: Enhanced error messaging and user feedback
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.1.4 ]
+    blocked_by: [ C.1.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.1.2 - need stability improvements first
+        blocking_dependencies:
+          - artifact_id: C.1.2
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-16T14:29:54Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-16T14:48:22Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-16T14:59:27Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-16T15:43:55Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Improve error messages from git hooks to provide clear guidance when issues
+    occur. Add helpful suggestions for common problems and ensure debugging
+    information is available when needed. Focus on making error messages
+    actionable and user-friendly for developers.
+  acceptance_criteria:
+    - Error messages include specific problem description and suggested solutions
+    - Common issues have dedicated help messages with step-by-step fixes
+    - Debug mode provides detailed execution information without overwhelming
+      output
+    - Error messages differentiate between user errors and system failures
+    - Help text includes links to documentation and troubleshooting guides
+    - Error formatting is consistent across all hooks and operations
+    - Messages are concise but informative (avoid technical jargon when possible)
+
+notes: >
+  Common error scenarios include GitHub CLI authentication issues, invalid
+  artifact IDs, missing files, permission problems, and network connectivity
+  issues. Implementation uses centralized error handling with consistent
+  formatting, error codes for programmatic handling, and debug mode for complex
+  issue troubleshooting. Message design principles focus on clear problem
+  description, actionable steps, and relevant context with color formatting.
+
+development_process:
+  alternatives_considered:
+    - "Enhancing existing error handling in each hook individually vs creating
+      centralized system - Chose centralized system for consistency and
+      maintainability"
+    - "Using plain text error messages vs structured error objects with metadata
+      - Chose structured approach to enable debug mode and programmatic
+      handling"
+    - "Hard-coding error messages vs creating catalog with templates - Chose
+      catalog approach to enable easy updates and documentation links"
+  challenges_encountered:
+    - challenge: "Biome linting issues with ANSI color code regex patterns in tests"
+      solution: "Resolved by using helper function instead of regex with control
+        characters"
+    - challenge: "TypeScript import organization and unused import warnings"
+      solution: "Resolved by carefully managing imports and removing unused references"
+    - challenge: "Balancing comprehensive error information with readability"
+      solution: "Resolved through debug mode that shows detailed info only when needed"
+
+completion_analysis:
+  key_insights:
+    - "Error categorization (user_error, system_failure, external_dependency)
+      helps determine appropriate responses and exit code behavior"
+    - "Debug mode detection through environment variables and command-line
+      arguments provides flexibility without overwhelming casual users"
+    - "Color-coded severity levels (critical, error, warning, info) improve
+      visual scanning while documentation links bridge error occurrence to
+      resolution"
+  implementation_approach: "Created a layered architecture with type definitions
+    for structured errors, error catalog with predefined scenarios, error
+    formatter with color support and debug mode, and integration layer enhancing
+    all existing hooks."
+  manual_testing_steps:
+    - "Test each hook with invalid scenarios (missing git config, invalid
+      artifact IDs, permission errors)"
+    - "Verify debug mode activation through environment variables (DEBUG,
+      KODEBASE_DEBUG, --debug flag)"
+    - "Confirm color output works in terminal and can be disabled with NO_COLOR"
+    - "Validate error messages provide actionable guidance with specific
+      commands and documentation links"
+    - "Test error categorization and exit code behavior for different error
+      types and severities"
+
+review_details:
+  documentation_updated: true
+  documentation_changes:
+    - "Enhanced main README with comprehensive error handling section"
+    - "Updated hooks README with structured error messaging details"
+    - "Created dedicated error-handling/README.md with full API reference"
+    - "Added error handling features to CHANGELOG v0.1.2"
+    - "Documented debug mode, categorization, and environment configuration"

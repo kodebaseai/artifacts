@@ -1,0 +1,139 @@
+metadata:
+  title: Publish @kodebase/core v0.1.0 to npm
+  priority: critical
+  estimation: XS
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C ]
+    blocked_by: [ B.1.1, B.1.2, B.1.3, B.1.4 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-11T12:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-11T10:55:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.1.1
+            resolved: true
+            resolved_at: 2025-07-11T16:01:43Z
+          - artifact_id: B.1.2
+            resolved: true
+            resolved_at: 2025-07-14T14:52:43Z
+          - artifact_id: B.1.3
+            resolved: true
+            resolved_at: 2025-07-11T16:12:20Z
+          - artifact_id: B.1.4
+            resolved: true
+            resolved_at: 2025-07-11T18:22:20Z
+    - event: ready
+      timestamp: 2025-07-11T18:22:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-11T18:25:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-11T18:48:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-11T18:50:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Final validation and npm publish. Verify build outputs (CJS, ESM, types),
+    test installation in sample project, publish with public access. Enables CLI
+    development in Initiative C.
+  acceptance_criteria:
+    - All tests pass (100% success rate)
+    - Build produces CommonJS, ESM, and TypeScript declarations
+    - Package.json has correct metadata and exports
+    - Test installation in fresh project works
+    - Types are correctly resolved by TypeScript
+    - Publish to npm with public access
+    - Verify package appears on npmjs.com
+    - Create GitHub release with changelog
+  technical_notes: >
+    Publishing checklist: 1. Run full test suite: `pnpm test` 2. Build all
+    outputs: `pnpm build` 3. Check package contents: `pnpm pack --dry-run` 4.
+    Test local install: `npm link` in test project 5. Add changeset: `pnpm
+    changeset add` 6. Version package: `pnpm changeset version` 7. Publish:
+    `pnpm changeset publish`
+
+notes:
+  package_configuration: |
+    Key package.json fields:
+    ```json
+    {
+      "name": "@kodebase/core",
+      "version": "0.1.0",
+      "description": "Core TypeScript utilities for Kodebase artifact management",
+      "main": "./dist/index.js",
+      "module": "./dist/index.mjs",
+      "types": "./dist/index.d.ts",
+      "exports": {
+        ".": {
+          "types": "./dist/index.d.ts",
+          "import": "./dist/index.mjs",
+          "require": "./dist/index.js"
+        }
+      },
+      "publishConfig": {
+        "access": "public"
+      }
+    }
+    ```
+  validation_steps: >
+    Before publishing: - Ensure no sensitive data in package - Verify all
+    dependencies are production-ready - Check bundle size is reasonable - Test
+    in both Node.js and bundled environments
+
+development_process:
+  alternatives_considered:
+    - "Using npm publish directly vs changesets - chose changesets for better
+      monorepo support and automated changelog generation"
+    - "Manual version bump vs changeset version - chose changeset for
+      consistency but had to adjust from 0.2.0 to 0.1.0"
+    - "Testing with npm link vs packed tarball - chose tarball installation for
+      more realistic testing"
+  challenges_encountered:
+    - challenge: "Changeset interactive mode not working in non-TTY environment"
+      solution: "Created changeset file manually and used --ignore flag for versioning"
+    - challenge: "Version bumped to 0.2.0 instead of desired 0.1.0"
+      solution: "Manually restored package.json and adjusted CHANGELOG to reflect v0.1.0"
+
+completion_analysis:
+  key_insights:
+    - "The package build system (tsup) efficiently produces all required outputs
+      with proper source maps"
+    - "Changesets workflow requires manual intervention in non-interactive
+      environments"
+    - "Testing package installation locally before publishing prevents issues in
+      production"
+  implementation_approach: "Followed the technical notes checklist systematically:
+    ran tests, built outputs, verified package contents with pack, tested local
+    installation with TypeScript validation, then published using changesets
+    workflow"
+  knowledge_generated:
+    - "Package exports configuration correctly supports both CommonJS and ESM
+      consumers"
+    - "TypeScript declarations are properly generated and resolve in consuming
+      projects"
+    - "Bundle sizes are reasonable: ESM 47.97KB, CJS 53.55KB, types 83.45KB"
+  manual_testing_steps:
+    - "Created test project with npm init"
+    - "Installed core package from packed tarball"
+    - "Created TypeScript test file importing various exports"
+    - "Verified TypeScript compilation with npx tsc --noEmit"
+    - "Ran compiled JavaScript to verify runtime functionality"
+    - "Checked npm registry after publish at
+      https://www.npmjs.com/package/@kodebase/core"

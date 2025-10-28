@@ -1,0 +1,125 @@
+metadata:
+  title: "Cascade Processing Engine"
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [ "I.3.3" ]
+    blocked_by: [ "I.3.1" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T18:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T18:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.3.1
+            resolved: false
+
+content:
+  summary: "Implement a sophisticated cascade processing engine that automatically
+    detects and processes event cascades according to the v3 five-flow
+    catalogue. The engine will handle upward cascades (Issue→completed triggers
+    parent Milestone→in_review when all children complete, first child
+    in_progress triggers parent in_progress), downward cascades (parent
+    completed triggers cancelled children→archived), and dependency cascades
+    (completed dependencies unblock waiting artifacts). It will implement the
+    canMarkReady() validation algorithm, maintain proper event chronology, use
+    visited artifact tracking and cascade depth monitoring to prevent infinite
+    loops, ensure atomic updates (all cascade events succeed or all fail), and
+    complete complex multi-level cascades in <30 seconds with full audit trail
+    and correlation_id inheritance."
+
+  acceptance_criteria:
+    - "Implements all cascade rules from event-cascade.md specification"
+    - "Maintains proper event chronology (no correlation IDs required)"
+    - "Handles archival cascade: completed parent → cancelled children archived"
+    - "Completes complex cascades in <30 seconds with full audit trail"
+    - "Issue → completed: Checks if parent Milestone can become in_review (all
+      children complete)"
+    - "Milestone → completed: Checks if parent Initiative can become in_review"
+    - "Dependency completion: Checks if blocked artifacts can become ready"
+    - "Parent completion: Archives all cancelled children automatically"
+    - "First child in_progress → parent in_progress (upward cascade for start
+      events)"
+    - "Last child completed → parent in_review (upward cascade for completion
+      events)"
+    - "Parent completed → cancelled children archived (downward cascade for
+      archival events)"
+    - "Processes cascades with proper correlation_id inheritance"
+    - "Tracks cascade depth to prevent infinite loops"
+    - "Uses visited artifact tracking for loop detection"
+    - "Validates all conditions before propagating events"
+    - "Implements atomic updates: all cascade events succeed or all fail"
+    - "Implements canMarkReady() validation algorithm from event-cascade.md"
+    - "Uses bottom-up cascade processing with immediate propagation"
+    - "Validates state transitions using state transition matrix for all
+      cascades"
+
+notes:
+  technical_specifications:
+    - "Implements all 6 named cascade flows from the v3 five-flow catalogue:"
+    - "  1. Parent Start Flow: First child in_progress → parent in_progress
+      (upward)"
+    - "  2. Completion Cascade Flow: Last child completed → parent in_review
+      (upward)"
+    - "  3. Dependency Resolution Flow: Dependency completed → dependent ready
+      (lateral)"
+    - "  4. Archival Flow: Parent completed → cancelled children archived
+      (downward)"
+    - "  5. Blocking Cascade Flow: Dependency blocked → dependent blocked
+      (lateral)"
+    - "  6. Reactivation Flow: Manual reactivation → cancelled to draft (self)"
+    - "Uses canMarkReady() validation algorithm from event-cascade.md for
+      readiness checks"
+    - "Implements bottom-up cascade processing with immediate propagation for
+      performance"
+    - "Maintains proper event chronology without requiring correlation IDs (v3
+      simplification)"
+    - "Uses visited artifact tracking and cascade depth monitoring to prevent
+      infinite loops"
+    - "Implements atomic updates: all cascade events succeed or all fail to
+      maintain consistency"
+
+  integration_points:
+    - "Integrates with I.3.1 Automated Event Generation Engine for trigger
+      detection"
+    - "Uses I.1.3 Core Validation Engine for state transition matrix validation"
+    - "Feeds processed events to I.3.3 State Consistency Validation for
+      integrity checks"
+    - "Provides cascade results to I.3.4 Automated Commit Generation for git
+      operations"
+    - "Reports processing metrics to I.3.5 Processing Monitoring for
+      observability"
+
+  performance_targets:
+    - "Complete complex multi-level cascades in <30 seconds with full audit
+      trail"
+    - "Process cascades with proper correlation_id inheritance (v3 event system)"
+    - "Maintain cascade depth limits to prevent infinite loops and ensure
+      bounded processing"
+    - "Use parallel processing where possible for independent cascade operations"
+
+  implementation_details:
+    - "Multi-Level Cascade Processing with proper correlation_id inheritance:"
+    - "  - Start Events: First child in_progress → parent in_progress (upward
+      cascade)"
+    - "  - Completion Events: Last child completed → parent in_review (upward
+      cascade)"
+    - "  - Archival Events: Parent completed → cancelled children archived
+      (downward cascade)"
+    - "Cascade Prevention Logic from event-cascade.md:"
+    - "  - Track cascade depth to prevent infinite loops"
+    - "  - Use visited artifact tracking for loop detection"
+    - "  - Validate all conditions before propagating events"
+    - "  - Atomic updates: all cascade events succeed or all fail"
+    - "State transition matrix validation for all cascades using existing
+      8-state model"
+    - "Bottom-up cascade processing with immediate propagation for optimal
+      performance"

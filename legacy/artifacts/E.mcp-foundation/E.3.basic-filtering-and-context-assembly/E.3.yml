@@ -1,0 +1,57 @@
+metadata:
+  title: Basic filtering and context assembly
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.4 ]
+    blocked_by: [ E.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T13:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        all_issues_completed: true
+
+content:
+  summary: >
+    Implement basic filtering to provide relevant context for each query. This
+    includes simple issue hierarchy filtering, basic file discovery based on
+    artifact references, and context size management to fit within AI limits.
+    Advanced intelligence features are reserved for future cloud service.
+
+  deliverables:
+    - Basic hierarchy filtering
+    - Simple file discovery
+    - Context size limiter
+    - Response formatting
+
+  validation:
+    - Returns relevant artifacts
+    - Excludes unrelated issues
+    - Respects context size limits
+
+notes: |
+  This milestone adds intelligence to the context system without complex AI-driven
+  filtering. It uses simple but effective heuristics to provide the most relevant
+  context while respecting performance and size constraints.
+
+  Planned Issues:
+  - E.3.1: Implement basic hierarchy filtering
+    Summary: Filter artifacts by hierarchy relationships and relevance to current query
+
+  - E.3.2: Build simple file discovery system
+    Summary: Discover relevant files based on artifact references and project patterns
+
+  - E.3.3: Create context size limiter
+    Summary: Implement smart truncation and prioritization to fit AI context limits
+
+  - E.3.4: Develop response formatting system
+    Summary: Format context responses optimally for AI assistant consumption

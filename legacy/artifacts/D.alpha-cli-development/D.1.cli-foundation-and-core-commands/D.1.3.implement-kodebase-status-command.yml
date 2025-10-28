@@ -1,0 +1,139 @@
+metadata:
+  title: Implement kodebase status command
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.1.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by D.1.1 - need CLI foundation first
+        blocking_dependencies:
+          - artifact_id: D.1.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-18T16:25:53Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-18T16:42:27Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-18T17:12:36Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-18T17:15:33Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement the 'kodebase status' command to display detailed information
+    about a specific artifact. This command will show the artifact's current
+    status, metadata, relationships, and recent events in a clear, formatted
+    output using Ink components for enhanced terminal display.
+
+  problem_statement: >
+    Users need a quick way to check the status and details of any artifact
+    without manually opening YAML files. The command should provide a
+    comprehensive view of the artifact's state, including its relationships and
+    recent activity, in an easy-to-read format.
+
+  acceptance_criteria:
+    - "Command syntax: kodebase status <artifact-id>"
+    - "Display all key metadata (title, status, assignee, priority)"
+    - "Show relationships (blocks and blocked_by)"
+    - "List recent events with timestamps"
+    - "Format output using Ink components for clarity"
+    - "Support --json flag for machine-readable output"
+    - "Handle non-existent artifact IDs gracefully"
+    - "Response time under 100ms"
+
+  deliverables:
+    - Display artifact status and metadata
+    - Show relationships (blocks/blocked_by)
+    - Format output with Ink components
+    - Support artifact ID parameter
+    - Add --json output option
+
+  technical_notes: >
+    Use @kodebase/core to load and parse artifacts. Create Ink components for
+    status display: StatusBadge for colored status, RelationshipList for
+    blocks/blocked_by, EventTimeline for recent events. Use chalk for colors and
+    box components for structure. Implement JSON output for scripting. Use memfs
+    for integration tests
+
+  validation:
+    - kodebase status A.1.5 - displays artifact information
+    - Non-existent ID shows helpful error message
+    - Relationships display with proper formatting
+    - Events show in chronological order
+    - --json flag outputs valid JSON
+    - Colors and formatting enhance readability
+
+development_process:
+  alternatives_considered:
+    - "Direct file system access without abstraction layer"
+    - "Using existing CLI frameworks like Commander.js or Yargs"
+    - "Building custom React components vs using pre-made libraries"
+  challenges_encountered:
+    - challenge: "TypeScript type mismatches between parsed artifacts and expected types"
+      solution: "Used ArtifactSchema types from @kodebase/core instead of Artifact
+        interface types"
+    - challenge: "Mock file system testing with memfs and proper TypeScript typing"
+      solution: "Added proper type casting for readdir mocks returning Dirent objects"
+    - challenge: "Implementing dynamic artifact path discovery without hardcoded paths"
+      solution: "Created ArtifactLoader utility that scans filesystem structure
+        dynamically"
+
+completion_analysis:
+  key_insights:
+    - "Ink React components provide excellent terminal UI experience with
+      familiar React patterns"
+    - "File system abstraction enables easy testing with memfs without touching
+      real files"
+    - "TypeScript schema validation ensures data integrity at runtime"
+    - "Component-based architecture allows for reusable UI elements across CLI
+      commands"
+  implementation_approach: "Created modular components (StatusBadge,
+    RelationshipList, EventTimeline) that can be reused across different CLI
+    commands. Used ArtifactLoader utility to handle file system operations and
+    dynamic path discovery. Implemented both formatted and JSON output modes for
+    different use cases."
+  knowledge_generated:
+    - "Understanding of Ink framework for building React-based CLI applications"
+    - "File system mocking techniques using memfs for testing without side
+      effects"
+    - "Dynamic artifact path resolution patterns for flexible file system
+      layouts"
+    - "TypeScript schema validation patterns for runtime data integrity"
+  manual_testing_steps:
+    - "Test command syntax: kodebase status D.1.3"
+    - "Verify metadata display (title, status, priority, estimation, assignee)"
+    - "Confirm relationships display (blocks and blocked_by arrays)"
+    - "Check event timeline with timestamps and relative time formatting"
+    - "Validate JSON output format: kodebase status D.1.3 --json"
+    - "Test error handling with non-existent artifact ID"
+    - "Verify response time under 100ms for typical artifacts"
+
+notes:
+  implementation_approach: >
+    Create a status.ts command that loads the artifact using @kodebase/core,
+    then renders it using custom Ink components. Design components for reuse in
+    other commands. Use Box and Text from Ink for layout, with color coding for
+    different statuses (green=ready, yellow=in_progress, etc.).

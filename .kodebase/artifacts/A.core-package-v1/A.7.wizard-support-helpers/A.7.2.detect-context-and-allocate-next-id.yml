@@ -1,0 +1,23 @@
+metadata:
+  title: detectContextLevel and allocateNextId
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.7.3]
+    blocked_by: [A.7.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:27:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement context detection for a working directory or target path and allocation
+    of the next id under a parent (e.g., next milestone A.N or next issue A.N.M).
+  acceptance_criteria:
+    - "Context detection returns one of: initiative, milestone, issue"
+    - Allocation scans siblings and returns the next numeric segment in order
+    - Works for multi-digit numeric segments and sparse ranges

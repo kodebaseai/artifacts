@@ -1,0 +1,23 @@
+metadata:
+  title: Add schema tests and golden fixtures
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.1.4]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Create unit tests for schemas and provide golden fixtures for valid and invalid
+    artifacts across initiative, milestone, and issue types.
+  acceptance_criteria:
+    - Tests verify required fields, optional sections, and error messages
+    - Golden fixtures live alongside tests and cover typical structures and edge cases
+    - CI executes schema tests as part of the core package pipeline

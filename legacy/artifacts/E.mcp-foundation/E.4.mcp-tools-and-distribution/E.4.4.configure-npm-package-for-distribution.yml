@@ -1,0 +1,35 @@
+metadata:
+  title: Configure npm package for distribution
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.4.1, E.4.2, E.4.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:26:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Set up package.json, build scripts, and npm publishing configuration for the
+    @kodebase/mcp-server package. This includes proper metadata, dependencies,
+    build configuration, and publishing scripts to enable clean distribution via
+    npm registry.
+
+  acceptance_criteria:
+    - "Package.json configured with correct metadata and dependencies"
+    - "Build scripts compile TypeScript and create distribution bundle"
+    - "Executable binary configured for MCP server startup"
+    - "Changesets integration for version management"
+    - "CI/CD pipeline configured for automated publishing"
+    - "Package installs and runs correctly after npm install"
+
+notes: |
+  Following the established monorepo patterns for package distribution.
+  Must integrate with existing Changesets workflow and Turborepo build
+  system for consistency with other packages.

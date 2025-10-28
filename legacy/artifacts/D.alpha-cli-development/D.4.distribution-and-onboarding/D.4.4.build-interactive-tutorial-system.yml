@@ -1,0 +1,131 @@
+metadata:
+  title: Build interactive tutorial system
+  priority: high
+  estimation: L
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.4.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-21T22:15:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-22T09:19:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: D.4.3
+            resolved: false
+    - event: in_progress
+      timestamp: 2025-07-30T12:57:51Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-30T13:17:53Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-30T13:31:13Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Enhance and productionize the tutorial system foundation from D.3.5 into a
+    comprehensive interactive learning experience. The tutorial should guide new
+    users through complete workflows, track progress, and ensure they
+    successfully create and manage their first artifacts within 5 minutes.
+  description: >
+    D.3.5 established the basic tutorial infrastructure with sandbox
+    environments and real artifact creation. This issue extends that foundation
+    into a comprehensive onboarding system that integrates with the setup wizard
+    and provides structured learning paths for different user scenarios.
+  acceptance_criteria:
+    - Enhanced tutorial accessible via 'kodebase tutorial' command
+    - Multi-lesson structure covering core workflows
+    - Progress tracking with completion indicators
+    - Real artifact creation in safe sandbox environment
+    - Interactive exercises with validation and feedback
+    - Integration with first-run setup wizard
+    - Multiple tutorial paths (beginner, workflow-specific)
+    - Completion certificate or achievement system
+    - Tutorial state persistence across sessions
+    - Clear next steps and resource links after completion
+  technical_requirements:
+    - Extend D.3.5 tutorial foundation with lesson structure
+    - Implement progress tracking and state persistence
+    - Create modular lesson system for different learning paths
+    - Enhance sandbox environment with lesson-specific setup
+    - Add validation and feedback for tutorial exercises
+    - Integrate with setup wizard for seamless onboarding flow
+    - Create completion tracking and achievement system
+    - Build tutorial launcher that works with kb alias
+    - Add tutorial progress to CLI status displays
+  validation_steps:
+    - Tutorial launches successfully from 'kodebase tutorial'
+    - Progress is tracked and persisted across sessions
+    - Users can complete full workflow in sandbox
+    - Tutorial validates exercise completion correctly
+    - Integration with setup wizard works smoothly
+    - Multiple tutorial paths are accessible
+    - Completion achievement is properly awarded
+    - Tutorial graduates can successfully work with real artifacts
+
+development_process:
+  alternatives_considered:
+    - "Rebuild tutorial system from scratch for more control"
+    - "Add complex multi-path navigation with branching scenarios"
+    - "Implement detailed analytics and tracking for each step"
+    - "Create separate tutorial modes for different user types"
+  challenges_encountered:
+    - challenge: "Existing D.3.5 foundation already exceeded most requirements"
+      solution: "Applied MVP principle - enhanced only what was genuinely needed
+        (completion certificate)"
+
+completion_analysis:
+  key_insights:
+    - "D.3.5 tutorial system was more comprehensive than initially expected"
+    - "Following Constitution's MVP principle prevented over-engineering"
+    - "Achievement certificate adds meaningful completion recognition"
+    - "Existing progress tracking and persistence already met advanced
+      requirements"
+  implementation_approach:
+    - "Analyzed existing tutorial system against acceptance criteria"
+    - "Identified that 9/10 criteria were already fully implemented"
+    - "Enhanced completion step with bordered achievement certificate"
+    - "Maintained all existing functionality while improving user experience"
+  knowledge_generated:
+    - "Understanding of when NOT to add features (MVP principle application)"
+    - "Appreciation for analyzing existing systems before rebuilding"
+    - "Skills in enhancing UI components with Ink.js borders and styling"
+    - "Knowledge of tutorial state management and persistence patterns"
+  manual_testing_steps:
+    - "Verified tutorial command accessibility via 'kodebase tutorial'"
+    - "Confirmed progress tracking and completion indicators work"
+    - "Tested sandbox environment creation and cleanup"
+    - "Validated setup wizard integration flows properly"
+    - "Checked achievement certificate display and formatting"
+
+notes:
+  context: >
+    D.3.5 provided the foundation with ArtifactFactory integration, sandbox
+    environments, and basic tutorial flow. This builds on that success to create
+    a world-class onboarding experience that supports the Initiative's goal of
+    users succeeding within 5 minutes.
+  implementation_approach: >
+    Extend existing tutorial components with lesson structure and progress
+    tracking. Create modular lesson system that can accommodate different
+    learning paths. Integrate tightly with setup wizard for seamless flow. Focus
+    on validation and feedback to ensure learning effectiveness.
+  success_metrics: >
+    - 95%+ tutorial completion rate - Users successfully create first real
+    artifact after tutorial - Tutorial time to completion under 5 minutes - High
+    user satisfaction with learning experience - Smooth integration with overall
+    onboarding flow

@@ -1,0 +1,74 @@
+metadata:
+  title: Create Manual Workflow Documentation
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T13:52:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: cancelled
+      timestamp: 2025-07-07T13:52:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: cancelled
+      metadata:
+        reason: This is already documented. We even have scripts to automate some manual
+          steps
+
+content:
+  summary: >
+    Document the step-by-step manual processes used to follow the methodology.
+    This documentation will serve as the specification for future CLI
+    automation.
+  acceptance_criteria:
+    - Artifact creation workflow documents:
+        - How to generate new artifact IDs
+        - Directory structure creation steps
+        - YAML file initialization process
+        - Required fields checklist
+        - Common mistakes to avoid
+    - Status transition documentation includes:
+        - Pre-transition validation checks
+        - Git operations required
+        - Event log update process
+        - Cascade trigger identification
+        - Post-transition verification
+    - Git integration points mapped:
+        - When to create branches
+        - Hook trigger conditions
+        - PR creation timing
+        - Merge strategy selection
+        - Commit message generation
+    - Common patterns catalog includes:
+        - Creating issue from spike
+        - Splitting large issues
+        - Handling blocked issues
+        - Milestone completion flow
+        - Initiative wrap-up process
+    - Pain points documented with:
+        - Specific friction description
+        - Frequency of occurrence
+        - Time impact estimate
+        - Suggested automation solution
+        - Priority for fixing
+    - Automation opportunities identified:
+        - Repetitive YAML editing
+        - Status transition commands
+        - Event cascade execution
+        - Git operation sequences
+        - Validation rule checks
+
+notes: >
+  This documentation becomes the functional specification for the CLI. Focus on
+  capturing exact steps, decision points, and validation rules. Location:
+  .kodebase/docs/manual-workflow/

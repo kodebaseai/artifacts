@@ -1,0 +1,35 @@
+metadata:
+  title: Implement getArtifacts tool
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:20:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Create MCP tool for querying and retrieving artifact information. This tool
+    allows AI assistants to request specific artifacts by ID, search for
+    artifacts by criteria, and retrieve detailed information about initiatives,
+    milestones, and issues with full metadata and relationship information.
+
+  acceptance_criteria:
+    - "Supports querying artifacts by ID (exact match)"
+    - "Supports searching artifacts by title, content, or metadata"
+    - "Returns complete artifact information including relationships"
+    - "Handles invalid artifact IDs gracefully with helpful errors"
+    - "Respects security constraints and path validation"
+    - "Provides consistent JSON response format"
+
+notes: |
+  This is the primary tool for accessing individual artifacts. Must be
+  robust and provide comprehensive information while maintaining security
+  and performance standards.

@@ -1,0 +1,93 @@
+metadata:
+  title: Develop configuration system (env vars + config file)
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.1.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:38:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-30T18:45:42Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-30T18:47:05Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: E.1.5
+    - event: in_review
+      timestamp: 2025-07-30T19:04:44Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-30T19:06:49Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build flexible configuration management with environment variable overrides
+    and optional config file support. This system provides sensible defaults
+    while allowing customization of response size limits, timeouts, cache TTLs,
+    file discovery patterns, and other operational parameters.
+
+  acceptance_criteria:
+    - Configuration hierarchy - defaults → config file → environment variables
+    - Support for kodebase-mcp.config.yml file
+    - Environment variable overrides for all settings
+    - TypeScript configuration types with validation
+    - Sensible defaults that work without any configuration
+    - Configuration validation with helpful error messages
+
+notes: |
+  Configuration should follow the pattern established by other Kodebase packages.
+  Must support both development and production scenarios with appropriate defaults
+  for each environment.
+
+development_process:
+  alternatives_considered:
+    - JSON configuration file format
+    - Environment variables only
+    - Configuration builder pattern with fluent API
+    - Complex ini/toml configuration formats
+  challenges_encountered:
+    - challenge: TypeScript type system complexity with partial configuration objects
+      solution: Used careful type casting and separate validation schemas for file vs
+        runtime config
+    - challenge: Environment variable type conversion handling
+      solution: Implemented type-aware parsing based on default config structure
+
+completion_analysis:
+  key_insights:
+    - Configuration hierarchy provides flexible deployment options without
+      complexity
+    - Zod validation enables excellent developer experience with helpful error
+      messages
+    - Following CLI package patterns ensures consistency across Kodebase
+      ecosystem
+  implementation_approach:
+    - Three-tier approach: TypeScript types, validation schemas, and loader functions
+    - Separate concerns: types definition, defaults, validation, and loading logic
+    - Configuration hierarchy implemented through deep merge with proper
+      precedence
+  knowledge_generated:
+    - Environment variable mapping pattern for complex nested configurations
+    - Zod partial schema validation for configuration file parsing
+    - Deep merge strategy for maintaining configuration object structure
+  manual_testing_steps:
+    - Verified configuration loads with defaults only (no config file, no env
+      vars)
+    - Tested YAML config file parsing with partial configuration override
+    - Validated environment variable overrides work correctly with type
+      conversion
+    - Confirmed error messages are helpful for invalid configuration values

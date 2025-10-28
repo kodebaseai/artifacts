@@ -1,0 +1,26 @@
+metadata:
+  title: Cascade Engine (Upward Only)
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.6]
+    blocked_by: [A.4]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Provide upward-only cascade recommendations: parent progresses when first
+    child starts; parent enters review when all children complete.
+  deliverables:
+    - shouldCascadeToParent(children, parentState?) for in_progress and in_review
+    - generateCascadeEvent(newState, triggerEvent, cascadeType) for reporting
+    - Tests for issue→milestone and milestone→initiative scenarios
+  validation:
+    - Deterministic outputs for given child states and parent state
+    - Coverage for edge cases (cancelled children excluded from counts)

@@ -1,0 +1,201 @@
+metadata:
+  title: Interactive features and UX
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ D.4 ]
+    blocked_by: [ D.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-18T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-18T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by D.2 - need Git command integration first
+        blocking_dependencies:
+          - artifact_id: D.2
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-21T19:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        reason: D.2 completed - CLI is more advanced than anticipated, updating scope
+    - event: in_progress
+      timestamp: 2025-07-21T10:15:46Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.3.2
+    - event: in_review
+      timestamp: 2025-07-21T19:32:44Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-21T22:15:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: pr_merged
+      metadata:
+        completion_summary: All 5 D.3.x issues completed successfully with comprehensive
+          UX transformation
+
+content:
+  summary: >
+    Add remaining interactive UX features to the already-advanced CLI. The CLI
+    currently has excellent Ink-based React components, comprehensive error
+    handling, progress indicators, and color output. This milestone focuses on
+    command aliases, shell auto-completion, interactive wizards, fuzzy search,
+    and onboarding tutorials - the final polish for world-class UX.
+  deliverables:
+    - Command aliases system ('kb' for kodebase, shortcuts like 'kb s' for
+      status)
+    - Shell auto-completion for commands and artifact IDs (bash/zsh support)
+    - Interactive artifact creation wizard with multi-step flow
+    - Fuzzy-search artifact picker with keyboard navigation
+    - Tutorial and onboarding mode with sandbox environment
+    - Enhanced command help and guidance system
+  validation:
+    - kb alias works as drop-in replacement for 'kodebase'
+    - Tab completion suggests commands and artifact IDs
+    - Interactive wizard creates valid artifacts
+    - Fuzzy search efficiently handles large artifact lists
+    - Tutorial successfully onboards new users
+    - Enhanced help guides users to correct commands
+
+completion_summary:
+  key_achievements:
+    - "Transformed CLI from basic tool into sophisticated interactive system
+      with world-class UX"
+    - "Established 'kb' alias system that works universally across package
+      managers and shell environments"
+    - "Built comprehensive shell auto-completion with intelligent caching and
+      cross-shell compatibility"
+    - "Created interactive artifact wizard using modular Ink component
+      architecture"
+    - "Implemented fuzzy-search picker with custom scoring algorithm for
+      efficient navigation"
+    - "Delivered complete tutorial system with real artifact creation and
+      sandbox isolation"
+    - "Achieved 100% completion rate across all 5 sub-issues with zero
+      regressions"
+    - "Established reusable component patterns (ArtifactPicker, wizards,
+      completion) for future milestones"
+
+  strategic_decisions:
+    - "Chose real ArtifactFactory integration over mocks for authentic tutorial
+      experience"
+    - "Selected system temp directories for sandbox isolation to ensure complete
+      safety"
+    - "Implemented modular React/Ink architecture for maximum component
+      reusability"
+    - "Adopted filesystem-based caching with 5-minute TTL for optimal completion
+      performance"
+    - "Used custom fuzzy search scoring (exact: 100, contains: 80, sequence:
+      60+) for intuitive filtering"
+    - "Prioritized TypeScript strict mode compliance to maintain codebase
+      quality standards"
+
+  knowledge_generated:
+    - "Package manager binaries automatically work across all shell environments
+      without shell-specific configuration"
+    - "Shell completion requires careful command line parsing to distinguish
+      typing vs providing arguments"
+    - "React-based CLI tools need special handling for synchronous completion
+      operations"
+    - "ArtifactFactory requires instance creation with existing artifact map for
+      proper context"
+    - "Ink useInput hook must be at component top level to avoid React Hook
+      Rules violations"
+    - "React useCallback optimization is crucial for TypeScript strict mode
+      compliance with async operations"
+    - "System temp directories with unique timestamps provide complete sandbox
+      isolation"
+    - "Interactive tutorials with real artifact creation provide superior
+      learning vs mock examples"
+    - "Visual progress indicators significantly improve user experience and
+      completion rates"
+    - "Modular component architecture enables extensible systems for future
+      enhancements"
+
+  team_impact:
+    - "Established comprehensive React/Ink patterns that serve as foundation for
+      all future interactive features"
+    - "Created detailed completion analysis documentation capturing technical
+      insights for team knowledge"
+    - "Built reusable components (ArtifactPicker, completion systems, wizards)
+      ready for immediate use in D.4"
+    - "Demonstrated effective challenge-solution documentation format for
+      knowledge transfer"
+    - "Proved feasibility of complex interactive flows in CLI environment
+      without sacrificing performance"
+    - "Generated comprehensive testing approaches for interactive CLI components"
+    - "Established TypeScript strict mode patterns for complex async operations
+      in CLI contexts"
+
+  next_milestone_insights:
+    - "D.4 Distribution can leverage established package manager binary
+      configuration patterns"
+    - "Shell integration and cross-platform compatibility knowledge directly
+      applicable to distribution workflows"
+    - "Component reusability patterns (ArtifactPicker, wizards) ready for
+      integration into deployment flows"
+    - "Performance optimization techniques (caching, useMemo) will be critical
+      for larger-scale operations"
+    - "State management and persistence patterns can scale to support team
+      collaboration features"
+    - "Tutorial system architecture provides foundation for advanced feature
+      onboarding"
+    - "Interactive component testing approaches established for validating
+      complex deployment workflows"
+    - "Error handling and user feedback patterns proven effective for guiding
+      users through complex processes"
+
+notes:
+  current_state: >
+    CLI analysis shows D.1 and D.2 are complete with professional-grade
+    React-based CLI using Ink. Already has comprehensive error handling,
+    progress indicators, color output, confirmation prompts, and sophisticated
+    UI components. Approximately 60% of originally planned D.3 features already
+    exist.
+
+  implementation_priority: >
+    Focus on high-value features not yet implemented: command aliases ('kb'
+    shortcuts), shell auto-completion system, interactive creation wizard,
+    fuzzy-search picker, and tutorial/onboarding mode. Skip redundant features
+    already excellently implemented.
+
+  revised_issues: >
+    D.3.1: Implement command aliases and shortcuts - Set up 'kb' as alias for
+    'kodebase' command - Add shortcuts (kb s, kb c, kb l, kb st for common
+    commands) - Create alias registration system for package managers - Add help
+    text showing available shortcuts - Ensure aliases work in all shell
+    environments
+
+    D.3.2: Build shell auto-completion system - Add tab completion for commands
+    and subcommands - Support artifact ID completion with caching - Create
+    completion scripts for bash and zsh - Handle partial matches and suggestions
+    - Integrate with existing CLI command structure
+
+    D.3.3: Create interactive artifact creation wizard - Build multi-step wizard
+    using existing Ink components - Use TextInput for title, assignee,
+    description fields - Use Select for type, priority, estimation options - Add
+    live validation and helpful error messages - Support back/forward navigation
+    between steps
+
+    D.3.4: Build fuzzy-search artifact picker - Create searchable list component
+    for artifact selection - Support arrow key navigation and filtering - Add
+    fuzzy search capability for large artifact lists - Show artifact
+    preview/details on selection - Integrate with existing commands that need
+    artifact selection
+
+    D.3.5: Implement tutorial and onboarding mode - Build interactive tutorial
+    flow for new users - Create sandbox environment for safe learning - Guide
+    through first artifact creation workflow - Teach Git integration and
+    workflow patterns - Track completion and provide next steps

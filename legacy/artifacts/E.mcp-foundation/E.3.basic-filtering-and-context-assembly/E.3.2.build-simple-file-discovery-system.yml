@@ -1,0 +1,82 @@
+metadata:
+  title: Build simple file discovery system
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.3.4 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:07:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T13:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        all_issues_completed: true
+    - event: in_progress
+      timestamp: 2025-09-18T12:02:05Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        event_id: evt_dfad3dcebb7d
+        automation_fallback: true
+    - event: in_review
+      timestamp: 2025-09-18T12:28:22Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_ready
+    - event: completed
+      timestamp: 2025-09-18T12:45:32Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+content:
+  summary: >
+    Discover relevant files based on artifact references and project patterns.
+    This system identifies code files, documentation, and other resources that
+    are likely to be relevant to specific artifacts or queries using simple
+    pattern matching and file system heuristics.
+
+  acceptance_criteria:
+    - "Discovers files referenced directly in artifact content"
+    - "Identifies related files using naming patterns and directory structure"
+    - "Finds relevant documentation based on artifact topics"
+    - "Provides file relevance scoring based on multiple factors"
+    - "Supports configurable file type filtering and exclusions"
+    - "Returns file discovery results with metadata and relevance scores"
+
+development_process:
+  implementation_approach:
+    - "Introduced a scoped FileDiscoveryService that extracts direct references, keyword matches, and documentation topics from parsed artifacts."
+    - "Integrated the discovery pipeline into ContextAssemblyPipeline with config-driven limits, size-aware filtering, and freshness/integrity reporting."
+    - "Added targeted Vitest coverage validating reference resolution, keyword heuristics, overrides, and error handling."
+  alternatives_considered:
+    - "Evaluated using a full-text search library, but stayed with simple keyword heuristics to honor MVP scope and keep dependencies minimal."
+    - "Considered reading raw artifact YAML instead of parsed structures; chose parser output to avoid duplicate schema handling."
+  challenges_encountered:
+    - challenge: "TypeScript's noUncheckedIndexedAccess surfaced string|undefined issues inside the glob parser utilities."
+      solution: "Guarded computed characters before use, maintaining predictable behavior without loosening compiler safety."
+
+completion_analysis:
+  key_insights:
+    - "Artifacts already expose rich strings that can power lightweight discovery without additional parsing cost."
+    - "Surface-level heuristics paired with explainable reasons provide a strong baseline while keeping scoring transparent."
+  implementation_approach:
+    - "Composed discovery with existing readers via async aggregation, then reused context-level filters and optimization passes for consistent trimming."
+    - "Captured configuration from loadConfig once and reused response limits to respect repository-wide caps."
+  knowledge_generated:
+    - "Documented how context freshness should incorporate discovered files to keep incentive alignment between heuristics and project health."
+    - "Clarified integration points for future filters by exposing summary and integrity status through the context package."
+  manual_testing_steps:
+    - "pnpm --filter @kodebase/mcp-server test"
+    - "pnpm --filter @kodebase/mcp-server check-types"
+    - "pnpm quality (fails: existing Biome lint violations in unrelated packages; see QA notes)"
+
+notes: |
+  Uses simple but effective heuristics like file naming patterns, directory
+  co-location, and explicit references rather than complex content analysis.
+  This provides good results with predictable performance characteristics.

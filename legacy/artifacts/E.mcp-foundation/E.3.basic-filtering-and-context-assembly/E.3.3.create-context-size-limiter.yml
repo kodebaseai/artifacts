@@ -1,0 +1,51 @@
+metadata:
+  title: Create context size limiter
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.3.4 ]
+    blocked_by: [ E.3.1, E.3.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:09:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-30T15:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: E.3.1
+            resolved: true
+            resolved_at: 2025-07-31T13:07:22Z
+          - artifact_id: E.3.2
+            resolved: true
+            resolved_at: 2025-09-18T12:45:32Z
+    - event: ready
+      timestamp: 2025-09-18T12:45:32Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+
+content:
+  summary: >
+    Implement smart truncation and prioritization to fit AI context limits. This
+    system ensures that context responses stay within the token limits of
+    various AI assistants while maximizing the value and relevance of the
+    included information through intelligent prioritization and truncation.
+
+  acceptance_criteria:
+    - "Respects configurable context size limits (tokens/characters)"
+    - "Prioritizes most relevant content when truncation is needed"
+    - "Provides graceful truncation that maintains context coherence"
+    - "Supports different limit profiles for different AI models"
+    - "Preserves essential information like artifact IDs and relationships"
+    - "Provides metadata about what was truncated and why"
+
+notes: |
+  Critical for practical deployment with AI assistants that have varying
+  context limits. Must balance completeness with relevance to provide
+  maximum value within constraints.

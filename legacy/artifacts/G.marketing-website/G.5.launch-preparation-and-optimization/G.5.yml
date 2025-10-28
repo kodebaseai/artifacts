@@ -1,0 +1,42 @@
+metadata:
+  title: Launch Preparation and Optimization
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-07T21:20:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Prepare the marketing site for public launch with performance optimization,
+    SEO setup, analytics integration, and beta feedback incorporation to ensure
+    the site is fast, findable, and effective at driving conversions.
+  deliverables:
+    - Performance optimization
+    - SEO audit and fixes
+    - Analytics setup (GA4, Mixpanel)
+    - Open Graph images
+    - Sitemap and robots.txt
+    - Launch checklist
+  acceptance_criteria:
+    - Lighthouse scores ≥ 95 for all public pages
+    - Core Web Vitals pass on real-user monitoring (95th percentile)
+    - SEO audit shows no critical issues and ≥ 90 score in Ahrefs Site Audit
+    - GA4 and Mixpanel events record page_view and cta_click with <1 % error rate
+    - Open Graph images display correctly on Twitter/X, LinkedIn, Slack link
+      unfurl
+    - Sitemap submitted and indexed by Google Search Console
+    - robots.txt allows expected pages and blocks private paths
+    - All checklist items completed and signed off by product & marketing leads
+    - Zero failing synthetic monitoring tests (availability, response time)
+  notes: >
+    Coordinate with DevOps for CDN cache, edge functions, and monitoring. Run
+    dress-rehearsal launch to surface last-minute issues.

@@ -1,0 +1,23 @@
+metadata:
+  title: Add tests for issue→milestone and milestone→initiative cascades
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.5.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:14:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Create focused tests for upward cascade recommendations: Issue→Milestone and
+    Milestone→Initiative transitions for in_progress and in_review cases.
+  acceptance_criteria:
+    - Parent moves to in_progress on first child start; remains if additional children start
+    - Parent moves to in_review when all active children complete; cancelled children ignored
+    - Deterministic recommendations and stable outputs across runs

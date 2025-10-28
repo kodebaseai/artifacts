@@ -1,0 +1,35 @@
+metadata:
+  title: Implement getContext tool
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:22:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Create MCP tool for comprehensive context retrieval with filtering. This is
+    the primary tool that AI assistants will use to understand project context.
+    It combines artifact data, documentation, event history, and relevant files
+    into a coherent context package optimized for AI consumption.
+
+  acceptance_criteria:
+    - "Provides comprehensive context for specific artifacts or queries"
+    - "Applies intelligent filtering based on relevance and relationships"
+    - "Respects context size limits and provides truncation metadata"
+    - "Includes relevant documentation and file references"
+    - "Formats response optimally for AI assistant understanding"
+    - "Supports different context levels (minimal, standard, comprehensive)"
+
+notes: |
+  This is the flagship tool that delivers the core value proposition of
+  the MCP server. It must integrate all the context gathering and filtering
+  capabilities built in previous milestones.

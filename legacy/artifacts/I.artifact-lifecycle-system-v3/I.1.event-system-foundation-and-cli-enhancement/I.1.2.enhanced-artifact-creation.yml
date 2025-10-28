@@ -1,0 +1,99 @@
+metadata:
+  title: Enhanced Artifact Creation with Git Flow
+  priority: high
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: ["I.1.1"]
+  events:
+    - event: draft
+      timestamp: "2025-08-04T17:35:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-08-04T17:40:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-08-04T17:50:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-08-04T18:45:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_ready
+    - timestamp: 2025-08-05T09:04:54Z
+      event: completed
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: |
+    Integrate the v3 `kodebase create` wizard with git workflow: auto-create an `add-<slug>` branch, prompt for minimal fields, generate draft events, and support `--submit` to validate & open a draft PR. Branches for Issue work use the artifact ID directly.
+  acceptance_criteria:
+    - Wizard branch `add-<slug>` is created/resumed automatically.
+    - Milestone vs Initiative parent logic generates IDs as per spec.
+    - --submit validates artifacts and opens a draft PR.
+    - Artifact files follow directory and naming patterns.
+    - All new artifacts start in `draft` with 5-field event record.
+
+completion_analysis:
+  key_insights:
+    - Successfully integrated artifact creation with Git workflow automation
+    - Branch naming conventions established (add-<slug> for wizard, artifact ID for work)
+    - Event generation follows v3 schema with proper correlation tracking
+  implementation_approach:
+    - Enhanced existing CLI create command with Git integration
+    - Implemented automatic branch creation and switching logic
+    - Added --submit flag for validation and PR creation workflow
+    - Integrated with existing directory structure patterns
+  knowledge_generated:
+    - Git workflow automation significantly improves developer experience
+    - Wizard branches provide clean separation between creation and implementation
+    - Automatic PR creation increases visibility and collaboration
+  manual_testing_steps:
+    - "Run: pnpm kodebase create"
+    - "Verify: add-<slug> branch is created automatically"
+    - "Create artifact with natural language prompt"
+    - "Run: pnpm kodebase create --submit"
+    - "Verify: Draft PR is created with proper title and description"
+
+notes: |
+  Technical Specifications from Planning Document:
+
+  Branch Creation:
+  - Wizard session branch: `add-<slug>` created automatically by `kodebase create`
+  - Work branches use the artifact ID itself (Issue only), e.g. `git checkout -b A.1.5`
+  - Branch push happens on `--submit` or manual `git push`
+
+  ID Generation:
+  - Follow existing incremental pattern within parent
+  - Milestone-oriented directory structure
+
+  Draft Validation:
+  - Use natural language prompt parsing
+  - Generate slug from prompt for directory structure
+  - Create milestone-oriented directory structure
+  - Match existing CLI automation specs
+
+  Event Generation (align with existing system):
+  - Generate draft event with `correlation_id = null` (root event)
+  - Use proper actor attribution from git config
+  - Follow existing event ID format (16-char hex)
+  - V3 event schema: event, timestamp, actor, trigger, metadata
+
+  Git Integration:
+  - Leverage existing post-checkout hook for in_progress transition
+  - Auto-create draft PR for team visibility (existing pattern)
+  - Follow commit message conventions from git-workflow.md
+  - PR template for artifact creation needs to be created
+
+  Technical Implementation:
+  - Integrate with existing directory structure: `A.methodology-foundation/A.1.complete-docs/`
+  - Use existing slug generation for file naming
+  - Hook into existing Git workflow automation
+  - Preserve existing branch lifecycle patterns
+  - Maintain compatibility with current `pnpm ictx` and workflow commands

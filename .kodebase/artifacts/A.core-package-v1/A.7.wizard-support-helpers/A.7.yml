@@ -1,0 +1,27 @@
+metadata:
+  title: Wizard Support Helpers (Enablers)
+  priority: medium
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.8]
+    blocked_by: [A.6]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Provide UI-agnostic helpers to bootstrap artifacts (layout, IDs, scaffolds)
+    and to gate starts based on ancestor states.
+  deliverables:
+    - ensureArtifactsLayout and resolveArtifactPaths({ id, slug, baseDir })
+    - detectContextLevel(targetPath|cwd) and allocateNextId(parentId, type, loader)
+    - scaffoldInitiative/Milestone/Issue with initial draft event (artifact_created)
+    - isAncestorBlockedOrCancelled(artifactId, loader)
+  validation:
+    - CLI can scaffold A/A.1/A.1.1 with these helpers
+    - Gating prevents start when ancestors are blocked/cancelled; tests cover cases

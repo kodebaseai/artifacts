@@ -1,0 +1,25 @@
+metadata:
+  title: Enforce sibling-only dependency rules
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.3.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-28T09:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement enforcement that dependencies only exist among siblings at the same level
+    (initiative↔initiative, milestone↔sibling milestone within same initiative,
+    issue↔sibling issue within the same milestone).
+  acceptance_criteria:
+    - Validator rejects non-sibling dependencies with a clear error code and field path
+    - Initiative deps restricted to initiatives only
+    - Milestone deps restricted to milestones under the same initiative
+    - Issue deps restricted to issues under the same milestone

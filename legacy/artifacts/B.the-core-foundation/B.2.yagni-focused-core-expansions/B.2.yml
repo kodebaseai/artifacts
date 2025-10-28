@@ -1,0 +1,100 @@
+metadata:
+  title: YAGNI-Focused Core Expansions
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-10T16:03:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-10T16:03:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.1
+            resolved: true
+            resolved_at: 2025-07-14T18:55:20Z
+    - event: ready
+      timestamp: 2025-07-14T18:55:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-15T09:22:12Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started:B.2.1
+    - event: in_review
+      timestamp: 2025-07-15T13:08:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-15T13:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build practical utilities that directly address CLI needs and major friction
+    points identified in A.3 analysis. Includes artifact query system for
+    filtering, bidirectional relationship management, state transition helpers,
+    and artifact factory with smart defaults. Each feature has an immediate use
+    case in the CLI.
+  deliverables:
+    - Artifact query system for filtering and searching
+    - Bidirectional relationship management utilities
+    - State transition validation and helpers
+    - Artifact factory with auto-population
+    - Schema migration tools (v0.1.0 to v0.2.0)
+  validation:
+    - Queries support common CLI operations (list, filter, search)
+    - Relationship updates maintain bidirectional consistency
+    - State transitions enforce methodology rules
+    - Factory reduces artifact creation boilerplate by 80%
+    - Migration tools handle all existing artifacts
+
+completion_summary:
+  key_achievements:
+    - "Successfully built foundational utilities needed for CLI development"
+    - "Enhanced migration tooling with comprehensive backup/rollback
+      capabilities"
+    - "Established YAGNI-focused development approach for maximum velocity"
+    - "Implemented event identity system enabling cascade automation (B.3)"
+    - "Built comprehensive test coverage ensuring reliability"
+  strategic_decisions:
+    - "Focused on immediate friction points rather than theoretical future needs"
+    - "Used YAGNI principle for delivering practical value quickly"
+    - "Built professional-grade implementation even for 'internal' utilities"
+    - "Prioritized migration tooling to support future schema evolution"
+  knowledge_generated:
+    - "YAGNI principle proved crucial for development velocity"
+    - "Migration tools demonstrate value of robust production-ready tooling"
+    - "Event identity system in schema v0.2.0 enables cascade automation"
+    - "Core package established as reliable foundation layer"
+  team_impact:
+    - "Delivered 5 core systems reducing manual overhead significantly"
+    - "Estimated 140+ minutes per developer per week saved through automation"
+    - "Created reusable utilities that support all future CLI commands"
+    - "Foundation set for advanced automation capabilities"
+  next_milestone_insights:
+    - "B.3 can leverage event identity system for cascade automation"
+    - "Migration tooling patterns can be reused for future schema evolution"
+    - "Core foundation supports all planned automation features"
+    - "Utilities directly enable CLI package (D milestone) development"
+
+notes:
+  friction_points_addressed: >
+    This milestone directly addresses: - FP-007: Bidirectional relationship
+    updates (5-10 min per relationship) - FP-009: Cascade dependency tracking
+    (10-15 min per analysis) - FP-010: State validation before transition (1-2
+    min per transition) - FP-001: Manual ID generation (2-3 min per creation)
+  implementation_approach: >
+    Follow YAGNI principle strictly. Each utility should solve a specific,
+    immediate problem identified in the friction analysis. No premature
+    abstractions or "nice to have" features.

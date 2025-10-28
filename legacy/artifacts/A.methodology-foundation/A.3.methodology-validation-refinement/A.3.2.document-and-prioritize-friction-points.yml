@@ -1,0 +1,135 @@
+metadata:
+  title: Document and Prioritize Friction Points
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [ A.3.3, A.3.5 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-09T20:08:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-10T08:55:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-10T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-10T09:20:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create comprehensive documentation of all friction points discovered during
+    manual implementation. Prioritize these by impact and frequency to guide
+    refinements.
+  acceptance_criteria:
+    - All friction points catalogued with:
+        - Clear problem description
+        - When it occurs in workflow
+        - Who is affected (developer/reviewer/PM)
+        - Example scenarios
+        - Current workarounds used
+    - Impact severity assessment includes:
+        - Time cost per occurrence (minutes)
+        - Frustration level (1-5)
+        - Error probability increase
+        - Flow interruption severity
+        - Downstream effects
+    - Frequency data collected:
+        - Occurrences per issue
+        - Daily/weekly frequency
+        - Affected artifact types
+        - User segments impacted
+        - Trend analysis
+    - Root cause analysis performed:
+        - Why does this friction exist
+        - Design decision that led to it
+        - Technical constraints involved
+        - Process dependencies
+        - Missing tooling identified
+    - Prioritization matrix created:
+        - Impact vs Frequency quadrant
+        - Cost to fix estimate
+        - Value delivered score
+        - Dependencies mapped
+        - Implementation order
+    - Quick wins identified:
+        - Can fix in < 1 day
+        - No breaking changes
+        - High value/effort ratio
+        - Independent of other fixes
+        - Immediate user benefit
+
+notes: >
+  Source data from A.2.3 manual workflow documentation. Create actionable list
+  for CLI development priorities. Output:
+  .kodebase/docs/metrics/friction-analysis.md
+
+development_process:
+  implementation_approach: >
+    Consolidated friction points from multiple sources including
+    FRICTION_POINTS.md, methodology metrics report, productivity analysis, and
+    git workflow documentation. Created comprehensive catalog of 20 distinct
+    friction points across 7 categories. Developed multi-dimensional impact
+    assessment using time cost, frustration level, error probability, flow
+    interruption, and downstream effects. Built prioritization matrix using
+    impact vs frequency quadrant analysis.
+  alternatives_considered:
+    - Simple list format vs structured analysis (chose structured for
+      actionability)
+    - Focusing only on high-impact items vs comprehensive catalog (chose
+      comprehensive)
+    - Technical-only analysis vs including human factors (chose holistic
+      approach)
+  challenges_encountered:
+    - challenge: Quantifying subjective factors like frustration and flow interruption
+      solution: Created multi-dimensional scoring matrix with clear criteria for each
+        factor
+    - challenge: Balancing detail with readability in a comprehensive report
+      solution: Used structured sections with executive summary and detailed breakdowns
+    - challenge: Determining realistic effort estimates for fixes without
+        implementation experience
+      solution: Based estimates on similar work from A.2 implementation and industry
+        standards
+
+completion_analysis:
+  summary: >
+    Successfully created comprehensive friction analysis documenting 20 distinct
+    friction points with detailed impact assessments, frequency data, root cause
+    analysis, and prioritized implementation roadmap. Identified quick wins that
+    can reduce overhead by 280 minutes per week with only 16 hours of
+    implementation effort.
+  key_insights:
+    - 95% of manual effort is automatable
+    - Event management and state transitions represent highest impact
+      opportunities
+    - Quick wins can provide immediate 4.6 hours/week time savings
+    - Methodology overhead of 29% can be reduced to under 5% with automation
+    - Design decisions created intentional friction that served its purpose
+  implementation_approach: >
+    Systematic analysis following acceptance criteria structure. Used existing
+    data from A.2 implementation experience, extracted patterns from multiple
+    documents, and created actionable prioritization based on ROI calculations.
+  knowledge_generated:
+    - Comprehensive friction point catalog for future reference
+    - Prioritization framework applicable to other process improvements
+    - Clear automation roadmap with dependency mapping
+    - Quantified impact data for investment justification
+  manual_testing_steps:
+    - Verified all referenced friction points exist in source documents
+    - Cross-checked time estimates with A.2.7 metrics report data
+    - Validated priority ordering against impact and frequency scores
+    - Confirmed quick wins are truly achievable in under 1 day

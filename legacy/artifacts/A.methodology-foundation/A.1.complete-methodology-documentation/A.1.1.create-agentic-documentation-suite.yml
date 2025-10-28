@@ -1,0 +1,137 @@
+metadata:
+  title: Create AGENTIC Documentation Suite
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [A.1.7]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-06T17:26:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-06T17:35:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-06T19:02:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create the foundational AGENTIC documents that establish both the rules
+    (Constitution) and processes (Methodology) for AI agents and developers
+    working within Kodebase. These documents work together to provide complete
+    guidance.
+  acceptance_criteria:
+    - Prime Directive section includes:
+        - The MVP is Law
+        - Reject Complexity
+        - Local-First, Always
+        - No Gold-Plating
+        - YAGNI principle
+    - Law of Requirements includes:
+        - The Issue is the Whole Truth
+        - The Law of Shared Language (GLOSSARY.md requirement)
+        - Question Ambiguity
+        - Respect the Hierarchy (Initiative -> Milestone -> Issue)
+        - Acceptance Criteria as Specification
+    - Law of Implementation includes:
+        - The Codebase is the Ground Truth
+        - No Magic Strings or Numbers
+        - Types are Non-Negotiable
+        - Single Responsibility
+        - Dependencies Flow Inward
+        - Prioritize Context Capture
+        - Separate Structure from Behavior
+        - Test-Driven Changes (Red-Green-Refactor)
+    - Law of Interaction includes:
+        - One Issue, One Branch
+        - Commits Tell a Story
+        - Documentation is Part of the Issue
+    - Law of Self-Correction includes:
+        - Acknowledge Before Acting
+        - The Agent Proposes, The Human Approves
+        - Learn from Correction
+    - Core philosophy section explains:
+        - Git repository as structured, event-driven database
+        - Artifacts as YAML files
+        - Events as immutable, append-only logs
+        - Identity management (human vs AI agent patterns)
+    - Artifact storage conventions include:
+        - Folder structure - /.kodebase/artifacts/
+        - Milestone-oriented organization
+        - Naming conventions for each artifact type
+        - File format (YAML) and extensions
+    - Complete artifact lifecycle includes all states:
+        - draft → ready → in_progress → in_review → completed → archived
+        - Trigger conditions for each transition
+        - Validation rules for each state change
+        - Cascade effects on parent/child artifacts
+    - Git workflow integration includes:
+        - Branch naming - <artifact-id>
+        - Commit conventions - artifact-id:type:message format
+        - Git hooks (post-checkout, pre-push)
+        - PR automation triggers
+    - Quality gates include:
+        - In Progress to In Review checklist
+        - Test coverage requirements (80%)
+        - Documentation requirements
+    - TDD workflow includes:
+        - Red-Green-Refactor cycle
+        - One test per acceptance criterion
+        - Structural vs behavioral commits
+
+notes: >
+  These documents already exist but need terminology updates (Plans→Initiatives,
+  Tasks→Issues). Reference existing files: - Current Constitution:
+  ./AGENTIC_CONSTITUTION.mdc - Current Methodology:
+  ./AGENTIC_KODEBASE_METHODOLOGY.mdc - Instructions: ./AGENTIC_INSTRUCTIONS.mdc
+
+development_process:
+  alternatives_considered:
+    - "Could have created documents from scratch, but existing documents already
+      had correct terminology"
+    - "Considered restructuring the laws, but maintained existing structure for
+      consistency"
+  challenges_encountered:
+    - challenge: "MultiEdit tool only applied first section of changes"
+      solution: "Completed remaining edits using individual Edit commands"
+    - challenge: "Formatting examples to be clear while maintaining document flow"
+      solution: "Used consistent Good/Bad example format with arrow notation for clarity"
+
+completion_analysis:
+  key_insights:
+    - "Documents already used correct terminology
+      (Issues/Milestones/Initiatives)"
+    - "Adding concrete examples significantly improves understanding of abstract
+      principles"
+    - "Good/Bad example format effectively demonstrates correct vs incorrect
+      implementations"
+  implementation_approach:
+    - "Systematic review of both documents against acceptance criteria"
+    - "Added 2 examples per rule using consistent formatting"
+    - "Verified all acceptance criteria met before completion"
+  knowledge_generated:
+    - "Constitution examples serve as practical reference for agent behavior"
+    - "Clear examples reduce ambiguity in rule interpretation"
+    - "Methodology document provides comprehensive workflow guidance"
+  manual_testing_steps:
+    - "Review AGENTIC_CONSTITUTION.mdc for concrete examples in each law"
+    - "Verify all 5 law sections have at least 2 Good/Bad examples each"
+    - "Confirm terminology uses Issues/Milestones/Initiatives throughout"
+    - "Check AGENTIC_KODEBASE_METHODOLOGY.mdc has all required sections"
+    - "Validate acceptance criteria are fully met in both documents"

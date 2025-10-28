@@ -1,0 +1,99 @@
+metadata:
+  title: Create quick win utility collection (timestamps, actors, YAML)
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.3.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-15T13:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-15T13:41:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.3.2
+            resolved: true
+            resolved_at: 2025-07-15T15:36:41Z
+    - event: ready
+      timestamp: 2025-07-15T15:36:41Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-15T17:27:35Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-15T17:56:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-15T17:59:52Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build a collection of small but high-frequency utilities that eliminate
+    repetitive manual tasks. These utilities are used hundreds of times per week
+    across all operations and collectively save significant time.
+  acceptance_criteria:
+    - Timestamp utility generates ISO format timestamps consistently
+    - Actor parsing utility extracts name and email from git config
+    - YAML formatting utility preserves structure and field ordering
+    - Smart diffing utility improves git history readability
+    - Field ordering utility ensures consistent artifact structure
+    - All utilities handle edge cases and provide clear error messages
+    - Utilities integrate seamlessly with existing core functions
+
+development_process:
+  alternatives_considered:
+    - "js-yaml vs yaml package: Chose the existing yaml package for consistency"
+    - "Custom diff formatting vs generic: Built specific artifact-aware
+      formatting"
+    - "Runtime field ordering vs build-time: Chose runtime for flexibility"
+  challenges_encountered:
+    - challenge: "YAML package API differences required adapting formatting options"
+      solution: "Adapted to yaml package's different API and formatting defaults"
+    - challenge: "TypeScript types for yaml package were incomplete, needed workarounds"
+      solution: "Created custom type definitions and used type assertions where
+        necessary"
+    - challenge: "Balancing readability with git diff optimization in formatting"
+      solution: "Implemented smart formatting that prioritizes readability while
+        minimizing diff noise"
+
+completion_analysis:
+  key_insights:
+    - "Timestamp and actor utilities were already implemented, focusing on
+      remaining"
+    - "YAML formatting with the yaml package differs from js-yaml defaults"
+    - "Field ordering constants provide single source of truth for structure"
+    - "Smart diff formatting significantly improves PR review experience"
+  implementation_approach: >
+    Built three new utilities (YAML formatter, field ordering, smart diff) that
+    complement existing timestamp and actor utilities. Each utility is focused
+    on a single responsibility with comprehensive error handling. All utilities
+    are pure functions with no side effects, making them easy to test and
+    compose.
+  knowledge_generated:
+    - "YAML package uses 'PLAIN' for unquoted strings vs js-yaml behavior"
+    - "Field ordering must handle nested structures (metadata.relationships)"
+    - "Smart diff formatting with trailing commas reduces git noise"
+    - "Comprehensive test coverage ensures reliability for high-frequency use"
+  manual_testing_steps:
+    - "Run pnpm test to verify all utilities work correctly"
+    - "Use formatYamlWithFieldOrder on an actual artifact"
+    - "Compare git diff output with and without smart formatting"
+    - "Verify error messages are clear and actionable"
+
+notes: >
+  Addresses multiple friction points through small, focused utilities. The YAML
+  formatting utility alone is used 75-100 times per week. These "quick wins"
+  provide immediate value while supporting larger automation features.

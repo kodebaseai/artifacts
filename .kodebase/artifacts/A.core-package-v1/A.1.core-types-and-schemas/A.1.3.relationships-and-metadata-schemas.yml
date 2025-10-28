@@ -1,0 +1,24 @@
+metadata:
+  title: Implement relationships and artifact metadata schemas
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.1.4]
+    blocked_by: [A.1.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement relationships (blocks, blocked_by) and artifact metadata (title,
+    priority, estimation, created_by, assignee, schema_version, events) schemas with
+    no fan-out persistence fields.
+  acceptance_criteria:
+    - Relationships default to empty arrays; only sibling IDs allowed by validator
+    - Artifact metadata requires all core fields and at least one event (draft)
+    - Unit tests cover valid and invalid structures

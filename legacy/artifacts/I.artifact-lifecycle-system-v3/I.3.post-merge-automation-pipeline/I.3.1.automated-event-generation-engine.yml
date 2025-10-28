@@ -1,0 +1,67 @@
+metadata:
+  title: "Automated Event Generation Engine"
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: ["I.3.2"]
+    blocked_by: []
+  events:
+    - timestamp: "2025-08-04T18:10:00Z"
+      event: draft
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-08-04T18:05:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+
+content:
+  summary: "Build an intelligent event generation engine that automatically creates appropriate events after artifacts are merged to main branch. The engine will analyze git diffs to identify changed artifacts, determine correct state transitions based on content completeness (new artifacts get draft events, updated artifacts transition to ready/blocked based on dependencies, deleted artifacts get cancelled events). It will implement the complete state transition matrix (Draft→Ready when all fields present, Draft→Blocked with unresolved dependencies, Ready→Blocked when new blockers added, Blocked→Ready when dependencies resolved), attribute all events to GitHub Actions actor, and include merge metadata (commit SHA, PR number) for full traceability using correlation_id inheritance patterns."
+
+  acceptance_criteria:
+    - "Correctly determines state transitions based on content analysis"
+    - "Generates events with proper correlation_id and parent_event_id chains"
+    - "Attributes all events to GitHub Actions actor"
+    - "Includes merge metadata for complete traceability"
+    - "New artifacts always generate draft event (correlation_id = event_id)"
+    - "Updated artifacts analyze content completeness to determine ready vs blocked state"
+    - "Deleted artifacts generate cancelled event with proper correlation chain"
+    - "Draft → Ready transition when all required fields present, no blocking dependencies"
+    - "Draft → Blocked transition when required fields present but has unresolved blocking dependencies"
+    - "Ready → Blocked transition when new blocking dependencies added"
+    - "Blocked → Ready transition when all blocking dependencies resolved"
+    - "Uses 'GitHub Actions (github-actions[bot]@users.noreply.github.com)' for all merge-triggered events"
+    - "Includes merge commit SHA and PR number in event metadata"
+    - "Performs git diff analysis to identify changed artifacts"
+    - "Uses I.1.3 validation engine for content completeness validation"
+    - "Implements state transition matrix"
+    - "Ensures proper correlation_id inheritance in generated events"
+
+notes: |
+  Content Analysis for State Determination:
+  - New artifacts: Always generate draft event (correlation_id = event_id)
+  - Updated artifacts: Analyze content completeness to determine ready vs blocked state
+  - Deleted artifacts: Generate cancelled event with proper correlation chain
+
+  State Transition Logic:
+  - Draft → Ready: All required fields present, no blocking dependencies
+  - Draft → Blocked: Required fields present but has unresolved blocking dependencies
+  - Ready → Blocked: New blocking dependencies added
+  - Blocked → Ready: All blocking dependencies resolved
+
+  Actor Attribution:
+  - Use "GitHub Actions (github-actions[bot]@users.noreply.github.com)" for all merge-triggered events
+
+  Event Metadata:
+  - Include merge commit SHA and PR number for traceability
+
+  Technical Specifications:
+  - Git diff analysis to identify changed artifacts
+  - Content completeness validation using I.1.3 validation engine
+  - State transition matrix implementation
+  - Event generation with proper correlation_id inheritance
+
+  This engine ensures every artifact change is properly tracked with appropriate events and maintains complete audit trails.

@@ -1,0 +1,25 @@
+metadata:
+  title: Implement ArtifactValidator (type detection and validateX)
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.2.3, A.2.4]
+    blocked_by: [A.2.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Provide a validator that auto-detects artifact type from structure,
+    exposes validateInitiative/validateMilestone/validateIssue, and surfaces
+    user-friendly validation errors.
+  acceptance_criteria:
+    - getArtifactType detects types by content reliably
+    - validateX methods enforce schemas and throw formatted errors
+    - Works standalone and when composed with the parser
+

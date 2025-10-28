@@ -1,0 +1,26 @@
+metadata:
+  title: Artifact discovery and type filters
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.6.4]
+    blocked_by: [A.6.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:21:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement recursive discovery of artifact files under `.kodebase/artifacts/`,
+    expose type filters (initiative, milestone, issue), and ensure performance scales
+    with number of siblings.
+  acceptance_criteria:
+    - "loadAllArtifactPaths returns absolute paths to all *.yml artifacts under the artifacts root"
+    - "loadArtifactsByType returns only IDs of the requested type using ID length heuristics (1, 2, 3+ segments)"
+    - "Discovery ignores non-artifact files and hidden files"
+    - "Performance is O(siblings) per check; large trees discovered via recursion"
+

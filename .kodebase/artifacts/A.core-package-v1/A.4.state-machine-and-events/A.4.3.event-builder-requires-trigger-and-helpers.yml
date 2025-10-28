@@ -1,0 +1,24 @@
+metadata:
+  title: Require explicit trigger in EventBuilder and add helpers
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.4.4]
+    blocked_by: [A.4.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:07:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Enforce that EventBuilder requires an explicit `trigger` (no fallback) and
+    provide convenience helpers createDraftEvent/createReadyEvent.
+  acceptance_criteria:
+    - Builder throws error when `trigger` is missing
+    - Helpers generate valid events with the correct triggers and ISO timestamps
+    - Unit tests cover required-trigger behavior and helper outputs
+

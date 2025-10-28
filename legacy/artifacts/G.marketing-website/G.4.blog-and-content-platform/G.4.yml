@@ -1,0 +1,41 @@
+metadata:
+  title: Blog and Content Platform
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-07T21:20:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Set up a blog platform for sharing insights, updates, and thought
+    leadership. This includes infrastructure, initial launch content, and
+    contributor guidelines to build SEO authority and community engagement.
+  deliverables:
+    - Blog homepage and archive
+    - Individual post template
+    - RSS feed
+    - Author profiles
+    - Launch blog posts (5-10)
+    - Contributing guide
+  acceptance_criteria:
+    - Blog homepage lists posts with correct metadata and lazy-loads images
+    - Individual post pages render in under 1 second globally
+    - RSS feed passes W3C validator with zero errors
+    - SEO metadata (title, description, Open Graph) present on all posts
+    - Author profile pages link bi-directionally to posts
+    - At least 5 launch posts published and reviewed
+    - Contributing guide accessible via /blog/contributing and passes
+      markdown-lint
+    - Lighthouse performance and accessibility scores ≥ 90
+  notes: >
+    Consider using MDX for posts to enable interactive demos. Enable easy
+    authoring through GitHub PR workflow.

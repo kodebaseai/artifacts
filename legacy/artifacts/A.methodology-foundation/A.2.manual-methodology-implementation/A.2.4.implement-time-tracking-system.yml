@@ -1,0 +1,71 @@
+metadata:
+  title: Implement Time Tracking System
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: cancelled
+      timestamp: 2025-07-06T19:44:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: cancelled
+      metadata:
+        reason: This was partially done in A.2.1 - we added the metrics. For now this
+          will be enough
+
+content:
+  summary: >
+    Set up and use a time tracking system to measure the actual effort required
+    for each phase of the methodology. This data will validate estimations and
+    inform process improvements.
+  acceptance_criteria:
+    - Time tracking method established:
+        - Simple CSV or JSON format defined
+        - Storage location determined
+        - Entry creation process documented
+        - Tools selected (manual or app)
+    - Data captured for all issues includes:
+        - Issue ID reference
+        - Start and end timestamps
+        - Phase identification (planning/coding/review)
+        - Interruption tracking
+        - Context switch counts
+    - Phase breakdown tracking:
+        - Planning phase: artifact creation, acceptance criteria
+        - Implementation phase: coding, testing, debugging
+        - Review phase: PR creation, feedback cycles
+        - Administrative: status updates, event logging
+    - Estimation accuracy analysis:
+        - Original estimate (XS/S/M/L/XL)
+        - Actual hours spent
+        - Variance calculation
+        - Patterns identified
+        - Calibration recommendations
+    - Overhead metrics calculated:
+        - Methodology overhead percentage
+        - Pure coding time vs process time
+        - Context switching cost
+        - Meeting and communication time
+    - Reports generated including:
+        - Per-issue time breakdown
+        - Phase distribution charts
+        - Estimation accuracy trends
+        - Overhead analysis
+        - Productivity insights
+
+notes: >
+  Keep tracking lightweight to avoid tracking becoming overhead itself. Focus on
+  actionable metrics that inform automation priorities. Consider using toggl,
+  clockify, or simple spreadsheet.

@@ -1,0 +1,24 @@
+metadata:
+  title: Add parser/validator tests and fixtures
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.2.2, A.2.3]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Provide unit tests for parser and validator (success and failure cases) and
+    golden fixtures for typical artifacts and error scenarios.
+  acceptance_criteria:
+    - Tests for valid initiative/milestone/issue fixtures pass with types inferred
+    - Invalid fixtures produce expected error messages and paths
+    - All tests wired into the repo test pipeline
+

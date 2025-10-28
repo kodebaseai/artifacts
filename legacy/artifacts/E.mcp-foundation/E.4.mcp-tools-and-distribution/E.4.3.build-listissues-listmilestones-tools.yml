@@ -1,0 +1,35 @@
+metadata:
+  title: Build listIssues/listMilestones tools
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:24:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Create MCP tools for listing and browsing project artifacts. These tools
+    provide AI assistants with the ability to discover what initiatives,
+    milestones, and issues exist in a project, with filtering and sorting
+    capabilities to help navigate large project structures efficiently.
+
+  acceptance_criteria:
+    - "listIssues tool returns filtered list of issues with metadata"
+    - "listMilestones tool returns milestone summaries with status"
+    - "listInitiatives tool provides high-level project overview"
+    - "Supports filtering by status, priority, assignee, and other criteria"
+    - "Provides sorting options (by date, priority, status, etc.)"
+    - "Returns concise but useful information for each artifact"
+
+notes: |
+  These discovery tools help AI assistants understand project scope
+  and structure before diving into specific context. Essential for
+  navigation and project understanding.

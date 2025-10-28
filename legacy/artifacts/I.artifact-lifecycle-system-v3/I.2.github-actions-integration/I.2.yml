@@ -1,0 +1,50 @@
+metadata:
+  title: "GitHub Actions Integration"
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [ "I.3" ]
+    blocked_by: [ "I.1" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T17:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T17:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.1
+            resolved: false
+
+content:
+  summary: "Seamless GitHub integration that enforces validation through automated
+    workflows while maintaining developer productivity and preventing invalid
+    artifacts from reaching main branch"
+
+  deliverables:
+    - "I.2.1: Pre-Merge Validation Workflow - GitHub Actions integration with
+      existing git-workflow.md patterns"
+    - "I.2.2: PR Template and Automation System - Automated PR enhancement and
+      reviewer guidance"
+    - "I.2.3: Branch Protection and Repository Configuration - Repository-level
+      protection to enforce PR-based workflow"
+    - "I.2.4: Validation Error Reporting and Feedback - Clear, actionable
+      validation feedback system"
+    - "I.2.5: Validation Performance and Monitoring - System performance
+      optimization and monitoring"
+
+  validation:
+    - "100% validation enforcement for artifact changes"
+    - "PR workflow execution in <60 seconds"
+    - "Zero invalid artifacts merged to main"
+    - "Clear validation feedback in PR comments"
+    - "Validates artifacts using existing validation logic"
+    - "Integrates seamlessly with existing PR workflow and git hooks"
+    - "Maintains compatibility with current pnpm cpr and completion workflow"
+    - "Follows all automation patterns from git-workflow.md"

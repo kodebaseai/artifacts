@@ -1,0 +1,25 @@
+metadata:
+  title: File service read/write with stable formatting
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.6.4]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:22:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement YAML read/write operations with stable serialization options to minimize
+    diff noise and preserve readability across automation commits.
+  acceptance_criteria:
+    - "readArtifact reads UTF-8 files and parses YAML safely; informative errors include the path"
+    - "writeArtifact serializes with stable ordering and plain scalars where possible (e.g., lineWidth=0)"
+    - "Round-trip read→write does not introduce spurious formatting changes"
+    - "Error handling wraps fs errors with path context"
+

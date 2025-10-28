@@ -1,0 +1,138 @@
+metadata:
+  title: Implement first-run setup wizard
+  priority: high
+  estimation: M
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.4.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-21T22:15:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-22T09:19:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: D.4.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-29T14:35:04Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+      metadata:
+        branch_created: D.4.3
+    - event: in_progress
+      timestamp: 2025-07-29T14:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.4.3
+    - event: in_review
+      timestamp: 2025-07-29T15:15:15Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-30T12:54:23Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create an interactive first-run setup wizard that guides new users through
+    initial configuration after global installation. The wizard should detect
+    first-time usage, help configure Git identity, set up shell completion, and
+    offer to launch the tutorial for immediate value.
+  description: >
+    After npm install -g @kodebase/cli, users need guidance to get started
+    effectively. This wizard leverages the sophisticated React/Ink components
+    from D.3 to create a welcoming, helpful first experience that gets users to
+    success quickly.
+  acceptance_criteria:
+    - Detects first run after global installation (no config file exists)
+    - Interactive wizard launches automatically on first kodebase command
+    - Guides through Git user identity configuration if needed
+    - Offers to install shell completion scripts automatically
+    - Allows user to set default preferences (output format, verbosity, etc.)
+    - Offers to launch tutorial system immediately after setup
+    - Creates user configuration file to prevent wizard re-runs
+    - Wizard can be manually triggered with 'kodebase setup' command
+    - Graceful handling if user cancels or skips steps
+    - Clear progress indication throughout wizard flow
+  technical_requirements:
+    - Create first-run detection mechanism (check for config file)
+    - Build interactive wizard using established React/Ink patterns
+    - Integrate with existing Git operations for identity setup
+    - Connect to shell completion installation from D.3.2
+    - Create user configuration system for storing preferences
+    - Add manual setup command for repeat access
+    - Implement skip/cancel options with appropriate defaults
+    - Use existing interactive components (TextInput, Select, Confirm)
+  validation_steps:
+    - First kodebase command after install triggers wizard
+    - Wizard successfully configures Git identity
+    - Shell completion installs correctly through wizard
+    - User preferences are saved and respected
+    - Manual 'kodebase setup' command works
+    - Wizard doesn't re-run after completion
+    - All interactive elements work smoothly
+
+development_process:
+  alternatives_considered:
+    - "Use OS-specific config locations vs XDG standard (~/.config/kodebase)"
+    - "Implement custom shell completion vs reusing existing install script"
+    - "Force all configuration vs allowing skip functionality"
+    - "Single-page form vs multi-step wizard approach"
+  challenges_encountered:
+    - challenge: "TypeScript types for third-party Ink components (ink-select-input,
+        ink-spinner)"
+      solution: "Created local SelectItem interface to avoid type import issues"
+    - challenge: "Detecting shell type reliably across different environments"
+      solution: "Used process.env.SHELL with fallback detection logic"
+    - challenge: "Integrating first-run check without blocking internal commands"
+      solution: "Skip check for __complete and setup commands to avoid recursion"
+
+completion_analysis:
+  key_insights:
+    - "Multi-step wizard provides better UX than single overwhelming form"
+    - "Detecting existing Git config prevents redundant configuration"
+    - "Shell completion installation is best handled by existing script"
+    - "Tutorial launch option at end creates immediate value demonstration"
+  implementation_approach:
+    - "Created modular wizard steps as separate components for maintainability"
+    - "Used React hooks for state management between wizard steps"
+    - "Leveraged existing Ink patterns from D.3 for consistency"
+    - "Integrated with existing shell completion infrastructure"
+  knowledge_generated:
+    - "XDG config standard provides consistent cross-platform configuration"
+    - "Ink's TextInput and SelectInput components handle complex interactions"
+    - "First-run detection must be async to handle file system operations"
+    - "Progress indicators significantly improve multi-step UX"
+  manual_testing_steps:
+    - "Remove ~/.config/kodebase/config.json to trigger first-run"
+    - "Run any kodebase command to see wizard launch"
+    - "Test skip functionality with Ctrl+S on each step"
+    - "Test exit functionality with Esc key"
+    - "Verify 'kodebase setup' launches wizard manually"
+    - "Confirm config file prevents re-runs"
+
+notes:
+  context: >
+    D.3 established excellent React/Ink patterns for interactive components.
+    This wizard reuses those patterns to create a cohesive onboarding experience
+    that leverages existing shell completion and tutorial infrastructure.
+  implementation_approach: >
+    Create setup wizard component using existing Ink patterns. Implement
+    first-run detection via config file check. Integrate existing Git and
+    completion functionality. Focus on user experience and clear progress.
+  user_experience_goals: >
+    - Zero friction setup process - Clear progress and next steps - Smart
+    defaults with customization options - Immediate path to value (tutorial
+    launch) - Professional, welcoming first impression

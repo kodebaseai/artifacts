@@ -1,0 +1,102 @@
+metadata:
+  title: Methodology Validation and Refinement
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ A.1, A.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-05T19:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-09T20:08:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.1
+            resolved: true
+            resolved_at: 2025-07-07T13:30:21Z
+          - artifact_id: A.2
+            resolved: true
+            resolved_at: 2025-07-09T20:08:00Z
+    - event: ready
+      timestamp: 2025-07-09T20:08:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-09T22:56:19Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started:A.3.1
+    - event: in_review
+      timestamp: 2025-07-10T12:13:02Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-10T12:20:02Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Validate and refine the methodology based on real usage experience from the
+    first two milestones. Document all manual workflow patterns that emerge
+    during implementation to inform future automation. Apply insights gained
+    from completing A.1 and A.2 to refine the methodology, ensuring it reduces
+    friction while maintaining value. Finalize all specifications and patterns
+    in preparation for CLI tooling implementation.
+  deliverables:
+    - Productivity metrics report
+    - Friction points documentation
+    - Refined methodology v2
+    - CLI automation requirements
+  validation:
+    - Measurable productivity improvement
+    - Clear automation patterns identified
+    - Methodology ready for tooling
+
+completion_summary:
+  key_achievements:
+    - Quantified productivity impact - 29% overhead reduced to <5% target
+    - Identified and prioritized 15 key friction points with solutions
+    - Released Constitution v2.0 and Methodology v2.0 with migration guide
+    - Updated schemas to v0.2.0 with simplified event model
+    - Designed comprehensive CLI architecture for full automation
+    - Created detailed CLI requirements specification (26 commands)
+    - Developed 12-week phased rollout plan for methodology adoption
+  strategic_decisions:
+    - Chose incremental refinement over complete methodology rewrite
+    - Prioritized automation of mechanical tasks to reduce friction
+    - Adopted flexible rules for documentation and non-code issues
+    - Designed phased rollout to minimize disruption and maximize learning
+    - Separated required vs optional practices based on value delivered
+  knowledge_generated:
+    - Rigid rules without automation create more friction than value
+    - Test requirements for documentation issues were counterproductive
+    - Simple branch naming (just issue ID) enables better automation
+    - 29% methodology overhead is unsustainable for team adoption
+    - Early adopter programs reduce resistance to methodology changes
+    - Flexibility in process allows teams to find optimal workflows
+    - Clear metrics and feedback loops are essential for methodology success
+  team_impact:
+    - "Refined v2.0 methodology dramatically reduces overhead from 29% to <5%"
+    - "Enables team to focus on value delivery rather than process compliance"
+    - "Comprehensive rollout plan ensures smooth adoption"
+    - "Minimal disruption to ongoing work during transition"
+  next_milestone_insights:
+    - "Foundation is set for CLI development (Initiative D)"
+    - "CLI requirements specification provides clear roadmap for implementation"
+    - "Rollout plan ensures teams are ready to adopt tooling as it becomes
+      available"
+    - "Methodology v2.0 optimizations enable efficient automation development"
+
+notes:
+  refinement_focus: >
+    This milestone synthesizes learnings from documentation and implementation
+    phases. The goal is to create a battle-tested methodology that balances
+    rigor with practicality, ready for automation through CLI tooling.

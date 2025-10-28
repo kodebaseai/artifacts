@@ -1,0 +1,55 @@
+metadata:
+  title: MCP tools and distribution
+  priority: high
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Finalize the MCP server with proper tool implementations and prepare for
+    distribution. This includes MCP tool definitions for artifact queries,
+    context retrieval commands, comprehensive error handling, and npm packaging
+    with installation scripts.
+
+  deliverables:
+    - getArtifacts tool implementation
+    - getContext tool implementation
+    - listIssues/listMilestones tools
+    - npm package configuration
+    - Installation documentation
+
+  validation:
+    - All MCP tools respond correctly
+    - Works with Claude and Cursor
+    - Installs cleanly via npm
+
+notes: |
+  This milestone completes the MCP server by implementing the specific tools
+  that AI assistants will use to interact with Kodebase projects. It also
+  handles the packaging and distribution setup for npm publication.
+
+  Planned Issues:
+  - E.4.1: Implement getArtifacts tool
+    Summary: Create MCP tool for querying and retrieving artifact information
+    
+  - E.4.2: Implement getContext tool
+    Summary: Create MCP tool for comprehensive context retrieval with filtering
+    
+  - E.4.3: Build listIssues/listMilestones tools
+    Summary: Create MCP tools for listing and browsing project artifacts
+    
+  - E.4.4: Configure npm package for distribution
+    Summary: Set up package.json, build scripts, and npm publishing configuration
+    
+  - E.4.5: Create installation documentation
+    Summary: Write comprehensive setup and usage documentation for end users

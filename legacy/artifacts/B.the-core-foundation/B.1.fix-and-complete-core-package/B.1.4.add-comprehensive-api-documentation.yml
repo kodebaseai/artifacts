@@ -1,0 +1,133 @@
+metadata:
+  title: Add comprehensive API documentation
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ B.1.5 ]
+    blocked_by: [ B.1.1, B.1.2, B.1.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-11T12:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-11T10:55:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.1.1
+            resolved: true
+            resolved_at: 2025-07-11T16:01:43Z
+          - artifact_id: B.1.2
+            resolved: true
+            resolved_at: 2025-07-14T14:52:43Z
+          - artifact_id: B.1.3
+            resolved: true
+            resolved_at: 2025-07-11T16:12:20Z
+    - event: ready
+      timestamp: 2025-07-11T16:12:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-11T17:52:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-11T18:20:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-11T18:22:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Document all public exports with JSDoc comments and usage examples. Critical
+    for adoption and reduces support burden. Focus on real-world CLI usage
+    patterns.
+  acceptance_criteria:
+    - Add JSDoc comments to all exported functions and types
+    - Include @example sections with practical CLI usage
+    - Document all parameters, return types, and exceptions
+    - Add package-level README.md with overview and quick start
+    - Create API reference documentation in /docs
+    - Include migration guide from manual YAML editing
+    - Generate TypeDoc output for web documentation
+  technical_notes: >
+    Focus on developer experience: - Clear examples for common operations -
+    Error handling patterns - Integration with CLI workflows - Performance
+    considerations
+
+notes:
+  documentation_sections: |
+    1. Getting Started
+      - Installation
+      - Basic usage
+      - Core concepts
+
+    2. API Reference
+      - Schemas and types
+      - Parsers and validators
+      - Utilities
+      - Error handling
+
+    3. Cookbook
+      - Creating artifacts
+      - Managing relationships
+      - State transitions
+      - Event handling
+
+    4. Migration Guide
+      - From manual YAML
+      - From v0.0.x
+  priority_apis: >
+    Start with most-used APIs: - createArtifact, parseArtifact, validateArtifact
+    - formatTimestamp, formatActor - State transition helpers - Relationship
+    management
+
+development_process:
+  alternatives_considered:
+    - "JSDoc vs TypeDoc vs external docs - chose JSDoc with TypeDoc generation
+      for best of both worlds"
+    - "Inline examples vs separate example files - chose inline @example blocks
+      for better discoverability"
+    - "Manual vs automated API docs - chose TypeDoc for automated generation
+      from JSDoc comments"
+  challenges_encountered:
+    - challenge: "Balancing comprehensive documentation with code readability"
+      solution: "Used concise JSDoc with detailed @remarks sections for complex topics"
+    - challenge: "Making examples realistic for CLI usage patterns"
+      solution: "Created examples showing actual artifact manipulation workflows"
+
+completion_analysis:
+  key_insights:
+    - "JSDoc comments serve dual purpose: IDE intellisense and generated
+      documentation"
+    - "Real-world examples in documentation significantly improve developer
+      experience"
+    - "TypeDoc generates comprehensive HTML documentation from TypeScript +
+      JSDoc"
+  implementation_approach: "Added JSDoc comments to all public exports in
+    index.ts, created detailed README.md with getting started guide, wrote
+    cookbook.md with practical recipes, generated TypeDoc HTML documentation,
+    and created migration guide for users transitioning from manual YAML
+    editing"
+  knowledge_generated:
+    - "Module-level JSDoc in index.ts provides package overview in IDE hover
+      tooltips"
+    - "TypeDoc configuration in typedoc.json enables custom theming and
+      navigation"
+    - "Cookbook format with problem-solution pairs is highly effective for
+      documentation"
+    - "Migration guides should show before/after comparisons for clarity"
+  manual_testing_steps:
+    - "Verified JSDoc comments appear in VS Code intellisense"
+    - "Generated TypeDoc HTML and reviewed all pages"
+    - "Tested code examples from documentation to ensure they compile"
+    - "Checked that all exported functions have complete documentation"
+    - "Validated markdown formatting in README and other docs"

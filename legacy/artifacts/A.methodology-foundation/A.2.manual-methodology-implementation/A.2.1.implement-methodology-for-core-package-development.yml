@@ -1,0 +1,78 @@
+metadata:
+  title: Implement Methodology for Core Package Development
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [A.2.7]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T14:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-07T19:25:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-07T19:28:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Apply the full methodology to develop the @kodebase/core package. Create the
+    typescript models, schemas, parser and utils that will allow other packages
+    to interact with our /.kodebase/ folder. Follow the complete lifecycle for
+    schema implementation, validation logic, and shared utilities.
+  acceptance_criteria:
+    - Initiative artifact for core package includes:
+        - Clear vision statement for the package
+        - Defined scope boundaries
+        - Success criteria metrics
+        - Architecture decisions documented
+    - Milestone artifacts created for:
+        - Schema definitions milestone
+        - Validation logic milestone
+        - Shared utilities milestone
+        - Each with proper deliverables and validation criteria
+    - Issue artifacts include:
+        - One issue per component/module
+        - Clear acceptance criteria for each
+        - Proper estimation (XS/S/M/L/XL)
+        - Dependencies mapped (blocks/blocked_by)
+    - Git workflow compliance:
+        - Branch names match pattern: <issue-id>
+        - All branches created with git checkout -b
+        - Draft PRs created immediately on branch creation
+    - Commit message compliance:
+        - Every commit prefixed with issue ID
+        - Format: "A.2.1.X: type: description"
+        - Structural commits separate from behavioral
+        - Clear commit messages explaining "why"
+    - Time tracking captures:
+        - Planning time per artifact
+        - Implementation time per issue
+        - Review and refinement time
+        - Context switching overhead
+    - Friction points documented:
+        - Manual YAML editing challenges
+        - State transition pain points
+        - Repetitive tasks identified
+        - Automation opportunities noted
+
+notes: >
+  This is our first real application of the methodology. Document everything,
+  especially what feels cumbersome or could be automated. Core package location:
+  packages/core/

@@ -1,0 +1,147 @@
+metadata:
+  title: Implement kodebase create command
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.1.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by D.1.1 - need CLI foundation first
+        blocking_dependencies:
+          - artifact_id: D.1.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-18T14:21:58Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-18T15:38:04Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.1.2
+    - event: in_review
+      timestamp: 2025-07-18T16:15:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-18T16:25:53Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement the 'kodebase create' command for creating new artifacts
+    (initiatives, milestones, and issues). This command will use @kodebase/core
+    for artifact operations and provide a simple interface for users to create
+    properly structured YAML files with all required metadata and validation.
+
+  problem_statement: >
+    Creating artifacts manually requires understanding YAML structure, schemas,
+    and proper ID formatting. The CLI should simplify this process by guiding
+    users through artifact creation with validation and sensible defaults. It
+    needs to support all three artifact types with their specific requirements.
+
+  acceptance_criteria:
+    - "Command syntax: kodebase create <type> <parent-id> <title>"
+    - "Support for all artifact types: initiative, milestone, issue"
+    - "Automatic ID generation following conventions (A.1.2 format)"
+    - "Validation of parent artifact existence and status"
+    - "YAML files created in correct directory structure"
+    - "Default metadata populated (created_by, timestamp, etc.)"
+    - "Clear success/error messages with file path"
+    - "Response time under 100ms"
+
+  deliverables:
+    - Create artifact creation logic using @kodebase/core
+    - Support all artifact types (initiative, milestone, issue)
+    - Add validation for artifact IDs and metadata
+    - Generate proper YAML structure
+    - Handle file system operations
+
+  technical_notes: >
+    Use @kodebase/core's artifact schemas for validation. Implement ID
+    generation logic that follows the hierarchical pattern (A, A.1, A.1.1). Use
+    Node.js fs promises for file operations. Extract Git user info for
+    created_by field. Ensure proper error handling for edge cases like duplicate
+    IDs or missing parent artifacts.
+
+  validation:
+    - Create initiative - 'kodebase create initiative "Title"' works
+    - Create milestone - 'kodebase create milestone A "Title"' works
+    - Create issue - 'kodebase create issue A.1 "Title"' works
+    - Invalid parent ID shows helpful error message
+    - Created files pass schema validation
+    - Duplicate ID prevention works correctly
+
+development_process:
+  alternatives_considered:
+    - "Initial design: Command syntax 'kodebase create <type> <parent-id>
+      <title>'"
+    - "Revised design: Command syntax 'kodebase create <parent_id> \"<idea>\"'
+      with auto-detection"
+    - "Direct YAML generation vs @kodebase/core ArtifactFactory (chose factory
+      for consistency)"
+    - "Manual directory creation vs leveraging existing patterns (chose custom
+      logic for milestone structure)"
+  challenges_encountered:
+    - challenge: "TypeScript type errors with @kodebase/core Artifact type inference"
+      solution: "Imported explicit Artifact type from @kodebase/core and properly
+        typed result variables"
+    - challenge: "Test file TypeScript inference issues with parentId parameter"
+      solution: "Refactored test file with explicit helper functions and proper type
+        annotations"
+    - challenge: "Linting issues with Node.js import protocol violations"
+      solution: "Updated all built-in module imports to use node: protocol prefix"
+
+completion_analysis:
+  key_insights:
+    - "User requirement changes mid-implementation require flexibility in the
+      approach"
+    - "The @kodebase/core ArtifactFactory provides excellent abstraction for
+      artifact creation"
+    - "Auto-detection of artifact type from parent ID simplifies the user
+      experience significantly"
+    - "React/Ink framework provides clean CLI component architecture with proper
+      error handling"
+  implementation_approach: >
+    Implemented React-based CLI using Ink framework with artifact-creator
+    utility. Created type-safe artifact creation with auto-detection based on
+    parent ID format. Integrated with @kodebase/core ArtifactFactory for
+    consistent artifact generation. Added comprehensive test coverage for
+    complex type detection and content creation logic.
+  knowledge_generated:
+    - "Command pattern for React/Ink CLI applications with async operations"
+    - "Integration patterns between CLI components and @kodebase/core library"
+    - "TypeScript type safety patterns for dynamic artifact creation"
+    - "Test architecture for complex logical functions with multiple branches"
+  manual_testing_steps:
+    - "Test initiative creation: kodebase create \"Build a new feature\""
+    - "Test milestone creation: kodebase create A \"Add API endpoints\""
+    - "Test issue creation: kodebase create A.1 \"Fix login bug\""
+    - "Test error handling: kodebase create A.1.2 \"Invalid parent format\""
+    - "Test file creation: Verify YAML files are created in correct directory
+      structure"
+    - "Test metadata population: Verify created_by, timestamp, and event fields
+      are populated"
+
+notes:
+  implementation_approach: >
+    Create a create.ts command module that parses arguments, validates artifact
+    type, generates the next available ID, creates the directory structure, and
+    writes the YAML file. Use @kodebase/core's parseArtifact to validate the
+    generated artifact. Show the created file path for user confirmation.

@@ -1,0 +1,99 @@
+metadata:
+  title: "User Documentation and Training Materials"
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: []
+    blocked_by: [ "I.5.3" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T18:20:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T18:25:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.5.3
+            resolved: false
+
+content:
+  summary: "Create comprehensive documentation and training materials enabling
+    teams to independently adopt the new PR-based workflow and successfully
+    migrate existing projects. The migration guide will provide step-by-step
+    procedures for transitioning existing projects, troubleshooting guides for
+    common issues, before/after workflow comparisons, and FAQ sections
+    addressing user concerns. New workflow documentation will include complete
+    CLI command reference with examples, PR-based workflow walkthroughs with
+    screenshots, validation error guides with specific remediation steps, and
+    best practices for efficient workflow adoption. Training materials will
+    feature video tutorials for key workflows (create, submit, review),
+    interactive examples with real artifact scenarios, and migration workshop
+    materials for team onboarding. The documentation system will integrate live
+    examples, searchable knowledge base functionality, and maintain alignment
+    with system changes to ensure users have access to current, accurate
+    information in their preferred learning format."
+
+  acceptance_criteria:
+    - "Enables independent migration and workflow adoption"
+    - "Provides clear remediation guidance for all error scenarios"
+    - "Offers multiple learning formats for different user preferences"
+    - "Maintains up-to-date documentation aligned with system changes"
+    - "Creates step-by-step migration procedures for existing projects"
+    - "Provides troubleshooting guide for common migration issues"
+    - "Includes before/after workflow comparison"
+    - "Adds FAQ section addressing user concerns"
+    - "Develops complete CLI command reference with examples"
+    - "Creates PR-based workflow walkthrough with screenshots"
+    - "Produces validation error guide with remediation steps"
+    - "Documents best practices and patterns for efficient workflow"
+    - "Creates video tutorials for key workflows (create, submit, review)"
+    - "Provides interactive examples with real artifact scenarios"
+    - "Develops migration workshop materials for team onboarding"
+    - "Integrates documentation system with live examples"
+    - "Sets up video production and hosting infrastructure"
+    - "Develops interactive tutorial system"
+    - "Implements searchable knowledge base"
+
+notes:
+  technical_specifications:
+    - "Documentation system integration with live examples"
+    - "Video production and hosting infrastructure"
+    - "Interactive tutorial system development"
+    - "Searchable knowledge base implementation"
+
+  migration_guide:
+    - "Step-by-step migration procedures for existing projects"
+    - "Troubleshooting guide for common migration issues"
+    - "Before/after workflow comparison"
+    - "FAQ section addressing user concerns"
+
+  new_workflow_documentation:
+    - "Complete CLI command reference with examples"
+    - "PR-based workflow walkthrough with screenshots"
+    - "Validation error guide with remediation steps"
+    - "Best practices and patterns for efficient workflow"
+
+  training_materials:
+    - "Video tutorials for key workflows (create, submit, review)"
+    - "Interactive examples with real artifact scenarios"
+    - "Migration workshop materials for team onboarding"
+
+  documentation_requirements:
+    - "Learning curve: <4 hours for existing Kodebase users to adapt"
+    - "95%+ actionable error messages with remediation steps"
+    - "Multiple learning formats for different user preferences"
+    - "Up-to-date documentation aligned with system changes"
+
+  content_coverage:
+    - "CLI command structure from cli-automation-specs.md"
+    - "Complete artifact lifecycle workflows"
+    - "Event system and correlation chain concepts"
+    - "Migration procedures for schema v2 to v3 transition"
+    - "Feature flag usage and rollout phases"
+    - "Troubleshooting common validation failures"

@@ -1,0 +1,141 @@
+metadata:
+  title: Marketing Website - kodebase.ai
+  status: draft
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ H ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-05T18:08:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T22:13:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started:G.1
+
+content:
+  vision: >
+    Create a compelling marketing website that communicates Kodebase's value
+    proposition to developers and engineering teams. The site should inspire
+    adoption by clearly showing how Kodebase solves real problems, demonstrating
+    its simplicity, and building trust through transparency. This is the front
+    door to the Kodebase ecosystem and the primary conversion tool for new
+    users.
+  scope: >
+    This initiative focuses on building a static marketing website using Next.js
+    with compelling content and design. Includes: Landing page, feature
+    exinitiativeations, documentation portal, pricing page, and blog. Excludes:
+    User authentication, dashboards, payment processing, and dynamic user
+    content.
+  success_criteria:
+    - Clear value proposition understood within 10 seconds
+    - Conversion rate >5% from visit to CLI installation
+    - Page load time <1 second globally
+    - SEO optimized for "structured development" keywords
+    - Accessible and beautiful on all devices
+
+notes:
+  content_strategy: >
+    Focus on developer pain points: lost context, repeated exinitiativeations,
+    and fragmented knowledge. Use concrete examples and scenarios that resonate
+    with engineering teams. Show, don't tell - include interactive demos and
+    real artifact examples. Balance technical accuracy with approachability.
+    Every page should answer: "How does this help me build better software?"
+
+  design_principles: >
+    Developer-first aesthetic: clean, modern, with subtle technical touches. Use
+    @kodebase/ui components for consistency with the product. Dark mode by
+    default with light mode option. Typography-focused design that makes
+    documentation beautiful. Animations should be purposeful, not decorative.
+    Trust signals through open source badges, GitHub stars, and testimonials.
+
+  conversion_optimization: >
+    Multiple CTAs for different user types: "Try CLI" for developers, "See Demo"
+    for managers. Progressive disclosure of information - don't overwhelm on
+    first visit. Clear onboarding path from landing to first artifact creation.
+    Track funnel metrics at each step. A/B test key messages and CTAs for
+    continuous improvement.
+
+  milestone_details:
+    G.2:
+      title: Documentation and learning center
+      summary: >
+        Build the documentation portal that helps users learn and adopt
+        Kodebase. This includes getting started guides, methodology
+        exinitiativeation, video tutorials, and API references. Make
+        documentation searchable, skimmable, and example-rich.
+      deliverables:
+        - Documentation homepage
+        - Quick start guide
+        - Methodology deep dive
+        - Interactive tutorials
+        - API reference
+        - Search functionality
+      validation:
+        - Docs searchable and indexed
+        - Examples run correctly
+        - Navigation intuitive
+    G.3:
+      title: Feature pages and use cases
+      summary: >
+        Create detailed pages for key features and use cases. Each page should
+        tell a story about how Kodebase solves specific problems. Include
+        comparisons with current workflows and ROI calculations for enterprise
+        teams.
+      deliverables:
+        - For Engineering Teams page
+        - For Open Source page
+        - AI Integration page
+        - Feature detail pages
+        - ROI calculator
+        - Case studies
+      validation:
+        - Each page has clear value prop
+        - Use cases resonate with audience
+        - Calculator provides real insights
+    G.4:
+      title: Blog and content platform
+      summary: >
+        Set up a blog platform for sharing insights, updates, and thought
+        leadership. This includes blog infrastructure, initial launch content,
+        and contributor guidelines. The blog builds SEO authority and community
+        engagement.
+      deliverables:
+        - Blog homepage and archive
+        - Individual post template
+        - RSS feed
+        - Author profiles
+        - Launch blog posts (5-10)
+        - Contributing guide
+      validation:
+        - Blog posts render correctly
+        - RSS feed validates
+        - SEO metadata present
+    G.5:
+      title: Launch preparation and optimization
+      summary: >
+        Prepare the marketing site for public launch with performance
+        optimization, SEO setup, analytics integration, and beta feedback
+        incorporation. Ensure the site is fast, findable, and effective at
+        driving conversions.
+      deliverables:
+        - Performance optimization
+        - SEO audit and fixes
+        - Analytics setup (GA4, Mixpanel)
+        - Open Graph images
+        - Sitemap and robots.txt
+        - Launch checklist
+      validation:
+        - Lighthouse scores >95
+        - Analytics tracking conversions
+        - Social previews look good

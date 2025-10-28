@@ -1,0 +1,98 @@
+metadata:
+  title: Enhance validation error formatting with actionable messages
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.3.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-15T13:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-15T13:41:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.3.1
+            resolved: true
+            resolved_at: 2025-07-15T14:26:00Z
+    - event: ready
+      timestamp: 2025-07-15T14:26:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-01-15T14:35:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-15T15:19:40Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-15T15:36:41Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Transform cryptic schema validation errors into helpful, actionable messages
+    that include field paths, expected values, and specific fix suggestions.
+    Reduce debugging time by 80% through developer-friendly error formatting.
+  acceptance_criteria:
+    - Convert Zod validation errors to human-readable messages
+    - Include specific field paths (e.g., "metadata.priority")
+    - Show expected values and formats for each field
+    - Provide fix suggestions and examples
+    - Support nested object and array validation errors
+    - Maintain error context for debugging
+    - Format errors consistently across all validation functions
+
+notes: >
+  Addresses FP-019 (schema validation - 3 min/check). Example transformation:
+  "Invalid enum value" → "metadata.priority must be one of: critical, high,
+  medium, low (found: 'urgent')". Critical for developer experience.
+
+development_process:
+  alternatives_considered:
+    - "Using a simple string template approach - rejected for lack of
+      flexibility"
+    - "Creating custom error classes for each validation type - rejected as
+      over-engineering"
+    - "Modifying Zod directly - rejected to maintain library independence"
+  challenges_encountered:
+    - challenge: "TypeScript strict mode compliance with optional error properties"
+      solution: "Added proper null checks and type guards for all optional fields"
+    - challenge: "Formatting nested object paths in a readable way"
+      solution: "Used dot notation (e.g., 'metadata.relationships.blocks.0') for clarity"
+    - challenge: "Balancing detail with readability in error messages"
+      solution: "Structured messages with clear sections: field, expectation, actual,
+        suggestion"
+
+completion_analysis:
+  key_insights:
+    - "Zod's error structure provides rich metadata that was previously
+      underutilized"
+    - "Field-specific descriptions dramatically improve error comprehension"
+    - "Consistent formatting patterns help developers quickly parse error
+      information"
+  implementation_approach: >
+    Created a dedicated error-formatter module that maps Zod error codes to
+    human-friendly messages. Used a switch statement for different error types
+    with field-aware context. Maintained the original error information for
+    debugging while adding actionable suggestions.
+  knowledge_generated:
+    - "Pattern for transforming technical errors into user-friendly messages"
+    - "Approach for maintaining both human and machine-readable error formats"
+    - "Strategy for progressive enhancement of validation feedback"
+  manual_testing_steps:
+    - "Tested with invalid priority values to verify enum error formatting"
+    - "Tested with missing required fields to verify type error messages"
+    - "Tested with invalid datetime formats to verify string validation errors"
+    - "Tested with multiple simultaneous errors to verify list formatting"
+    - "Tested with deeply nested validation errors to verify path handling"

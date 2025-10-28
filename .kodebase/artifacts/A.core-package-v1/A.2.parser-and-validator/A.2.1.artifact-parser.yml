@@ -1,0 +1,25 @@
+metadata:
+  title: Implement ArtifactParser (YAML → typed)
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.2.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Build a robust parser that reads YAML content and validates it against the
+    artifact schemas, returning typed Initiative/Milestone/Issue objects with
+    formatted validation errors.
+  acceptance_criteria:
+    - parseYaml rejects empty/invalid YAML with clear messages
+    - parseInitiative/Milestone/Issue validate against schemas and return typed objects
+    - Zod errors are converted into readable messages (no raw Zod trees)
+

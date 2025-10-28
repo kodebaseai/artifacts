@@ -1,0 +1,87 @@
+metadata:
+  title: Branch-to-artifact mapping improvements
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.2.5 ]
+    blocked_by: [ C.2.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.2.3 - need cascade integration first
+        blocking_dependencies:
+          - artifact_id: C.2.3
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-17T12:43:40Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-17T12:56:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: C.2.4
+        automation_fallback: true
+    - event: in_review
+      timestamp: 2025-07-17T12:58:22Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_url: https://github.com/kodebaseai/kodebase/pull/52
+        automation_fallback: true
+    - event: completed
+      timestamp: 2025-07-17T14:17:56Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Improve the mapping between git branches and artifact IDs. Handle edge cases
+    like nested artifacts, complex hierarchies, and ensure reliable artifact
+    identification from branch names. This enhances the robustness of
+    git-to-artifact connections.
+  acceptance_criteria:
+    - Branch names correctly map to artifact IDs in all hierarchy levels
+    - Edge cases handled: nested artifacts, complex IDs, special characters
+    - Artifact file discovery works reliably from branch context
+    - Multiple artifact formats supported (A.1.5, AB.23.11, etc.)
+    - Invalid branch names are detected and handled gracefully
+    - Path resolution works correctly in different repository structures
+    - Performance is efficient even with large artifact collections
+
+development_process:
+  implementation_approach: >
+    Implemented through 6 commits focusing on iterative development and testing.
+  alternatives_considered:
+    - Considered direct implementation without testing first
+    - Evaluated different architectural approaches during development
+  challenges_encountered:
+    - challenge: Ensuring compatibility with existing codebase patterns
+      solution: Followed established coding conventions and integration patterns
+
+completion_analysis:
+  key_insights: >
+    Successfully implemented C.2.4 following TDD principles and maintaining code
+    quality standards.
+  implementation_approach: >
+    Extend existing branch validation with enhanced artifact discovery. Build a
+    robust mapping system that can handle complex repository structures and
+    provide clear error messages when mapping fails. Cache artifact locations to
+    improve performance for repeated operations.
+  knowledge_generated: >
+    Gained experience in CLI integration patterns and workflow automation.
+  manual_testing_steps:
+    - Verified all acceptance criteria are met
+    - Tested integration with existing systems
+    - Confirmed no regressions in related functionality

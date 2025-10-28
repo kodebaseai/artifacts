@@ -1,0 +1,104 @@
+metadata:
+  title: Git Operations and Automation - Building @kodebase/git-ops
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ D ]
+    blocked_by: [ B ]
+  events:
+    - event: draft
+      timestamp: 2025-07-05T11:56:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-05T11:56:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-16T12:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_review
+      timestamp: 2025-07-18T12:36:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-18T12:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  vision: >
+    Build the Git operations package that provides the automation layer between
+    Git actions and artifact state changes. This package implements the core Git
+    hooks, branch management, and PR automation that makes the Kodebase
+    methodology seamless within existing Git workflows. It transforms manual Git
+    operations into intelligent, event-driven updates that maintain perfect
+    synchronization between development work and project knowledge.
+  scope: >
+    This initiative focuses on building the @kodebase/git-ops package with all
+    Git automation capabilities. Includes: Git hooks implementation, branch
+    management utilities, PR automation, commit validation, and event detection.
+    Excludes: CLI commands (Initiative D), artifact parsing (Initiative B), MCP
+    integration, web interface.
+  success_criteria:
+    - All Git hooks working reliably on Mac/Linux (Windows support future)
+    - Seamless integration with GitHub workflows (GitLab/Bitbucket for future)
+    - Zero manual status updates required during normal development
+    - Branch operations automatically trigger correct status transitions
+    - Published to npm as @kodebase/git-ops
+
+completion_summary:
+  business_impact: "Established the foundational Git automation infrastructure
+    that enables seamless integration between Git workflows and artifact
+    management. The @kodebase/git-ops package provides the critical automation
+    layer that makes the Kodebase methodology practical and effortless for
+    developers, eliminating manual status updates and ensuring perfect
+    synchronization between development work and project tracking."
+  strategic_achievements:
+    - "Built comprehensive Git hooks system with post-checkout, post-merge, and
+      pre-push automation"
+    - "Implemented bidirectional synchronization between PR states and artifact
+      events"
+    - "Created intelligent branch management with automatic artifact status
+      transitions"
+    - "Established PR automation with context-aware template generation and LLM
+      guidance"
+    - "Delivered cross-platform compatibility for Mac/Linux environments"
+    - "Published @kodebase/git-ops package to npm for ecosystem availability"
+  organizational_learning:
+    - "Git automation is the cornerstone of methodology adoption"
+    - "Without seamless integration between Git operations and artifact
+      management, methodology becomes a burden"
+    - "Automation must be invisible to developers - enhance existing workflows
+      without requiring behavior changes"
+    - "Context-driven approaches (like LLM-guided PR descriptions) are more
+      flexible than rigid template systems"
+  architecture_evolution:
+    - "Git-ops package establishes event-driven architecture pattern essential
+      for future CLI and MCP integrations"
+    - "Separation of concerns between Git operations, artifact management, and
+      user interfaces creates clean foundation"
+    - "Architecture provides foundation for next phase of tooling development"
+  future_roadmap_impact:
+    - "Initiative C completion unblocks all downstream initiatives (D, E, F, H)
+      by providing core automation infrastructure"
+    - "CLI initiative (D) can now focus on user experience rather than
+      foundational Git operations"
+    - "Established patterns and architecture will accelerate development of
+      remaining initiatives significantly"
+
+notes:
+  testing_strategy: >
+    Use memfs (in-memory file system) to test Git hook operations, file
+    modifications, and artifact updates without actual disk I/O. This enables
+    testing of .git/hooks installation, branch operations, and cross-platform
+    path handling in isolated environments. Combined with git fixtures, provides
+    comprehensive test coverage.

@@ -1,0 +1,146 @@
+metadata:
+  title: Alpha CLI Development - Building @kodebase/cli
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ E ]
+    blocked_by: [ C ]
+  events:
+    - event: draft
+      timestamp: 2025-07-05T11:56:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-05T11:56:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by A, B and C
+        blocking_dependencies:
+          - artifact_id: C
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-18T12:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-18T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started:D.1
+    - event: in_review
+      timestamp: 2025-07-30T13:53:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: children_completed
+      metadata:
+        completion_summary: All 4 D Milestones completed - CLI ready for distribution
+          with comprehensive onboarding
+    - event: completed
+      timestamp: 2025-07-30T14:20:24Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+      metadata:
+        all_milestones_completed: true
+        business_impact: Production-ready CLI enabling structured development
+          methodology adoption
+
+content:
+  vision: >
+    Build the Kodebase CLI tool that brings the methodology to life through
+    intuitive commands. This is the primary interface for developers to interact
+    with the artifact system, automating the manual processes validated in
+    Initiative A. The CLI transforms the theoretical methodology into practical,
+    daily workflow commands that make structured knowledge management
+    effortless.
+  scope: >
+    This initiative focuses on building the @kodebase/cli package with essential
+    artifact lifecycle commands. Includes: Core commands (create, status, ready,
+    list), Git branch automation, interactive prompts, and basic workflow
+    automation. Excludes: Git hooks (Initiative D), MCP integration, advanced
+    analytics, migration tools, and plugin system.
+  success_criteria:
+    - All core commands working reliably with <100ms response time
+    - Intuitive command structure that feels natural to developers
+    - Comprehensive help system and error messages
+    - Published to npm as @kodebase/cli
+    - Zero-friction installation and setup process
+
+completion_summary:
+  business_impact: >
+    The Kodebase CLI transforms theoretical methodology into practical daily
+    workflow tools, enabling developers to adopt structured knowledge management
+    without friction. This creates a scalable foundation for broader adoption of
+    the Kodebase methodology, directly supporting the business goal of making
+    structured development practices accessible and actionable.
+  strategic_achievements:
+    - "Production-ready CLI with 15+ commands covering complete artifact
+      lifecycle"
+    - "Comprehensive Git workflow integration enabling seamless branch and PR
+      management"
+    - "Interactive user experience with wizards, fuzzy search, and intuitive
+      shortcuts"
+    - "World-class onboarding system including setup wizard and interactive
+      tutorial"
+    - "Distribution-ready npm package with global installation and shell
+      completion"
+    - "Robust architecture supporting future extensions and MCP integration"
+  organizational_learning:
+    - "Ink.js framework provides excellent foundation for interactive CLI
+      development"
+    - "TypeScript + testing with memfs enables reliable CLI testing without file
+      system dependencies"
+    - "Progressive enhancement approach (core → git → UX → distribution)
+      prevents over-engineering"
+    - "User experience design principles apply strongly to CLI tools, not just
+      web interfaces"
+    - "Documentation and onboarding are critical success factors for developer
+      tool adoption"
+    - "MVP methodology prevents feature creep while ensuring comprehensive
+      functionality"
+  architecture_evolution:
+    - "Established modular CLI architecture with clear separation between
+      commands, utilities, and UI"
+    - "Created reusable patterns for interactive CLI components (wizards,
+      pickers, progress indicators)"
+    - "Built extensible command system with plugin-ready architecture for future
+      enhancements"
+    - "Integrated @kodebase/core and @kodebase/git-ops packages into cohesive
+      CLI experience"
+    - "Developed comprehensive testing strategies for CLI applications with
+      complex user interactions"
+    - "Established distribution and packaging patterns for npm-published CLI
+      tools"
+  future_roadmap_impact:
+    - "CLI provides foundation for MCP (Model Context Protocol) integration in
+      future initiatives"
+    - "User feedback from distributed CLI will inform future methodology and
+      tooling improvements"
+    - "Established patterns enable rapid development of additional CLI commands
+      and features"
+    - "Distribution infrastructure supports broader community adoption and
+      contribution"
+    - "Architecture supports future integrations with IDEs, CI/CD systems, and
+      other developer tools"
+
+notes:
+  testing_strategy: >
+    Use memfs for testing all file operations without actual disk I/O. Mock
+    @kodebase/git-ops for testing Git integration. Test interactive features
+    using Ink's testing utilities. Ensure all commands work in CI environments
+    without TTY. Test error scenarios with malformed artifacts and missing
+    files.
+
+  onboarding_strategy: >
+    Implement an interactive tutorial accessible via 'kodebase tutorial' that
+    guides new users through creating their first artifact, understanding the
+    lifecycle, and completing a simple issue. The tutorial uses a sandbox
+    environment to avoid affecting real work. Success metric: users complete
+    first real issue within 5 minutes of installation.
+
+  future_integration_hooks: >
+    Design CLI architecture with extension points for future MCP integration.
+    Placeholder commands like 'kodebase context' reserved for MCP features.
+    Plugin system groundwork allowing additional commands to be registered.
+    Configuration system designed to accommodate MCP server settings later.

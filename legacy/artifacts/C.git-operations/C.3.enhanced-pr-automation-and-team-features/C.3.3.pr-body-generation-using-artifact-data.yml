@@ -1,0 +1,80 @@
+metadata:
+  title: PR body generation using artifact data
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.3.4, C.3.5 ]
+    blocked_by: [ C.3.1, C.3.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.3.1 and C.3.2 - need PR templates and sync mechanisms first
+        blocking_dependencies:
+          - artifact_id: C.3.1
+            resolved: false
+          - artifact_id: C.3.2
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-18T11:26:50Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: cancelled
+      timestamp: 2025-07-18T12:25:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: cancelled
+      metadata:
+        reason: Context system handles this
+
+content:
+  summary: >
+    Generate intelligent and comprehensive PR descriptions using artifact
+    metadata including deliverables, acceptance criteria, dependencies, progress
+    status, and related context. Create templates that provide meaningful
+    information for reviewers and stakeholders.
+
+  problem_statement: >
+    Current PR descriptions are often minimal or manually written, lacking
+    structured information about what the PR accomplishes, how it relates to
+    project goals, and what reviewers should focus on. Automated generation can
+    provide consistent, comprehensive context for better reviews.
+
+  acceptance_criteria:
+    - PR bodies automatically generated from artifact metadata
+    - Include deliverables, acceptance criteria, and validation points
+    - Show dependency relationships and impact analysis
+    - Display progress status and milestone context
+    - Support different templates for issues vs milestones vs initiatives
+    - Allow manual overrides and customization of generated content
+
+  deliverables:
+    - Intelligent PR body generation system
+    - Template engine with multiple formats (issue, milestone, initiative)
+    - Metadata extraction and formatting utilities
+    - Dependency visualization in PR descriptions
+    - Progress tracking and completion status display
+    - Customizable templates with organization-specific branding
+
+  technical_notes: >
+    Build on the enhanced PR templates from C.3.1 to create a sophisticated
+    generation system. Use @kodebase/core parsers to extract all relevant
+    metadata, format it using configurable templates, and generate structured PR
+    descriptions. Support markdown formatting, dependency graphs, progress bars,
+    and checklist generation based on acceptance criteria.
+
+  validation:
+    - Generated PR bodies include all relevant artifact information
+    - Templates adapt correctly to different artifact types
+    - Dependency relationships are clearly visualized
+    - Progress status is accurately reflected
+    - Generated content is well-formatted and readable
+    - Manual customization options work as expected

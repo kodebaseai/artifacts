@@ -1,0 +1,24 @@
+metadata:
+  title: Docs and crosslinks (README, spec alignment)
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.8.3]
+    blocked_by: [A.8.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:39:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Update the core package README and crosslink spec sections so that docs reflect
+    the final public API and module structure. Ensure examples compile.
+  acceptance_criteria:
+    - 'README includes quickstart and examples using the curated exports'
+    - 'Spec crosslinks updated (core-package-spec.md sections)'
+    - 'Examples compile in a minimal consumer project'
+

@@ -1,0 +1,42 @@
+metadata:
+  title: Feature Pages and Use Cases
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-07T21:22:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Create detailed pages for key features and use cases, telling a clear story
+    of how Kodebase solves specific problems. Include workflow comparisons and
+    ROI calculations for enterprise teams.
+  deliverables:
+    - For Engineering Teams page
+    - For Open Source page
+    - AI Integration page
+    - Feature detail pages
+    - ROI calculator
+    - Case studies
+  acceptance_criteria:
+    - Each page communicates a clear value proposition within the first viewport
+    - Copy reviewed by at least two team members for clarity and accuracy
+    - ROI calculator returns results in < 200 ms and handles empty / extreme
+      inputs gracefully
+    - Feature detail pages include validated code snippets that compile
+    - Case study pages include testimonial quotes and metrics
+    - Pages render correctly on mobile, tablet, desktop with Lighthouse
+      performance ≥ 90
+    - SEO metadata is complete (title, description, canonical URL, Open Graph)
+    - CTA buttons track conversion events via analytics
+  notes: >
+    Use storytelling frameworks—problem, solution, outcome—to structure each
+    use-case page. Real metrics strengthen credibility.

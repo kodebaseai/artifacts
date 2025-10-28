@@ -1,0 +1,24 @@
+metadata:
+  title: Loader and file service tests/fixtures
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.6.2, A.6.3]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:23:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Add unit and integration tests with golden fixtures for discovery, type filters,
+    ID extraction, and file read/write stability.
+  acceptance_criteria:
+    - "Fixtures cover A.yml, A.1.yml, A.1.1.slug.yml and mixed trees"
+    - "Type filters return expected sets on fixtures"
+    - "Round-trip read/write assertions pass; no spurious diffs"
+    - "Edge cases: hidden folders/files ignored; malformed YAML yields clear errors"

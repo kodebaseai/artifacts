@@ -1,0 +1,24 @@
+metadata:
+  title: Validate relationship consistency and existence (blocks ↔ blocked_by)
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.3.3]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:35:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Ensure that for every relationship pair, `A.blocks` contains `B` iff `B.blocked_by`
+    contains `A`, and that all referenced IDs exist and obey sibling/same-parent rules.
+  acceptance_criteria:
+    - 'Non-existent references are rejected with a clear error code and field path'
+    - 'Reciprocity check: for each A→B in blocks, B must list A in blocked_by (and vice versa)'
+    - 'Violations reported once per pair with actionable messages; no duplicate noise'
+    - 'Validator runs after same-parent/sibling filters to avoid cascade errors'

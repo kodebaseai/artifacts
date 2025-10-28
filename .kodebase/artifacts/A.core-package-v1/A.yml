@@ -1,0 +1,27 @@
+metadata:
+  title: Core Package v1
+  priority: high
+  estimation: L
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  vision: >-
+    Ship a minimal, robust core engine for artifacts, validation, and cascades
+    to power MVP flows (new repo bootstrap and adding work in ongoing projects).
+  scope: >-
+    Implement parser, validator, readiness rules, state machine, upward cascades,
+    artifact discovery/IO, and wizard-enabling helpers as defined in the core spec.
+  success_criteria:
+    - Validates and parses v1 artifacts at scale
+    - Sibling-only dependency rules enforced
+    - Upward cascade recommendations implemented
+    - CLI integrates create/start/status/validate using this API

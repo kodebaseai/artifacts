@@ -1,0 +1,87 @@
+metadata:
+  title: Create documentation scanner
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.2.4 ]
+    blocked_by: [ E.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:52:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T09:58:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-31T10:50:54Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-31T11:02:10Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-31T11:03:46Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build scanner to discover and index project documentation files across the
+    repository. This includes README files, markdown documentation, API docs,
+    architecture documents, and other relevant project documentation that
+    provides context for AI assistants understanding the codebase.
+
+  acceptance_criteria:
+    - "Discovers README files at all levels of the project"
+    - "Indexes markdown files in docs/ directories"
+    - "Finds and categorizes API documentation"
+    - "Scans for architecture and design documents"
+    - "Extracts meaningful metadata from documentation files"
+    - "Provides fast lookup by document type and relevance"
+
+notes: |
+  The scanner should be intelligent about which documentation is most relevant
+  to different types of queries and provide a way to prioritize documentation
+  based on recency and relevance to specific artifacts or code areas.
+
+development_process:
+  alternatives_considered:
+    - "File system watching with chokidar for real-time updates"
+    - "Database-backed indexing with SQLite for persistence"
+    - "Complex relevance scoring with ML-based text analysis"
+  challenges_encountered:
+    - challenge: "Determining optimal file type detection patterns"
+      solution: "Used comprehensive pattern matching for filenames and paths,
+        including common documentation formats and location-based
+        categorization"
+
+completion_analysis:
+  key_insights:
+    - "Documentation scanning benefits from location-based categorization
+      (docs/, api/, architecture/)"
+    - "Simple relevance scoring based on file location and type provides
+      sufficient prioritization"
+    - "Following existing reader patterns (ArtifactReader) ensures consistency
+      in MCP server architecture"
+  implementation_approach:
+    - "Built scanner following existing patterns from artifact-reader.ts"
+    - "Used Node.js fs/promises for async file operations with proper error
+      handling"
+    - "Implemented recursive directory scanning with intelligent skip patterns"
+    - "Created type-safe interfaces for all data structures and operations"
+  knowledge_generated:
+    - "Understanding of MCP server reader module patterns and conventions"
+    - "File system scanning best practices for performance and error resilience"
+    - "Documentation categorization strategies for AI context provision"
+  manual_testing_steps:
+    - "Tested scanner.scan() on project root to verify README discovery"
+    - "Verified findByType() filtering works for different documentation types"
+    - "Confirmed relevance scoring places root README.md highest"

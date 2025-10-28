@@ -1,0 +1,123 @@
+metadata:
+  title: Configure npm package for distribution
+  priority: high
+  estimation: S
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ D.4.2, D.4.3, D.4.4 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-21T22:15:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-22T09:19:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-22T10:22:59Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.4.1
+    - event: in_review
+      timestamp: 2025-07-22T14:49:09Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-22T14:50:40Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Prepare the @kodebase/cli package for public distribution via npm registry.
+    This includes configuring package metadata, bin entries, prepublish hooks,
+    and testing the global installation process. The goal is to ensure smooth
+    npm install -g @kodebase/cli experience for end users.
+  description: >
+    The CLI is functionally complete from D.1-D.3 but needs proper npm packaging
+    configuration for distribution. This involves updating package.json with
+    comprehensive metadata, ensuring proper bin entry configuration, adding
+    quality gates, and validating the complete installation workflow.
+  acceptance_criteria:
+    - package.json has complete metadata (description, keywords, author,
+      repository, etc.)
+    - bin entry correctly points to cli executable for global installation
+    - prepublish hooks run linting, type checking, and tests
+    - npm pack creates a valid package tarball
+    - Global installation works: npm install -g creates working 'kodebase' command
+    - Shell completion files are included in package distribution
+    - Package size is optimized (exclude dev dependencies, test files)
+    - Initial changeset created for v0.1.0 release
+  technical_requirements:
+    - Update packages/cli/package.json with distribution metadata
+    - Configure bin field to point to built CLI entry point
+    - Add prepublishOnly script with quality checks
+    - Test npm pack and npm install -g locally
+    - Verify kodebase command works globally after installation
+    - Include completion scripts in files array
+    - Create changeset for initial release
+  validation_steps:
+    - Run npm pack and inspect tarball contents
+    - Install package globally in clean environment
+    - Verify kodebase command is available in PATH
+    - Test core commands work after global install
+    - Confirm shell completion installs correctly
+
+notes:
+  context: >
+    The CLI package is production-ready with sophisticated React/Ink interface,
+    comprehensive commands, and excellent UX. This issue focuses purely on
+    packaging and distribution mechanics, not feature development.
+  implementation_approach: >
+    Start with package.json metadata updates, then configure bin entries. Add
+    prepublish hooks for quality gates. Test locally with npm pack and global
+    install. Create initial changeset for version management.
+
+development_process:
+  alternatives_considered:
+    - "Use npm prepare script instead of prepublishOnly for quality gates"
+    - "Create separate distribution script vs using npm pack directly"
+    - "Manual changeset creation vs automated changeset generation"
+  challenges_encountered:
+    - challenge: "npm install -g failed with workspace protocol errors"
+      solution: "Used npm link for local testing which simulates global installation
+        accurately"
+    - challenge: "Changeset CLI required interactive input not available in automated
+        environment"
+      solution: "Created changeset file manually following project conventions and
+        format"
+
+completion_analysis:
+  key_insights:
+    - "Package distribution requires careful balance of included files vs
+      package size"
+    - "Global installation testing with npm link provides identical results to
+      real installation"
+    - "Prepublish hooks ensure consistent quality without blocking development
+      workflow"
+    - "Shell completion scripts significantly improve user experience and should
+      be distributed"
+  implementation_approach:
+    - "Incremental approach with one acceptance criterion per commit for clear
+      traceability"
+    - "Quality-first approach running lint, types, and tests before each commit"
+    - "Manual testing approach using npm pack and npm link to validate
+      distribution"
+  knowledge_generated:
+    - "Understanding of npm package.json metadata fields for professional
+      distribution"
+    - "Knowledge of bin entry configuration for global CLI installation"
+    - "Experience with Changesets system for semantic versioning and release
+      management"
+  manual_testing_steps:
+    - "npm pack to generate tarball and inspect contents with tar -tf"
+    - "npm link to install globally and test kodebase/kb commands"
+    - "Verified help output and command functionality after global installation"
+    - "Confirmed shell completion scripts are included in distribution package"

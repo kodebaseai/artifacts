@@ -1,0 +1,25 @@
+metadata:
+  title: Integration tests for core flows
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.9.3]
+    blocked_by: [A.9.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:45:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Add end-to-end tests covering the primary flows: create→validate, start→cascade,
+    and complete→cascade using the sample fixtures and core helpers.
+  acceptance_criteria:
+    - 'Validation: new artifacts with draft only → post-merge ready/blocked computation passes'
+    - 'Cascade: last issue completed → milestone/initiative get in_review recommendations'
+    - 'Completion: completion info present → completed event appended (simulated)'
+    - 'Tests run under Vitest; no network, deterministic results'
+

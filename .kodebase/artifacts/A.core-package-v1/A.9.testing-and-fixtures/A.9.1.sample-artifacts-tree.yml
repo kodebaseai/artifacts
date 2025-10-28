@@ -1,0 +1,24 @@
+metadata:
+  title: Create sample artifacts tree fixtures
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.9.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Build a small but representative artifacts tree for tests, including several issues,
+    sibling dependencies, and one milestone boundary, with slugs in filenames.
+  acceptance_criteria:
+    - 'Fixtures include A.yml, A.1.yml, multiple A.1.X.slug.yml with varied dependencies'
+    - 'At least one dependency chain and one independent issue set'
+    - 'Fixtures live under a test/fixtures directory and are easy to extend'
+

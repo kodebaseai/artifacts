@@ -1,0 +1,96 @@
+metadata:
+  title: "Pre-Merge Validation Workflow"
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: ["I.2.2", "I.2.3", "I.2.4", "I.2.5"]
+    blocked_by: []
+  events:
+    - timestamp: "2025-08-04T18:00:00Z"
+      event: draft
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-08-04T18:05:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-09-18T12:55:14Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        event_id: "evt_2434baf983e9c9c8"
+    - event: in_review
+      timestamp: 2025-09-19T16:44:04Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_ready
+    - event: completed
+      timestamp: 2025-09-19T18:50:40Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+content:
+  summary: "Implement GitHub Actions workflow that validates all artifact changes before merge, integrating with existing CLI validation commands to check schema compliance, state transitions, and dependency relationships. The workflow will trigger on PR updates targeting .kodebase/artifacts/**, create status checks compatible with existing PR templates, and enforce branch protection rules while preserving post-merge automation capabilities. This ensures no invalid artifacts reach the main branch while maintaining developer productivity through clear validation feedback."
+
+  acceptance_criteria:
+    - "Validates artifacts using existing validation logic"
+    - "Integrates seamlessly with existing PR workflow and git hooks"
+    - "Maintains compatibility with current pnpm cpr and completion workflow"
+    - "Follows all automation patterns from git-workflow.md"
+    - "Runs on PR updates (not just creation, since draft PRs auto-created)"
+    - "Targets .kodebase/artifacts/** paths as specified in git-workflow.md"
+    - "Integrates with existing PR title conventions (artifact ID prefixed)"
+    - "Uses existing CLI commands for validation (kodebase validate)"
+    - "Leverages existing schema validation from cli-automation-specs.md"
+    - "Checks state transition validity using existing state machine"
+    - "Creates status checks compatible with existing PR templates"
+    - "Uses PR description format from git-workflow.md"
+    - "Protects .kodebase/artifacts/** paths specifically"
+    - "Allows existing post-merge automation to proceed"
+    - "Blocks invalid transitions per existing state machine"
+
+notes: |
+  Technical Implementation Details:
+  - Integrate with existing git-workflow.md patterns and conventions
+  - Leverage existing CLI commands (kodebase validate) for consistency
+  - Use existing schema validation from cli-automation-specs.md
+  - Align with existing PR workflow patterns (draft PRs auto-created)
+  - Run on PR updates, not just creation, since draft PRs are auto-created
+  - Target .kodebase/artifacts/** paths as specified in git-workflow.md
+  - Create status checks compatible with existing PR templates
+  - Block invalid transitions per existing state machine
+  - Protect .kodebase/artifacts/** paths specifically
+  - Allow existing post-merge automation to proceed
+  - Preserve existing post-merge hook functionality
+  - Maintain compatibility with current pnpm cpr and completion workflow
+development_process:
+  implementation_approach: "Automated validation via pnpm exec tsx scripts/validate-artifacts.ts, leveraging existing CLI for schema/readiness and core state machine helpers for event ordering."
+  alternatives_considered:
+    - "Directly invoke @kodebase/core validation APIs inside workflow without CLI wrapper."
+    - "Run kodebase validate for entire repository instead of diff-scoped files."
+  challenges_encountered:
+    - challenge: "Parsing CLI output that mixes formatting with JSON."
+      solution: "Strip stdout down to JSON payload by locating first/last braces before parsing."
+    - challenge: "Ensuring state machine validation runs without duplicating core logic."
+      solution: "Reuse validateEventOrder from @kodebase/core with ArtifactValidator for type detection."
+    - challenge: "kodebase CLI aborts in CI on first run because setup config is missing."
+      solution: "Provision ~/.config/kodebase/config.json automatically before invoking the validator script."
+    - challenge: "Workspace dependency builds were missing when invoking the CLI dist in automation."
+      solution: "Build @kodebase/git-ops alongside core and cli before running the validator."
+
+completion_analysis:
+  key_insights:
+    - "Limiting validation to changed artifacts keeps the workflow fast and focused."
+    - "Combining CLI results with state-machine checks provides comprehensive coverage without branching new logic."
+  implementation_approach:
+    - "Typescript helper script executes CLI validation and state machine guard, emitting summarised results for CI logs."
+    - "Workflow extracts artifact ID from PR title to maintain consistent automation triggers."
+  knowledge_generated:
+    - "@kodebase/core exposes validateEventOrder, enabling state transition verification without custom code."
+    - "pnpm --filter @kodebase/cli exec preserves package context when running CLI commands in CI."
+    - "CLI automation must seed ~/.config/kodebase/config.json to bypass the first-run setup wizard in non-interactive environments."
+    - "CLI dist requires @kodebase/git-ops build artifacts; ensuring the workflow builds dependency packages prevents module resolution errors."
+  manual_testing_steps:
+    - "pnpm exec tsx scripts/validate-artifacts.ts .kodebase/artifacts/I.artifact-lifecycle-system-v3/I.2.github-actions-integration/I.2.1.pre-merge-validation-workflow.yml"

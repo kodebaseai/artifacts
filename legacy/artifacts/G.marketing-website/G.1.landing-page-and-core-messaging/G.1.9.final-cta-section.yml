@@ -1,0 +1,104 @@
+metadata:
+  title: Final CTA Section Integrated with Tally
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ G.1.2 ]
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-28T15:03:16Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: G.1.9
+    - event: in_review
+      timestamp: 2025-07-28T20:11:07Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-28T20:14:58Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create the final conversion section with compelling CTA that integrates with
+    Tally for early-access signup and feedback capture. This is the destination
+    for all scroll-to-CTA buttons throughout the page. Design:
+    .kodebase/docs/product/design/marketing landing page/Homepage.jpg
+  acceptance_criteria:
+    - Compelling final headline that summarizes value proposition
+    - Clear benefit statements leading to signup form
+    - Tally form embedded or modal loads in <500ms
+    - Multiple CTA button variants for A/B testing
+    - Successful submission event captured with "cta_submit" analytics
+    - Thank you state after successful submission
+    - Form validation and error handling
+    - Mobile and desktop responsive design
+    - Social proof elements (testimonials, early adopter count)
+    - Secondary CTAs (documentation, blog, social media)
+
+notes: >
+  This is the conversion goal for the entire page. All hero CTAs and scroll-to
+  buttons should link here. Use environment vars for Tally form IDs per
+  environment (prod/staging). Focus on removing friction while building
+  excitement for early access.
+
+development_process:
+  alternatives_considered:
+    - "Inline Tally embed: Considered directly embedding Tally form but opted
+      for button trigger to maintain design control"
+    - "Custom form solution: Evaluated building custom form but Tally provides
+      better analytics and integrations"
+    - "Multiple step form: Considered multi-step approach but single form
+      reduces friction for early access"
+  challenges_encountered:
+    - challenge: "CTA section was updated during implementation with new styling
+        requirements"
+      solution: "Adapted to the new design system with gradient buttons and grid
+        background"
+    - challenge: "Tally integration approach needed to balance performance with user
+        experience"
+      solution: "Planned for on-demand loading of Tally form to optimize initial page
+        load"
+
+completion_analysis:
+  key_insights:
+    - "Successfully integrated Tally form with both popup and modal approaches"
+    - "Implemented blur overlay for professional UX during form interaction"
+    - "Added comprehensive analytics tracking for conversion funnel"
+    - "Created two implementation options for flexibility"
+  implementation_approach:
+    - "Created CTASection with Tally popup using window.open()"
+    - "Built CTASectionModal with Tally's official embed script"
+    - "Added blur overlay with backdrop-filter for visual focus"
+    - "Implemented thank you state with secondary CTAs"
+    - "Added TypeScript types for gtag analytics"
+    - "Configured environment variables for Tally form ID"
+  knowledge_generated:
+    - "Tally forms can be integrated via popup or embedded modal"
+    - "Blur overlay improves user focus during form completion"
+    - "Window focus events can detect popup closure"
+    - "Tally's embed script provides callbacks for accurate tracking"
+    - "Environment variables enable easy form ID management"
+  manual_testing_steps:
+    - "Click CTA button and verify Tally form opens"
+    - "Confirm blur overlay appears and dismisses correctly"
+    - "Test form submission flow and thank you state"
+    - "Verify analytics events fire for cta_click and cta_submit"
+    - "Test responsive behavior on mobile devices"
+    - "Ensure secondary CTAs work in thank you state"

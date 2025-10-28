@@ -1,0 +1,24 @@
+metadata:
+  title: Implement initiative, milestone, and issue schemas
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.1.5]
+    blocked_by: [A.1.3]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement Zod schemas for initiative, milestone, and issue artifacts with
+    flexible acceptance_criteria (strings, arrays, and nested objects).
+  acceptance_criteria:
+    - Initiative: vision, scope, success_criteria; optional completion_summary/notes
+    - Milestone: summary, deliverables, validation; optional completion_summary/notes
+    - Issue: summary, acceptance_criteria; optional development_process/completion_analysis/review_details/notes
+    - Acceptance criteria supports mixed/nested structures

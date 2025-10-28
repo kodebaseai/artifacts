@@ -1,0 +1,76 @@
+metadata:
+  title: Review assignment based on artifact ownership
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.3.5 ]
+    blocked_by: [ C.3.1, C.3.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.3.1 and C.3.3 - need PR templates and body generation first
+        blocking_dependencies:
+          - artifact_id: C.3.1
+            resolved: false
+          - artifact_id: C.3.3
+            resolved: false
+    - event: cancelled
+      timestamp: 2025-07-18T12:29:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: cancelled
+      metadata:
+        reason: Context system handles this
+
+content:
+  summary: >
+    Automatically assign PR reviewers based on artifact ownership, team
+    structure, and expertise areas. Use artifact metadata (assignee, created_by)
+    and team configuration to intelligently suggest and assign appropriate
+    reviewers for maximum review quality and efficiency.
+
+  problem_statement: >
+    Manual reviewer assignment is time-consuming and often suboptimal. Team
+    members most familiar with an artifact's context should review related PRs,
+    but this knowledge isn't leveraged in current PR workflows. Automatic
+    assignment based on artifact ownership can improve review quality.
+
+  acceptance_criteria:
+    - Automatic reviewer assignment based on artifact assignee/creator
+    - Team-based assignment using CODEOWNERS-style configuration
+    - Expertise-based assignment considering artifact types and domains
+    - Fallback assignment rules for unavailable or unassigned artifacts
+    - Manual override capabilities for special cases
+    - Integration with existing GitHub reviewer assignment mechanisms
+
+  deliverables:
+    - Intelligent reviewer assignment system
+    - Team configuration and CODEOWNERS integration
+    - Expertise mapping and domain-based assignment
+    - Assignment rules engine with configurable logic
+    - GitHub API integration for reviewer management
+    - Documentation for team configuration and assignment rules
+
+  technical_notes: >
+    Extend the PR automation to analyze artifact metadata and determine
+    appropriate reviewers. Implement a configurable rules engine that considers
+    artifact assignee, creator, team membership, and expertise areas. Integrate
+    with GitHub's reviewer assignment API and support both automatic assignment
+    and suggested reviewers.
+
+  validation:
+    - Reviewers automatically assigned based on artifact ownership
+    - Team configuration correctly influences assignment decisions
+    - Expertise mapping works for different artifact types
+    - Fallback rules handle edge cases appropriately
+    - Manual overrides function correctly
+    - GitHub integration assigns reviewers successfully

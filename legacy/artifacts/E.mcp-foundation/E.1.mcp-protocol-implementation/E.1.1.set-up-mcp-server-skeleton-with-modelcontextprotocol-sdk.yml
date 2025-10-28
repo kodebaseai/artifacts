@@ -1,0 +1,105 @@
+metadata:
+  title: Set up MCP server skeleton with @modelcontextprotocol/sdk
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.1.2, E.1.3, E.1.4, E.1.5, E.1.6 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:30:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-30T15:12:21Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-30T15:13:21Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-30T16:38:06Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-30T16:47:34Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Initialize the basic MCP server project structure with the official
+    @modelcontextprotocol/sdk. This creates the foundation package for the MCP
+    server that will serve Kodebase project context to AI assistants. Set up the
+    monorepo package structure, dependencies, and basic server skeleton
+    following MCP best practices.
+
+  acceptance_criteria:
+    - New @kodebase/mcp-server package created in packages/ directory
+    - modelcontextprotocol/sdk dependency installed and configured
+    - Basic TypeScript configuration with proper types
+    - Package.json configured with correct metadata and scripts
+    - Basic MCP server class skeleton that can instantiate without errors
+    - Exports proper MCP server interface for other packages to use
+
+development_process:
+  alternatives_considered:
+    - Using custom MCP implementation instead of official SDK - rejected for
+      maintainability and protocol compliance
+    - Creating HTTP-based server first - rejected as stdio is simpler for MVP
+      and matches CLI patterns
+    - Adding immediate tool registration - rejected as it violates MVP
+      principle, belongs in subsequent issues
+    - Using JavaScript instead of TypeScript - rejected as it breaks monorepo
+      type safety standards
+    - Implementing complex configuration system upfront - rejected to maintain
+      focus on basic skeleton
+  challenges_encountered:
+    - challenge: TypeScript import/export circular dependency with factory function
+      solution: Made factory function async and used dynamic import to resolve dependency
+    - challenge: Vitest configuration conflicts with root setup requiring
+        vitest-setup.ts file
+      solution: Created standalone vitest config for mcp-server package with node
+        environment
+    - challenge: Understanding MCP SDK API structure and transport patterns
+      solution: Studied official documentation and examples, followed McpServer +
+        StdioServerTransport pattern
+
+completion_analysis:
+  key_insights:
+    - MCP SDK follows clear separation between server logic and transport
+      mechanisms
+    - Official SDK provides excellent foundation for protocol compliance
+    - Monorepo patterns from core/cli packages transfer seamlessly to MCP server
+    - Skeleton approach enables future milestones to build systematically
+  implementation_approach:
+    - Followed existing monorepo package structure (core, cli patterns)
+    - Created minimal viable MCP server that instantiates without errors
+    - Implemented clean public API with factory function for other packages
+    - Used official @modelcontextprotocol/sdk for protocol compliance
+    - Added comprehensive TypeScript typing with no 'any' types
+    - Included basic test coverage to verify skeleton functionality
+  knowledge_generated:
+    - MCP server architecture requires server instance + transport separation
+    - McpServer class handles protocol logic, transport handles communication
+    - Official SDK supports stdio, HTTP, and other transport mechanisms
+    - Skeleton can be extended systematically with tools, resources, and
+      middleware
+  manual_testing_steps:
+    - Verified package installs dependencies without errors
+    - Confirmed TypeScript compilation passes all type checks
+    - Validated all tests pass (6/6) with proper instantiation testing
+    - Tested build process generates correct ESM/CJS outputs
+    - Verified server class instantiates and provides expected interface
+    - Confirmed exports work correctly for other package consumption
+
+notes: |
+  This is the foundational issue for the entire MCP initiative. The server skeleton
+  must follow the established monorepo patterns and integrate cleanly with the existing
+  @kodebase/core package for artifact parsing and schema validation.

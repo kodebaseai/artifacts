@@ -1,0 +1,25 @@
+metadata:
+  title: Implement canTransition/getValidTransitions per artifact type
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.4.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:05:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Define legal state transitions per artifact type (initiative, milestone, issue)
+    and expose canTransition/getValidTransitions utilities consistent with the spec.
+  acceptance_criteria:
+    - Transition maps cover all states (draft, ready, blocked, in_progress, in_review, completed, cancelled, archived)
+    - canTransition returns true only for legal transitions; false otherwise
+    - getValidTransitions returns an ordered, de-duplicated list of next states
+    - Clear errors/messages are available for illegal transitions in validators
+

@@ -1,0 +1,27 @@
+metadata:
+  title: Parser and Validator
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.3]
+    blocked_by: [A.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement YAML → typed parsing and artifact validation with actionable
+    errors, including type detection and Zod error formatting.
+  deliverables:
+    - ArtifactParser with parseYaml and parseInitiative/Milestone/Issue
+    - ArtifactValidator with auto type detection and validateX methods
+    - Error formatter producing readable, actionable messages
+  validation:
+    - Invalid YAML produces clear messages; valid docs parse into correct types
+    - Type detection resolves initiative/milestone/issue reliably
+    - Unit tests covering success and failure cases

@@ -1,0 +1,79 @@
+metadata:
+  title: "Validation Error Reporting and Feedback"
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [ "I.2.5" ]
+    blocked_by: [ "I.2.1" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T18:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T18:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.2.1
+            resolved: false
+
+content:
+  summary: "Develop a comprehensive error reporting system that provides clear,
+    actionable feedback for artifact validation failures across multiple
+    channels (CLI, GitHub, web). The system will implement severity levels
+    (ERROR blocks merge, WARNING flags for review, INFO provides guidance),
+    include specific field references with line numbers, offer exact remediation
+    steps, and link to documentation for complex rules. It will track validation
+    progress across PR updates showing which errors have been fixed, maintain a
+    remediation suggestion database with context-specific advice, and ensure
+    consistent error formatting across all validation channels to maximize
+    developer productivity through clear guidance."
+
+  acceptance_criteria:
+    - "Provides specific, actionable error messages with exact remediation steps"
+    - "Tracks validation progress across PR updates"
+    - "Integrates seamlessly with GitHub PR workflow"
+    - "Maintains consistent error format across all validation channels"
+    - "Implements severity levels: ERROR (blocks merge), WARNING (flags for
+      review), INFO (guidance)"
+    - "Provides specific field references with line numbers where applicable"
+    - "Includes remediation suggestions with exact steps to fix"
+    - "Links to documentation for complex validation rules"
+    - "Shows which validation errors have been fixed in PR updates"
+    - "Integrates with GitHub status checks with detailed descriptions"
+    - "Posts PR comments with formatted validation reports"
+    - "Provides CLI output for local validation runs"
+    - "Uses structured error format with machine-readable metadata"
+    - "Maintains remediation suggestion database with context-specific advice"
+    - "Tracks progress between validation runs"
+    - "Supports multi-channel output formatting (CLI, GitHub, web)"
+
+notes: |
+  Error Message Structure:
+  - Severity levels: ERROR (blocks merge), WARNING (flags for review), INFO (guidance)
+  - Specific field references with line numbers where applicable
+  - Remediation suggestions with exact steps to fix
+  - Links to documentation for complex validation rules
+
+  Progress Tracking:
+  - Show which validation errors have been fixed in PR updates
+  - Track validation improvement over time
+  - Provide diff of validation results between runs
+
+  Integration Points:
+  - GitHub status checks with detailed descriptions
+  - PR comments with formatted validation reports
+  - CLI output for local validation runs
+
+  Technical Specifications:
+  - Structured error format with machine-readable metadata
+  - Remediation suggestion database with context-specific advice
+  - Progress tracking between validation runs
+  - Multi-channel output formatting (CLI, GitHub, web)
+
+  This system ensures developers receive clear, actionable feedback regardless of where they encounter validation errors.

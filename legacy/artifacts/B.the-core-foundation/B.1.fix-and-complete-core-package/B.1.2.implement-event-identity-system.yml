@@ -1,0 +1,119 @@
+metadata:
+  title: Implement event identity system (event_id, correlation_id, parent_event_id)
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.1.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-11T12:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-11T10:55:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.1.1
+            resolved: true
+            resolved_at: 2025-07-11T16:01:43Z
+    - event: ready
+      timestamp: 2025-07-11T16:01:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-14T10:01:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-11T14:50:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-14T14:52:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Add missing event tracking fields that are critical for automation. event_id
+    enables deduplication, correlation_id tracks cascade chains, parent_event_id
+    links related events. Foundation for all cascade automation (saves 140
+    min/cascade).
+  acceptance_criteria:
+    - Add event_id field to event schema (UUID v4)
+    - Add correlation_id field for tracking related events
+    - Add parent_event_id field for event chains
+    - Update all parsers and validators
+    - Generate event_id automatically when creating events
+    - Validate event relationships in cascade operations
+    - Update existing tests to include new fields
+  technical_notes: >
+    Event identity enables: - Deduplication: Prevent duplicate events with same
+    event_id - Correlation: Track all events in a cascade operation - Causality:
+    Link child events to parent triggers - Audit: Complete traceability of all
+    state changes
+
+notes:
+  implementation_details: >
+    1. Update eventSchema in packages/core/src/schemas/common.ts 2. Add UUID
+    generation utility for event_id 3. Create event builder that auto-populates
+    identity fields 4. Update all event creation code to use builder
+  friction_point_addressed: >
+    FP-011: Manual cascade checking takes 140 minutes per cascade. This is the
+    foundation for automating cascade analysis.
+
+development_process:
+  alternatives_considered:
+    - "Store all identity fields at top level (event_id, correlation_id,
+      parent_event_id)"
+    - "Store all identity fields in metadata as sub-object"
+    - "Use auto-incrementing integers instead of UUIDs for event_id"
+    - "Generate event_id on demand rather than at creation time"
+  challenges_encountered:
+    - challenge: "Initial confusion about field placement (top-level vs metadata)"
+      solution: "Separated core identity (event_id) at top level from cascade tracking
+        (correlation_id, parent_event_id) in metadata"
+    - challenge: "Many existing tests needed updating to use new event structure"
+      solution: "Systematically updated all 136 tests to use EventBuilder with proper
+        identity fields"
+    - challenge: "Had to update both schemas and TypeScript interfaces"
+      solution: "Ensured consistency between Zod schemas and TypeScript types,
+        maintaining type safety throughout"
+
+completion_analysis:
+  key_insights:
+    - "Event identity system provides the foundation for all cascade automation"
+    - "Separating core identity (event_id) from cascade metadata maintains clean
+      architecture"
+    - "EventBuilder pattern ensures consistent event creation across the
+      codebase"
+    - "All 136 tests now properly use event identity fields"
+  implementation_approach:
+    - "Implemented a three-tier identity system. event_id as the primary key at
+      the top level, with correlation_id and parent_event_id in metadata for
+      cascade tracking"
+    - "Created an EventBuilder class with fluent API to ensure all events are
+      created with proper identity fields"
+    - "Updated all schemas, types, and tests to use the new structure"
+    - "The approach maintains backward compatibility while enabling powerful
+      cascade automation features"
+  knowledge_generated:
+    - "Event builders with fluent APIs significantly reduce boilerplate and
+      errors"
+    - "Separating identity from metadata allows flexible schema evolution"
+    - "Comprehensive test updates are critical when changing core data
+      structures"
+    - "UUID v4 format (evt_[16 hex chars]) provides sufficient uniqueness for
+      event IDs"
+  manual_testing_steps:
+    - "Run all core package tests: pnpm test (136 tests passing)"
+    - "Create events using EventBuilder and verify identity fields are populated"
+    - "Test cascade event creation and verify parent_event_id linkage"
+    - "Validate YAML parsing with new event structure"
+    - "Check that cascade engine properly uses event identity for correlation"

@@ -1,0 +1,78 @@
+metadata:
+  title: Next.js Marketing Site Setup
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T22:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-07T22:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-07T22:48:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Bootstrap a new Next.js codebase for the marketing website with the required
+    tooling, folder structure, and CI setup. Ensure Tailwind CSS and
+    @kodebase/ui components are integrated.
+  acceptance_criteria:
+    - New Next.js 15 app scaffolded in apps/web
+    - TypeScript, Biome configured per monorepo standards
+    - Tailwind CSS set up with shared design tokens
+    - kodebase/ui components imported and a sample page renders
+    - Placeholder components for each section
+    - CI pipeline (lint, build) passes in GitHub Actions
+    - README updated with dev setup instructions
+
+notes: >
+  This forms the foundation for all subsequent landing-page work.
+
+development_process:
+  alternatives_considered:
+    - "Use a separate repo for marketing site, but monorepo keeps DX consistent"
+    - "Create site with Astro, but chose Next.js 15 for first-class React and
+      Turbopack support"
+  challenges_encountered:
+    - challenge: "Tailwind + @kodebase/ui peer-dependency alignment"
+      solution: "Pinned Tailwind 4.x versions across workspace to avoid mismatched
+        PostCSS plugins"
+    - challenge: "next/font CSS variable setup with two custom fonts"
+      solution: "Leveraged next/font/google variable option and applied via body class"
+
+completion_analysis:
+  key_insights:
+    - "Monorepo tooling (Turborepo, shared TS/Tailwind config) accelerated setup"
+    - "Using placeholder components early helps separate structure from later
+      visual polish"
+  implementation_approach:
+    - "Scaffolded Next.js app with Tailwind + UI library"
+    - "Added section placeholders as separate components for modularity"
+  knowledge_generated:
+    - "Documented pattern for loading multiple Google fonts via next/font"
+    - "Established baseline container / spacing utility classes for marketing
+      pages"
+  manual_testing_steps:
+    - "Run `pnpm --filter web dev` and verify home page renders all sections"
+    - "Check browser console for font-loading and Tailwind class warnings"
+    - "Push branch and validate Vercel preview build passes and displays new
+      sections"

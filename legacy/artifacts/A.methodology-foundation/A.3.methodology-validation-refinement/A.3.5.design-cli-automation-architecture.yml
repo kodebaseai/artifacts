@@ -1,0 +1,141 @@
+metadata:
+  title: Design CLI Automation Architecture
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ A.3.1, A.3.2, A.3.4 ]
+    blocks: [ A.3.6 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.3.1
+            resolved: true
+            resolved_at: 2025-07-09T23:40:08Z
+          - artifact_id: A.3.2
+            resolved: true
+            resolved_at: 2025-07-10T09:20:08Z
+          - artifact_id: A.3.2
+            resolved: true
+            resolved_at: 2025-07-10T10:26:08Z
+    - event: ready
+      timestamp: 2025-07-10T10:26:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-10T10:27:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-10T10:38:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-10T10:41:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Based on manual workflow documentation, design the architecture for CLI
+    automation. Define commands, workflows, and integration points.
+  acceptance_criteria:
+    - CLI command structure designed:
+        - Command hierarchy (kodebase create/ready/etc)
+        - Subcommands and options
+        - Argument patterns
+        - Output formats
+        - Interactive vs batch modes
+    - Workflow automation mapped:
+        - Common sequences identified
+        - Macro commands designed
+        - Pipeline definitions
+        - Conditional logic
+        - Error recovery flows
+    - Integration points specified:
+        - Git hook interfaces
+        - GitHub/GitLab API needs
+        - File system operations
+        - External tool calls
+        - Plugin architecture
+    - Data flow documented:
+        - Input sources
+        - Processing stages
+        - Storage patterns
+        - Output destinations
+        - Cache strategies
+    - Error handling planned:
+        - Common failure modes
+        - Validation strategies
+        - Recovery procedures
+        - User messaging
+        - Rollback capabilities
+    - User experience mocked:
+        - Command examples
+        - Output samples
+        - Progress indicators
+        - Confirmation prompts
+        - Help documentation
+
+notes: >
+  This becomes the blueprint for Initiative B (CLI development). Consider both
+  power users and beginners in UX design. Plan for extensibility and third-party
+  integrations.
+
+development_process:
+  alternatives_considered:
+    - "Full-featured CLI vs MVP approach: Chose MVP to validate core concepts
+      first"
+    - "Multiple programming languages considered: TypeScript chosen for
+      consistency with web stack"
+    - "Complex plugin system vs simple extension points: Deferred plugins to
+      post-MVP"
+    - "Database backend vs Git-only: Stayed true to Git-as-database philosophy"
+
+  challenges_encountered:
+    - challenge: "Balancing automation with user control"
+      solution: "Implemented both interactive and batch modes to accommodate different
+        user preferences"
+    - challenge: "Error recovery complexity in multi-step operations"
+      solution: "Simplified to transaction-based rollback and retry patterns with
+        clear recovery messages"
+    - challenge: "Cross-platform compatibility requirements"
+      solution: "Focused on Mac/Linux for MVP, with Windows support deferred to
+        post-MVP phase"
+
+completion_analysis:
+  key_insights:
+    - "Progressive disclosure is key - simple commands for beginners, advanced
+      for power users"
+    - "Git hooks provide seamless automation without changing developer workflow"
+    - "Error messages with recovery hints dramatically improve UX"
+    - "Caching strategies essential for sub-100ms performance targets"
+
+  implementation_approach:
+    - "Three-tier command hierarchy: Primary (MVP), Secondary, Advanced"
+    - "Event-driven architecture with Git as single source of truth"
+    - "Plugin architecture designed but deferred to maintain MVP simplicity"
+    - "Focus on developer experience with smart defaults and minimal
+      configuration"
+
+  knowledge_generated:
+    - "Command flow diagrams for each primary operation"
+    - "Data flow architecture from input to Git commit"
+    - "Comprehensive error handling strategy with recovery procedures"
+    - "Clear migration path from Alpha MVP to full implementation"
+
+  deliverables:
+    - ".kodebase/docs/cli-architecture.md - Comprehensive architecture document"
+    - "Command hierarchy with clear MVP/post-MVP boundaries"
+    - "Integration architecture for Git, GitHub, and future plugins"
+    - "Implementation roadmap with 6-week timeline"

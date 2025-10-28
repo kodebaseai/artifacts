@@ -1,0 +1,114 @@
+metadata:
+  title: Artifact file updates using @kodebase/core parsers
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.2.3 ]
+    blocked_by: [ C.2.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.2.1 - need CLI integration foundation first
+        blocking_dependencies:
+          - artifact_id: C.2.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-17T10:37:41Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+      metadata:
+        unblocked_by: C.2.1
+        reason: Unblocked by completion of C.2.1 - CLI integration foundation is now
+          complete
+    - event: in_progress
+      timestamp: 2025-07-17T11:53:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-17T11:53:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-17T11:53:50Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement artifact YAML file updates using @kodebase/core's ArtifactParser
+    and performTransition. Ensure git hooks can read, modify, and write artifact
+    files reliably with proper validation. This enables git operations to
+    directly update artifact state in YAML files.
+  acceptance_criteria:
+    - Git hooks can load artifact YAML files using ArtifactParser
+    - performTransition is used to update artifact states correctly
+    - Modified artifacts are written back to YAML files with proper formatting
+    - Event identity fields are properly populated during updates
+    - File operations handle concurrent access and error cases gracefully
+    - Artifact validation ensures data integrity after updates
+    - Integration tests verify complete read-modify-write workflow
+
+notes:
+  core_integration_points: >
+    1. ArtifactParser: For reading and validating YAML files 2.
+    performTransition: For state changes with validation 3. YAML formatting
+    utilities: For consistent output format 4. Event identity system: For proper
+    event_id and correlation tracking 5. Validation system: For ensuring
+    artifact integrity
+  file_operation_requirements: >
+    - Atomic file operations to prevent corruption - Proper error handling for
+    file system issues (permissions, disk space) - Concurrent access protection
+    (file locking or retry mechanisms) - Backup/recovery strategies for failed
+    operations - Path resolution from git hook context to artifact files
+  implementation_strategy: >
+    Build a robust file operation layer that uses @kodebase/core utilities for
+    all artifact manipulations. Ensure git hooks can reliably update artifacts
+    without corruption or data loss. Include comprehensive error handling and
+    recovery mechanisms.
+
+completion_analysis:
+  key_insights:
+    - Enhanced ArtifactLoader with atomic file operations using temporary files
+      and rename operations to prevent corruption during concurrent access
+    - Implemented comprehensive error handling with custom ArtifactFileError
+      class providing actionable error messages for different failure scenarios
+    - Added backup and recovery mechanisms with automatic restoration on failed
+      operations, ensuring data integrity is never compromised
+    - Created retry mechanisms with exponential backoff for transient failures,
+      improving reliability in high-concurrency environments
+    - Enhanced validation including chronological event ordering and data
+      integrity checks to catch inconsistencies early
+    - Implemented extensive integration tests covering complete
+      read-modify-write workflows with 13 test cases for error scenarios and
+      concurrent access
+    - Successfully integrated with @kodebase/core ArtifactParser,
+      performTransition, and createEvent for consistent state management
+    - Added comprehensive TypeScript type safety throughout the implementation
+      preventing runtime errors
+  implementation_approach: >
+    Followed TDD principles with comprehensive testing before implementation.
+    Created atomic file operations using temporary files and fs.renameSync() for
+    corruption-free updates. Built layered error handling with specific error
+    types for different failure scenarios. Added retry logic with exponential
+    backoff for reliability.
+  manual_testing_steps:
+    - Verified atomic file operations prevent corruption during simulated
+      concurrent access
+    - Tested error handling with permission denied, disk full, and file lock
+      scenarios
+    - Confirmed backup/recovery works correctly when operations fail midway
+    - Validated retry mechanisms handle transient failures appropriately
+    - Tested integration with @kodebase/core functions in realistic git hook
+      scenarios
+    - Verified all 13 integration tests pass with comprehensive coverage
+    - Confirmed TypeScript type checking passes with no 'any' types used

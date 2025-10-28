@@ -1,0 +1,25 @@
+metadata:
+  title: Slug-tolerant ID extraction regex
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.6.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:20:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement a slug-tolerant filename parser to extract artifact IDs from filenames
+    with optional human-readable slugs, e.g., `A.yml`, `A.1.yml`,
+    `A.1.1.my-feature.yml` → IDs `A`, `A.1`, `A.1.1`.
+  acceptance_criteria:
+    - 'Regex matches IDs with multi-digit segments and optional slugs: ^([A-Z](?:\.\d+)*)(?:\..+)?\.yml$'
+    - 'getArtifactIdFromPath returns only the ID (without slug)'
+    - 'Non-matching files are ignored safely'
+

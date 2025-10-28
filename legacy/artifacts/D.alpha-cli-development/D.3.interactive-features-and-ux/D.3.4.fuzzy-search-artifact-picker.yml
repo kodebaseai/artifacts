@@ -1,0 +1,139 @@
+metadata:
+  title: Build fuzzy-search artifact picker
+  priority: medium
+  estimation: M
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-21T19:50:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-21T19:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        reason: D.2 completed - CLI is more advanced than anticipated, updating scope
+    - event: in_progress
+      timestamp: 2025-07-21T14:19:15Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.3.4
+    - event: in_review
+      timestamp: 2025-07-21T14:39:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-21T16:25:49Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create an interactive fuzzy-search component for selecting artifacts from
+    large lists. Provide keyboard navigation, filtering, and preview
+    capabilities to make artifact selection fast and intuitive.
+
+  description: >
+    Many CLI commands need users to specify artifact IDs, which becomes
+    cumbersome with large projects. This component provides a searchable,
+    filterable picker that integrates with existing commands, making artifact
+    selection much more user-friendly.
+
+  acceptance_criteria:
+    - Fuzzy search component works with arrow key navigation
+    - Real-time filtering as user types search terms
+    - Shows artifact details/preview on selection
+    - Handles large artifact lists efficiently (100+ items)
+    - Integrates with commands that need artifact selection
+    - Supports different filter modes (by type, status, etc.)
+    - Clear visual feedback for selection and filtering
+    - Escape key cancels selection gracefully
+
+  technical_approach: >
+    Build Ink-based React component using existing UI patterns. Implement fuzzy
+    matching algorithm (or use library like fuse.js). Create efficient filtering
+    and virtualization for large lists. Integrate with existing artifact loading
+    utilities.
+
+  files_affected:
+    - packages/cli/src/components/ArtifactPicker.tsx (main picker component)
+    - packages/cli/src/utils/fuzzy-search.ts (search logic)
+    - packages/cli/src/components/ArtifactPreview.tsx (preview component)
+    - packages/cli/src/commands/*.ts (integration points)
+
+development_process:
+  alternatives_considered:
+    - "Using external fuzzy search library (fuse.js) - opted for custom
+      implementation for control and minimal dependencies"
+    - "Building search inside ArtifactLoader vs dedicated fuzzy-search utility -
+      chose utility for reusability"
+    - "Single-mode picker vs multi-state flow - implemented multi-state for
+      better UX in interactive commands"
+
+  challenges_encountered:
+    - challenge: "React Hook Rules violation - useInput called inside switch case in
+        InteractiveStart"
+      solution: "Moved useInput hook to top level of component and handled state
+        management with conditional logic"
+    - challenge: "TypeScript type compatibility between ArtifactSummary and fuzzy
+        search results"
+      solution: "Created FilteredArtifact interface extending ArtifactSummary with
+        fuzzy search metadata"
+
+completion_analysis:
+  key_insights:
+    - "Fuzzy search with scoring system provides intuitive filtering matching
+      user expectations"
+    - "Separating search input mode from navigation mode creates smooth keyboard
+      interaction"
+    - "Multi-state flow in InteractiveStart demonstrates picker integration
+      patterns for other commands"
+
+  implementation_approach:
+    - "Custom fuzzy search algorithm with scoring (exact match: 100, contains:
+      80, char sequence: 60+)"
+    - "React state management for input/navigation modes with useInput for
+      keyboard handling"
+    - "Component composition pattern - ArtifactPicker + ArtifactPreview for
+      flexible layouts"
+    - "Integration example with Start command showing complete workflow from
+      selection to execution"
+
+  knowledge_generated:
+    - "Ink useInput hook must be at component top level to avoid React Hook
+      Rules violations"
+    - "Efficient filtering for large lists requires useMemo optimization and
+      smart re-render control"
+    - "Preview integration works well with side-by-side layout using Ink Box
+      flex properties"
+
+  manual_testing_steps:
+    - "Verified fuzzy search with various search patterns (exact, partial,
+      character sequences)"
+    - "Tested keyboard navigation flow: input -> down arrow -> navigate list ->
+      enter to select"
+    - "Confirmed escape key cancellation works in both input and navigation
+      modes"
+    - "Validated integration with start command including multi-state flow and
+      preview display"
+
+notes:
+  implementation_details: >
+    Built using existing Ink patterns with ArtifactLoader integration. Custom
+    fuzzy search provides better control than external libraries. Multi-state
+    flow in InteractiveStart serves as integration template for other commands.
+
+  integration_points: >
+    Start command demonstrates full integration. Pattern can be reused for
+    status, update, delete, show commands. ArtifactPicker component is designed
+    for flexible integration with different filter requirements and display
+    contexts.

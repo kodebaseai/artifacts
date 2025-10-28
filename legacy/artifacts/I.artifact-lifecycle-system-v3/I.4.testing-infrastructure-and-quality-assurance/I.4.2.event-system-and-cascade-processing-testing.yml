@@ -1,0 +1,91 @@
+metadata:
+  title: "Event System and Cascade Processing Testing"
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: ["I.4.5"]
+    blocked_by: []
+  events:
+    - timestamp: "2025-08-04T18:15:00Z"
+      event: draft
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-08-04T18:20:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+
+content:
+  summary: "Build comprehensive test coverage for the event generation and cascade processing systems to ensure reliability and correctness. Tests will verify proper correlation_id and parent_event_id assignment, state transition event generation from content analysis, and correct actor attribution in all events. Cascade processing tests will cover single-level cascades (Issue→Milestone), multi-level cascades (Issue→Milestone→Initiative), loop detection and prevention mechanisms, and concurrent cascade processing scenarios. Event chain integrity testing will ensure correlation chains remain unbroken through cascades, validate integrity checking algorithms, and test cascade rollback on violations. The test suite will use mock artifact repositories, event simulation tools, and cascade processing test scenarios to verify all cascade rules are properly implemented and maintain event chain integrity through all operations."
+
+  acceptance_criteria:
+    - "All event generation rules tested with proper correlation chains"
+    - "Cascade processing tested for all supported scenarios"
+    - "Loop detection prevents infinite recursion in all test cases"
+    - "Event chain integrity maintained through all cascade operations"
+    - "Tests proper correlation_id and parent_event_id assignment"
+    - "Tests state transition event generation from content analysis"
+    - "Tests event metadata and actor attribution"
+    - "Tests single-level cascades (Issue → Milestone)"
+    - "Tests multi-level cascades (Issue → Milestone → Initiative)"
+    - "Tests cascade loop detection and prevention"
+    - "Tests concurrent cascade processing"
+    - "Tests correlation chain maintenance through cascades"
+    - "Tests event chain validation and integrity checking"
+    - "Tests cascade rollback on integrity violations"
+    - "Implements mock artifact repositories for testing"
+    - "Provides event simulation and verification tools"
+    - "Creates cascade processing test scenarios"
+    - "Includes event chain analysis utilities"
+
+notes: |
+  Technical Specifications from Initiative Planning:
+
+  **Event System v3 Schema (from I.1.1):**
+  - Each event contains exactly five fields: event, timestamp, actor, trigger, metadata
+  - No event_id, correlation_id, or parent_event_id fields stored (v3 simplification)
+  - Chronological order inside artifact file provides chain of custody
+  - Performance requirement: cascade processing <30 seconds for complex scenarios
+
+  **Event Correlation Rules Testing:**
+  - Root events (artifact creation): correlation_id = null
+  - Content-based transitions: correlation_id inherits from previous event in artifact
+  - Cascade events: correlation_id format evt_[parent-event-id]-[timestamp]
+  - Cross-artifact dependency resolution: correlation_id from triggering dependency completion
+
+  **Named Cascade Flow Testing (6 flows from I.1.1):**
+  1. Parent Start Flow: First child in_progress → parent in_progress
+  2. Completion Cascade Flow: Last child completed → parent in_review
+  3. Dependency Resolution Flow: Blocker completed → dependent unblocked
+  4. Cancel Flow: Manual cancel → cancelled state (triggers sibling unblock)
+  5. Archival Flow: Parent completed → cancelled children archived
+  6. Reactivation Flow: Manual reactivation of cancelled artifacts
+
+  **Actor Attribution Testing:**
+  - CLI Creation: "User Name (email@domain.com)" from git config
+  - PR Merge: "GitHub Actions (github-actions[bot]@users.noreply.github.com)"
+  - AI Agent Work: "agent.[TYPE].[SESSION]@[TENANT].kodebase.ai"
+  - Cascade Processing: "Cascade Engine (system@kodebase.ai)"
+  - Migration: "Migration System (migration@kodebase.ai)"
+
+  **State Machine Integration:**
+  - 8-state model: draft, ready, blocked, in_progress, in_review, completed, cancelled, archived
+  - PR workflow transitions integrated with all cascade flows
+  - Existing cancellation/archival logic preserved and enhanced
+
+  **Cascade Processing Rules:**
+  - Atomic processing: all cascade events succeed or all rollback
+  - Loop prevention: track visited artifacts, limit cascade depth
+  - Validation: verify all conditions before propagating
+  - canMarkReady() validation algorithm implementation
+  - Bottom-up cascade processing with immediate propagation
+
+  **Test Infrastructure:**
+  - Mock artifact repositories for cascade simulation
+  - Event simulation and verification tools
+  - Cascade processing test scenarios for all 6 flows
+  - Event chain analysis utilities for integrity checking
+  - Concurrent cascade processing simulation

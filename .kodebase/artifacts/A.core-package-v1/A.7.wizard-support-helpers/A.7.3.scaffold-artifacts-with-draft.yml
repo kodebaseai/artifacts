@@ -1,0 +1,24 @@
+metadata:
+  title: scaffoldInitiative/Milestone/Issue with initial draft event
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.7.4]
+    blocked_by: [A.7.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:28:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement scaffold helpers that build in-memory artifacts with minimal content
+    and an initial draft event using the correct trigger and timestamp.
+  acceptance_criteria:
+    - Helpers return typed objects that pass schema validation
+    - Draft event uses trigger `artifact_created` and ISO-8601 UTC timestamp
+    - Notes and optional fields are supported without breaking validation
+

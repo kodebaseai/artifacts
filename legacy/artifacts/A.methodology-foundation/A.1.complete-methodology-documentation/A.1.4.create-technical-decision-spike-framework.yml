@@ -1,0 +1,141 @@
+metadata:
+  title: Create Technical Decision (Spike) Framework
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [A.1.7]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T10:36:05Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-07T11:14:56Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-07T11:26:31Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Document the spike process for technical decisions and explorations. Spikes
+    are NOT artifacts but a separate documentation framework that lives in
+    .kodebase/docs/engineering/spikes/ to capture technical decisions and their
+    rationale.
+  acceptance_criteria:
+    - Spike documentation structure defined:
+        - Location: .kodebase/docs/engineering/spikes/
+        - Format: Markdown documents
+        - Naming: decision-title.md
+        - Template: spike-template.md
+    - Spike template includes sections:
+        - Problem Statement
+        - Decision Criteria
+        - Options Investigated
+        - Analysis (pros/cons per option)
+        - Decision & Rationale
+        - Implementation Plan
+        - Validation Approach
+        - Related Issues (links to artifacts)
+        - Metadata section at end with:
+            - Author(s)
+            - Created date
+            - Last updated date
+            - Originating issue/milestone ID
+            - Decision status (proposed/accepted/superseded)
+            - Stakeholders consulted
+            - Review/approval details
+            - Tags/categories for searchability
+    - Spike types documented:
+        - Research Spike (investigate without building)
+        - Proof of Concept Spike (build to validate)
+        - Comparison Spike (evaluate specific alternatives)
+    - Time-boxing guidelines:
+        - Research Spike: 1-3 days
+        - Proof of Concept: 2-5 days
+        - Comparison Spike: 1-2 days
+    - Integration patterns documented:
+        - How issues trigger spikes (uncertainty encountered)
+        - How spikes generate issues (approach identified)
+        - Bidirectional linking between spikes and issues
+        - Multiple issues can reference same spike
+    - Quality gates defined:
+        - Spike creation checklist
+        - Spike completion criteria
+        - Implementation validation steps
+    - Decision tracking framework:
+        - How to reference spikes in issues
+        - When spike is required vs optional
+        - Validation during implementation
+    - Example spike document created:
+        - Real technical decision example
+        - Shows all template sections filled
+        - Demonstrates issue linking
+        - Includes complete metadata section
+        - Shows how to track decision evolution
+
+notes: >
+  Spikes are NOT artifacts in the Kodebase planning system. They are separate
+  technical documentation that lives in .kodebase/docs/engineering/spikes/. They
+  provide decision rationale and link to implementation issues. Reference:
+  .kodebase/docs/engineering/spikes/README.md
+
+development_process:
+  alternatives_considered:
+    - "Template-only approach: Just creating a template without comprehensive
+      documentation"
+    - "Integration with artifact system: Making spikes part of the planning
+      artifacts"
+    - "External tool integration: Using separate spike management tools"
+  challenges_encountered:
+    - challenge: "Balancing comprehensiveness with simplicity in the template structure"
+      solution: "Focused on essential sections while allowing optional extensions"
+    - challenge: "Ensuring clear distinction between spikes and artifacts to avoid
+        confusion"
+      solution: "Added clear header documentation explaining spikes are exploratory,
+        not work items"
+    - challenge: "Creating realistic example that demonstrates all template sections
+        effectively"
+      solution: "Used API framework decision as it touches all aspects: requirements,
+        options, trade-offs"
+
+completion_analysis:
+  key_insights:
+    - "Spikes serve as knowledge capture mechanism separate from planning
+      artifacts"
+    - "Structured template ensures consistent decision documentation across team"
+    - "Real example (AI agent Git identity) demonstrates practical application"
+    - "Integration patterns enable seamless workflow between spikes and issues"
+  implementation_approach:
+    - "Built comprehensive template covering all acceptance criteria sections"
+    - "Enhanced existing _README.md with complete framework documentation"
+    - "Created realistic example spike showing proper template usage"
+    - "Documented decision tracking and quality gates for spike process"
+  knowledge_generated:
+    - "Clear distinction between spikes (technical decisions) and artifacts
+      (planning)"
+    - "Time-boxing guidelines for different spike types maintain development
+      velocity"
+    - "Bidirectional linking pattern between spikes and issues enables
+      traceability"
+    - "Structured metadata section enables searchability and decision tracking"
+  manual_testing_steps:
+    - "Verified all template sections align with acceptance criteria"
+    - "Confirmed example spike demonstrates complete metadata usage"
+    - "Tested spike file naming convention with kebab-case format"
+    - "Validated integration patterns documentation against workflow
+      requirements"

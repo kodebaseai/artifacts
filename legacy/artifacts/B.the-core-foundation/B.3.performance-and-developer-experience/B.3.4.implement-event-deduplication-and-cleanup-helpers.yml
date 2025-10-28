@@ -1,0 +1,59 @@
+metadata:
+  title: Implement event deduplication and cleanup helpers
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.3.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-15T13:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-15T13:41:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.3.3
+            resolved: true
+            resolved_at: 2025-07-15T17:59:52Z
+    - event: ready
+      timestamp: 2025-07-15T17:59:52Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-16T10:20:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-16T11:25:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-16T11:27:08Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement utilities to detect and remove duplicate events, validate event
+    ordering, and ensure single state consistency. Prevent 25% of event-related
+    errors through automated cleanup and validation.
+  acceptance_criteria:
+    - Detect duplicate events based on timestamp, event type, and actor
+    - Remove duplicate events while preserving chronological order
+    - Validate event sequence follows proper state transitions
+    - Ensure only one event exists for each state at any time
+    - Clean up orphaned events after cascade operations
+    - Provide detailed reporting of cleanup actions performed
+    - Handle edge cases like simultaneous events or manual corrections
+
+notes: >
+  Addresses event duplication issues affecting 25% of artifacts. Critical for
+  data integrity and preventing invalid state transitions. Includes cleanup for
+  orphaned events after cascade operations.

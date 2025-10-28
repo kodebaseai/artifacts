@@ -1,0 +1,50 @@
+metadata:
+  title: "Testing Infrastructure & Quality Assurance"
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [ "I.5" ]
+    blocked_by: [ "I.3" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T17:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T17:50:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.3
+            resolved: false
+
+content:
+  summary: "Comprehensive testing infrastructure that ensures system reliability
+    through automated testing of all workflows, validation logic, and cascade
+    processing"
+
+  deliverables:
+    - "I.4.1: Core Validation Logic Testing - Unit and integration tests for
+      validation engine components"
+    - "I.4.2: Event System and Cascade Processing Testing - Testing for event
+      generation and cascade processing logic"
+    - "I.4.3: CLI Command Integration Testing - End-to-end testing for all CLI
+      commands and workflows"
+    - "I.4.4: GitHub Actions Workflow Testing - Testing for all GitHub Actions
+      workflows and integrations"
+    - "I.4.5: Performance and Load Testing - Performance validation and
+      scalability testing"
+
+  validation:
+    - "95%+ code coverage for all validation logic"
+    - "All workflows tested end-to-end"
+    - "Performance targets validated through testing"
+    - "Zero production bugs from tested components"
+    - "All validation rules tested with positive and negative cases"
+    - "Cascade processing tested for all supported scenarios"
+    - "Complete workflows tested end-to-end with validation"
+    - "All GitHub Actions workflows tested with success and failure scenarios"

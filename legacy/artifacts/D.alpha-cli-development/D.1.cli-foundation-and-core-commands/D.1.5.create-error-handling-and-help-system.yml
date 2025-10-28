@@ -1,0 +1,150 @@
+metadata:
+  title: Create error handling and help system
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.1.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by D.1.1 - need CLI foundation first
+        blocking_dependencies:
+          - artifact_id: D.1.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-18T20:43:22Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-18T21:01:36Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.1.5
+    - event: in_review
+      timestamp: 2025-07-18T21:24:45Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-18T21:26:48Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement comprehensive error handling and help system for the CLI. This
+    includes catching and displaying errors gracefully, providing helpful
+    suggestions for common mistakes, and creating detailed help documentation
+    for all commands with examples and usage patterns.
+
+  problem_statement: >
+    Good error messages and help documentation are crucial for developer
+    experience. Users should receive clear, actionable feedback when something
+    goes wrong, and comprehensive help when they need it. The system must
+    maintain the <100ms response time requirement while providing rich error
+    context.
+
+  acceptance_criteria:
+    - "Global error handler catches all exceptions"
+    - "Error messages include suggestions for fixes"
+    - "Common errors have specific handlers (file not found, invalid ID, etc.)"
+    - "--help works for main command and all subcommands"
+    - "Help includes examples for each command"
+    - "Error output uses color coding (red for errors)"
+    - "Stack traces only shown with --verbose flag"
+    - "All operations complete in <100ms"
+
+  deliverables:
+    - Implement comprehensive error handling
+    - Create helpful error messages with suggestions
+    - Add --help for all commands
+    - Create command examples
+    - Ensure <100ms response time
+
+  technical_notes: >
+    Create a central error handling system with custom error classes for
+    different scenarios. Use Ink's ErrorBoundary for React component errors.
+    Implement performance monitoring to ensure <100ms response time. Create a
+    help component that can be reused across commands. Use commander.js built-in
+    help system as a foundation.
+
+  validation:
+    - Invalid artifact ID shows suggestion to use 'list' command
+    - File system errors provide clear explanations
+    - --help displays comprehensive documentation
+    - Examples in help are runnable
+    - Performance metrics show <100ms response time
+    - Verbose mode shows additional debug information
+    - Error messages guide users to solutions
+
+development_process:
+  alternatives_considered:
+    - "Consider using commander.js for error handling - Rejected: CLI uses Ink,
+      not commander.js"
+    - "Use simple console.error for all errors - Rejected: Doesn't provide
+      structured suggestions"
+    - "Implement error handling in each command separately - Rejected: Creates
+      duplication and inconsistency"
+  challenges_encountered:
+    - challenge: "React error boundaries don't exist in CLI environment like browser"
+      solution: "Used process event handlers for uncaught exceptions and React hooks
+        for component errors"
+    - challenge: "TypeScript abstract class instantiation errors with CLIError"
+      solution: "Created anonymous concrete subclasses using class expressions for
+        dynamic error creation"
+
+completion_analysis:
+  key_insights:
+    - "Error handling in CLI requires different patterns than web - no window
+      events, use process handlers"
+    - "Ink components need structured error handling through React patterns, not
+      traditional CLI patterns"
+    - "Performance monitoring at entry point catches timing issues across all
+      command execution paths"
+    - "Custom error classes with suggestions provide much better UX than generic
+      error messages"
+  implementation_approach: >
+    Built comprehensive error system using React patterns adapted for CLI.
+    Created custom error classes for different scenarios (FileSystem,
+    InvalidArtifactId, Validation, Git, Performance) each with contextual
+    suggestions. Integrated global error handler using withErrorHandler HOC and
+    process event listeners. Enhanced help system with detailed examples and
+    color-coded output. Added performance monitoring to ensure <100ms response
+    time requirement.
+  knowledge_generated:
+    - "CLI error handling requires hybrid approach: process handlers + React
+      patterns"
+    - "Ink Text components don't support marginLeft - must wrap in Box
+      components"
+    - "Performance monitoring should wrap entire CLI execution, not individual
+      commands"
+    - "--verbose flag must be parsed at entry point and passed through component
+      hierarchy"
+  manual_testing_steps:
+    - "Test --help on main command and all subcommands (create, status, list)"
+    - "Test error scenarios: missing arguments, invalid artifact IDs, unknown
+      commands"
+    - "Verify error colors: red for errors, yellow for suggestions, gray for
+      details"
+    - "Test --verbose flag shows stack traces, without it shows help hint"
+    - "Verify all error messages include actionable suggestions"
+
+notes:
+  implementation_approach: >
+    Create an errors.ts module with custom error classes. Implement a global
+    error handler in the main CLI entry point. Create help templates for each
+    command with examples. Add performance timing wrapper to measure response
+    times. Design error messages to be educational, not just informative.

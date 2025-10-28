@@ -1,0 +1,128 @@
+metadata:
+  title: Tabbed Problem Section with AI Videos
+  priority: medium
+  estimation: L
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ G.1.2 ]
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-22T15:50:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-22T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-24T09:36:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: G.1.5
+    - event: in_review
+      timestamp: 2025-07-24T13:04:04Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-24T13:06:58Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create an interactive tabbed interface presenting the 5 core problems that
+    Kodebase solves. Each tab displays a paragraph explanation with a 5-second
+    AI robot animation representing the theme. Design:
+    .kodebase/docs/product/design/marketing landing page/Homepage.jpg
+  acceptance_criteria:
+    - Five interactive tabs for each problem area
+    - Tab 1: Context Decay - explanation + AI robot video
+    - Tab 2: Fragmented Workflows - explanation + AI robot video
+    - Tab 3: Human-agent Collaboration - explanation + AI robot video
+    - Tab 4: Knowledge Distillation - explanation + AI robot video
+    - Tab 5: Trust & Governance - explanation + AI robot video
+    - Smooth tab transitions with fade in/out animations
+    - Videos are optimized 5-second clips (<2MB each)
+    - Auto-advance through tabs with pause on hover
+    - Mobile responsive with swipe gestures for tab navigation
+    - Accessible keyboard navigation and screen reader support
+
+development_process:
+  alternatives_considered:
+    - "Radix UI Tabs: Initially considered for familiarity, but decided to
+      migrate to Base UI for better alignment with project standards"
+    - "CSS-only animations: Considered pure CSS transitions but chose View
+      Transition API for smoother, more performant animations"
+    - "Fixed background position: Considered static tab styling but chose moving
+      background for better user engagement"
+    - "JavaScript animation libraries: Considered Framer Motion but chose native
+      View Transitions for better performance and smaller bundle"
+  challenges_encountered:
+    - challenge: "Base UI TabsListContext missing error during component migration
+        from Radix UI"
+      solution: "Fixed by properly using TabsList component instead of regular div and
+        updating data attributes from data-[state=active] to data-[selected]"
+    - challenge: "SVG icons not inheriting color from selected tab state"
+      solution: "Added [&_svg]:text-current class to ensure proper color inheritance
+        through CSS cascade"
+    - challenge: "Video height overflow on md breakpoint not respecting parent
+        container max-height"
+      solution: "Added responsive max-height classes directly to video element:
+        max-h-[60vw] md:max-h-[40vh] lg:max-h-[514px]"
+    - challenge: "Background position calculation incorrect after window resize
+        causing flash effect"
+      solution: "Implemented debounced resize handler with 100ms delay and
+        skipViewTransition flag during resize events"
+    - challenge: "Moving background position miscalculated on mobile orientation
+        (horizontal vs vertical layout)"
+      solution: "Added responsive calculation logic detecting screen size with lg
+        breakpoint (1024px) and using appropriate transform (translateX vs
+        translateY)"
+
+completion_analysis:
+  key_insights:
+    - "View Transition API provides superior UX for tab animations compared to
+      traditional CSS transitions"
+    - "Base UI migration required careful attention to data attribute changes
+      (data-[state=active] → data-[selected])"
+    - "Responsive design complexity increases significantly when supporting both
+      horizontal and vertical orientations"
+    - "Debouncing resize events is critical for preventing visual glitches
+      during window resizing"
+  implementation_approach:
+    - "Component-first development: Built reusable Base UI Tabs component before
+      implementing specific problem section"
+    - "Progressive enhancement: Started with basic functionality, then added
+      smooth animations and responsive behavior"
+    - "Mobile-first responsive design: Implemented horizontal layout for small
+      screens, vertical for desktop"
+    - "Performance optimization: Used native View Transitions instead of heavy
+      animation libraries"
+  knowledge_generated:
+    - "View Transition API browser support patterns and fallback strategies for
+      older browsers"
+    - "Base UI component architecture differences from Radix UI, particularly in
+      event handling and data attributes"
+    - "CSS cascade behavior with SVG icon color inheritance in complex component
+      hierarchies"
+    - "Responsive video element constraints and how max-height behaves across
+      different container contexts"
+  manual_testing_steps:
+    - "Verified tab switching animations on Chrome, Firefox, and Safari"
+    - "Tested responsive behavior across mobile (375px), tablet (768px), and
+      desktop (1024px+) breakpoints"
+    - "Validated video loading with poster image on slow network connections"
+    - "Confirmed debounced resize behavior prevents flashing during window
+      resize"
+    - "Tested keyboard navigation and focus states for accessibility compliance"
+
+notes: >
+  Videos are already created. Focus on creating engaging copy for each problem
+  area that resonates with developer pain points. This section should create
+  emotional connection before presenting solutions.

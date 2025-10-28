@@ -1,0 +1,107 @@
+metadata:
+  title: "Automated Commit Generation and Git Integration"
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [ "I.3.5" ]
+    blocked_by: [ "I.3.3" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T18:10:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T18:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.3.3
+            resolved: false
+
+content:
+  summary: "Develop automated git integration that commits all cascade-generated
+    events back to the main branch after processing completes. The system will
+    create a single atomic commit containing all cascade events using the format
+    'cascade: Process events from PR #{pr-number}' with a detailed summary of
+    processed cascades in the commit body. It will perform direct git operations
+    to main branch (bypassing PR workflow for system events), use proper system
+    git configuration for actor attribution, implement graceful conflict
+    handling with retry logic, verify committed events maintain proper YAML
+    formatting, validate artifact integrity isn't broken by changes, and provide
+    commit SHA tracking for complete audit trail linking original PRs to cascade
+    commits."
+
+  acceptance_criteria:
+    - "Successfully commits all cascade events back to main branch"
+    - "Maintains proper commit message format and metadata"
+    - "Handles git conflicts without data loss"
+    - "Provides traceability through commit SHAs and PR references"
+    - "Creates single commit containing all cascade-generated events"
+    - "Uses commit message format: 'cascade: Process events from PR
+      #{pr-number}'"
+    - "Includes summary of processed cascades in commit message body"
+    - "Commits directly to main branch (bypasses PR workflow for system events)"
+    - "Uses system git configuration for commits"
+    - "Handles git conflicts gracefully with retry logic"
+    - "Verifies committed events maintain proper YAML formatting"
+    - "Validates that committed changes don't break artifact integrity"
+    - "Provides commit SHA tracking for audit purposes"
+    - "Implements direct git operations for main branch commits"
+    - "Configures system git with proper actor attribution"
+    - "Implements conflict detection and resolution strategies"
+    - "Performs post-commit verification and validation"
+
+notes:
+  technical_specifications:
+    - "Direct git operations for main branch commits bypassing PR workflow for
+      system events"
+    - "System git configuration with proper actor attribution for automated
+      commits"
+    - "Conflict detection and resolution strategies with retry logic for
+      transient failures"
+    - "Post-commit verification and validation to ensure artifact integrity"
+    - "Single atomic commit containing all cascade-generated events for clean
+      history"
+    - "Standardized commit message format: 'cascade: Process events from PR
+      #{pr-number}'"
+    - "Detailed commit body with summary of processed cascades for audit trail"
+    - "Commit SHA tracking for complete traceability linking PRs to cascade
+      commits"
+
+  integration_points:
+    - "Receives validated cascade events from I.3.3 State Consistency Validation"
+    - "Integrates with system git configuration for proper actor attribution"
+    - "Coordinates with I.3.5 Processing Monitoring for commit tracking and
+      audit"
+    - "Uses git conflict resolution strategies with retry mechanisms"
+    - "Provides commit metadata to monitoring systems for traceability"
+
+  performance_targets:
+    - "Successfully commits all cascade events back to main branch without data
+      loss"
+    - "Handles git conflicts gracefully with retry logic and exponential backoff"
+    - "Maintains proper commit message format and metadata consistency"
+    - "Provides complete traceability through commit SHAs and PR references"
+
+  implementation_details:
+    - "Commit Generation process:"
+    - "  - Create single commit containing all cascade-generated events"
+    - "  - Use commit message format: 'cascade: Process events from PR
+      #{pr-number}'"
+    - "  - Include summary of processed cascades in commit message body"
+    - "Git Integration with main branch operations:"
+    - "  - Commit directly to main branch (bypass PR workflow for system events)"
+    - "  - Use system git configuration for commits with proper actor
+      attribution"
+    - "  - Handle git conflicts gracefully with retry logic and exponential
+      backoff"
+    - "Verification and quality assurance:"
+    - "  - Verify committed events maintain proper YAML formatting"
+    - "  - Validate that committed changes don't break artifact integrity"
+    - "  - Provide commit SHA tracking for audit purposes"
+    - "Actor attribution using system configuration for automated cascade
+      commits"

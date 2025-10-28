@@ -1,0 +1,26 @@
+metadata:
+  title: Loader and File IO
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.7]
+    blocked_by: [A.5]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement slug-tolerant ID extraction and recursive discovery; provide
+    stable read/write of YAML artifacts.
+  deliverables:
+    - ID extraction regex ^([A-Z](?:\.\d+)*) (handle slugs via optional suffix)
+    - loadAllArtifactPaths, loadArtifactsByType, getArtifactIdFromPath
+    - ArtifactFileService read/write with stable formatting
+  validation:
+    - Correct extraction for A.yml, A.1.yml, and A.1.1.<slug>.yml
+    - Discovery handles thousands via recursion; unit tests cover typical trees

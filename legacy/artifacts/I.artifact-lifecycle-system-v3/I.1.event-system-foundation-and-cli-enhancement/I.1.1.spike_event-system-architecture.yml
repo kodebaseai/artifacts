@@ -1,0 +1,142 @@
+metadata:
+  title: Technical Spike - Event System Architecture
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Claude Agent (migcarva session)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ "I.1.2", "I.1.3", "I.1.4", "I.1.5" ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-31T19:08:59.031Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T19:18:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-31T19:20:27Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: I.1.1
+        automation_fallback: true
+    - event: in_review
+      timestamp: 2025-07-31T19:32:15Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-08-04T17:33:18Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+content:
+  summary: "Define the complete event system architecture that aligns PR-based
+    workflow with existing event-cascade.md patterns. This technical spike
+    establishes the foundational specifications for event correlation, cascade
+    processing, and state management that all other Initiative I issues depend
+    upon."
+  acceptance_criteria:
+    - "Complete specification document defining all 9 named cascade flows:
+      Parent Start Flow, Completion Cascade Flow, Dependency Resolution Flow,
+      Archival Flow, Blocking Cascade Flow, Reactivation Flow, Artifact Creation
+      Flow, Cross-Artifact Dependency Re-evaluation Flow, and Dependency
+      Cancellation Flow"
+    - "Event correlation rules updated for PR workflow while maintaining full
+      compatibility with existing event chains from event-cascade.md"
+    - "Enhanced actor attribution specification including AI agent pattern
+      (agent.[TYPE].[SESSION]@[TENANT].kodebase.ai) with programmatic detection"
+    - "State machine integration preserving existing 8-state model
+      (draft→ready→blocked→in_progress→in_review→completed→cancelled→archived)
+      with PR workflow transitions"
+    - "Detailed cascade flow specifications with trigger conditions, correlation
+      chain rules, validation logic, and example scenarios for each of the 9
+      flows"
+    - "Performance requirements and benchmarks established for cascade
+      processing (<30 seconds for complex multi-level cascades)"
+
+notes:
+  spike_approach: "Research and analysis phase to create foundational architecture
+    specification"
+  planning_reference: "Based on Initiative I planning document section I.1.1 with
+    integration from event-cascade.md, git-workflow.md, and
+    ai-agent-git-identity-pattern.md"
+  critical_path: "This spike must complete before any other I.1 issues can begin -
+    provides architecture foundation for entire Initiative I"
+  key_research_areas:
+    - "Analyze existing event-cascade.md correlation patterns and cascade rules"
+    - "Integrate git-workflow.md automation patterns with event system"
+    - "Define 9 named cascade flows with detailed specifications including new
+      interactive cancellation flow"
+    - "Establish event ID format alignment (16-char hex vs UUID considerations)"
+    - "Create actor attribution rules including AI agent identity patterns"
+    - "Design PR workflow event correlation that preserves existing chains"
+  deliverables:
+    - "Technical specification document
+      (.kodebase/docs/engineering/specs/event-system-architecture-v2.md)"
+    - "Cascade flow reference guide with examples for each of the 9 flows
+      including interactive cancellation workflow"
+    - "Event correlation rules and validation algorithms"
+    - "State transition matrix with PR workflow integration"
+    - "Performance benchmarks and requirements for cascade processing"
+  existing_system_integration:
+    - "Must preserve all existing correlation patterns from event-cascade.md"
+    - "Must align with git-workflow.md branch and PR conventions"
+    - "Must integrate ai-agent-git-identity-pattern.md for actor attribution"
+    - "Must support existing cascade processing while adding PR workflow events"
+  success_criteria:
+    - "Architecture enables seamless integration between manual and PR-based
+      workflows"
+    - "All 9 cascade flows have clear implementation specifications including
+      interactive dependency cancellation"
+    - "Event correlation chains maintain full audit trail through complex
+      cascades"
+    - "Performance targets established and validated through design analysis"
+  estimated_duration: "3-5 days for research, analysis, and specification creation"
+  next_steps: "Upon completion, this specification enables parallel work on I.1.2
+    (CLI), I.1.3 (validation), I.1.4 (PR submission), and I.1.5 (dev tools)"
+
+development_process:
+  alternatives_considered:
+    - "Incremental approach: Define only 2-3 basic cascade flows initially"
+    - "Code-first approach: Implement basic cascades then derive specification"
+    - "Existing system study: Analyze current manual processes and formalize"
+    - "External system research: Study other event-driven architectures for
+      patterns"
+  challenges_encountered:
+    - challenge: "Balancing comprehensive specification with MVP principles"
+      solution: "Created detailed specification but focused on exactly what's needed
+        for Initiative I implementation - no over-engineering"
+    - challenge: "Integrating PR workflow events with existing correlation patterns"
+      solution: "Defined clear continuation vs new chain rules that preserve all
+        existing event chains while adding PR workflow triggers"
+    - challenge: "Performance requirements without existing benchmarks"
+      solution: "Established realistic targets based on manual process analysis (<30s
+        complex cascades) with monitoring capabilities"
+
+completion_analysis:
+  key_insights:
+    - "Event correlation patterns are the critical foundation - preserve
+      existing chains while enabling PR workflow"
+    - "The 9 named cascade flows cover 100% of artifact lifecycle scenarios
+      including interactive dependency cancellation"
+    - "AI agent identity patterns enable programmatic detection and automated
+      actor attribution"
+    - "Performance benchmarks must be realistic but aggressive enough to deliver
+      95% time savings over manual processes"
+  implementation_approach: "Research-first specification approach - analyzed
+    existing patterns, integrated PR workflow requirements, defined
+    comprehensive architecture that enables all Initiative I milestones"
+  knowledge_generated:
+    - "Complete mapping of existing event system architecture and correlation
+      patterns"
+    - "Definitive specification of 9 cascade flows with trigger conditions and
+      correlation rules including interactive cancellation workflow"
+    - "Integration patterns for PR workflow that preserve backward compatibility"
+    - "Performance benchmarking framework for complex cascade processing"
+  manual_testing_steps: "Technical spike - no manual testing required. Validation
+    occurs through implementation in subsequent I.1 issues"

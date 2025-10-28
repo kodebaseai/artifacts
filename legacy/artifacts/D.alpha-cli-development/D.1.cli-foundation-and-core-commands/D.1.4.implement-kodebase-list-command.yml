@@ -1,0 +1,141 @@
+metadata:
+  title: Implement kodebase list command
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.1.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by D.1.1 - need CLI foundation first
+        blocking_dependencies:
+          - artifact_id: D.1.1
+            resolved: false
+    - event: in_progress
+      timestamp: 2025-07-18T18:35:31Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.1.4
+        automation_fallback: true
+    - event: in_review
+      timestamp: 2025-07-18T20:40:22Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-18T20:43:22Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement the 'kodebase list' command to display artifacts in a table format
+    with filtering and sorting capabilities. This command provides an overview
+    of all artifacts or a filtered subset, helping users quickly find and
+    understand the state of their project.
+
+  problem_statement: >
+    As projects grow, finding specific artifacts becomes challenging. Users need
+    a way to list and filter artifacts by various criteria (type, status,
+    assignee) and see them in a well-organized table format. The command should
+    support multiple filters and sorting options for maximum flexibility.
+
+  acceptance_criteria:
+    - "Command syntax: kodebase list [options]"
+    - "Display artifacts in table format with columns: ID, Title, Type, Status,
+      Assignee"
+    - "Support filters: --type, --status, --assignee, --parent"
+    - "Allow multiple filter values (e.g., --status ready,in_progress)"
+    - "Sort by ID by default, support --sort flag"
+    - "Show hierarchical structure with indentation"
+    - "Pagination for large result sets (>50 items)"
+    - "Response time under 100ms for <1000 artifacts"
+
+  deliverables:
+    - List artifacts with filtering options
+    - Support --type, --status, --assignee filters
+    - Display in table format using Ink
+    - Add sorting capabilities
+    - Show artifact hierarchy
+
+  technical_notes: >
+    Use @kodebase/core to load all artifacts efficiently. Implement filtering in
+    memory for performance. Use ink-table component for table display. Add
+    tree-like indentation for hierarchical display. Cache artifact loading for
+    better performance on repeated calls. Consider using fuzzy search for
+    assignee filtering.
+
+  validation:
+    - "kodebase list shows all artifacts in table format"
+    - "--type issue filters to show only issues"
+    - "--status ready,in_progress shows multiple statuses"
+    - Hierarchy displays with proper indentation
+    - Table columns align properly
+    - Large lists paginate correctly
+    - Sorting works on all columns
+
+development_process:
+  alternatives_considered:
+    - "Using ink-table library for table formatting"
+    - "Creating custom table component with Text padding"
+    - "Using third-party CLI table libraries (cli-table3, table)"
+  challenges_encountered:
+    - challenge: "ink-table library compatibility issues with React 18"
+      solution: "Created custom table formatting using Text components with proper
+        padding and alignment"
+    - challenge: "Some artifacts failing schema validation causing missing entries"
+      solution: "Implemented graceful error handling to skip invalid artifacts while
+        maintaining clean user experience"
+
+completion_analysis:
+  key_insights:
+    - "Custom table formatting provides better control over layout and React 18
+      compatibility"
+    - "Hierarchical artifact loading requires careful directory traversal and
+      error handling"
+    - "Schema validation errors in existing artifacts indicate need for data
+      migration"
+    - "In-memory filtering and sorting provides optimal performance for <1000
+      artifacts"
+  implementation_approach: >
+    Extended ArtifactLoader with loadAllArtifacts() method that recursively
+    scans artifact directories. Implemented filtering and sorting logic in React
+    component. Created custom table display using Text components with
+    calculated column widths and proper hierarchical indentation. Added
+    comprehensive argument parsing for all filter and pagination options.
+  knowledge_generated:
+    - "Artifact directory structure follows predictable
+      Initiative/Milestone/Issue hierarchy"
+    - "React component state management patterns for async data loading with
+      filters"
+    - "CLI argument parsing techniques for complex multi-value options"
+    - "Performance optimization through in-memory operations vs file system
+      calls"
+  manual_testing_steps:
+    - "Tested basic list command: node packages/cli/dist/index.js list"
+    - "Verified type filtering: --type milestone shows only milestones"
+    - "Confirmed multiple status filtering: --status draft,in_progress works
+      correctly"
+    - "Validated parent filtering: --parent D shows only D-related artifacts"
+    - "Tested sorting: --sort status orders by status alphabetically"
+    - "Confirmed hierarchical indentation displays artifact relationships"
+    - "Verified pagination shows correct counts and page indicators"
+
+notes:
+  implementation_approach: >
+    Create a list.ts command that loads all artifacts, applies filters, sorts
+    results, and renders using ink-table. Implement a loadAllArtifacts utility
+    that walks the artifact directory structure. Design the table to be
+    responsive to terminal width. Add color coding for different statuses in the
+    table.

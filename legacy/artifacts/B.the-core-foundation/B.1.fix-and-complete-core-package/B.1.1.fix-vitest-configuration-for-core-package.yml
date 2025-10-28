@@ -1,0 +1,64 @@
+metadata:
+  title: Fix vitest configuration for core package
+  priority: critical
+  estimation: XS
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ B.1.2, B.1.3, B.1.4, B.1.5 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-11T12:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-11T10:55:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-11T10:58:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-11T14:52:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-11T16:01:43Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Current vitest setup fails with "No projects were found" error when running
+    tests in the core package. This blocks all testing and validation work. Need
+    to create vitest.config.ts that extends root config with node environment
+    for core package.
+  acceptance_criteria:
+    - Create vitest.config.ts in packages/core/ that extends root config
+    - Configure test environment as 'node' (not jsdom)
+    - All existing tests run successfully
+    - pnpm test works from both root and packages/core/
+    - Tests find and execute all *.test.ts files
+  technical_notes: >
+    Based on monorepo setup, need to merge root config with local overrides:
+    ```typescript import { defineConfig, mergeConfig } from 'vitest/config';
+    import rootConfig from '../../vitest.config'; export default mergeConfig(
+      rootConfig,
+      defineConfig({
+        test: {
+          environment: 'node',
+        },
+      })
+    ); ```
+
+notes:
+  root_cause: >
+    The monorepo vitest configuration expects local vitest.config.ts files in
+    packages that need different test environments. Core package runs in
+    Node.js, not browser.
+  impact: >
+    Blocks all testing for core package, preventing validation of schemas,
+    parsers, and utilities. Critical path blocker for B.1 milestone completion.

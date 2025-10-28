@@ -1,0 +1,27 @@
+metadata:
+  title: State Machine and Events
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.5]
+    blocked_by: [A.3]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Define valid transitions per artifact type and chronological constraints;
+    require explicit triggers for event creation.
+  deliverables:
+    - canTransition and getValidTransitions utilities per artifact type
+    - validateEventOrder enforcing chronological sequencing; first event is draft
+    - EventBuilder requiring explicit trigger; helpers for draft/ready
+  validation:
+    - Invalid transitions are rejected with informative errors
+    - Sequences violating chronology fail validation
+    - Builder refuses events without a trigger; unit tests cover edge cases

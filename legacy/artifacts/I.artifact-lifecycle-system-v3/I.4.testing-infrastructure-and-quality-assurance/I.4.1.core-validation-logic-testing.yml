@@ -1,0 +1,79 @@
+metadata:
+  title: "Core Validation Logic Testing"
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: ["I.4.5"]
+    blocked_by: []
+  events:
+    - timestamp: "2025-08-04T18:15:00Z"
+      event: draft
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-08-04T18:20:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+
+content:
+  summary: "Develop comprehensive test suite for the validation engine ensuring 95%+ code coverage and robust testing of all validation rules. The suite will include unit tests for each artifact type's readiness validation logic, dependency cycle detection algorithms, cross-reference validation for bidirectional relationships, and state transition validation matrix. Integration tests will validate complete flows for complex artifact hierarchies, test performance with large artifact sets (>100 artifacts), and verify validation caching mechanisms. Test data factories will generate artifacts covering all edge cases and complex dependency graphs, while performance benchmarking will ensure <2 second validation targets are consistently met. The testing infrastructure will use Jest/Vitest framework with comprehensive coverage reporting."
+
+  acceptance_criteria:
+    - "95%+ code coverage for all validation logic"
+    - "All validation rules tested with positive and negative cases"
+    - "Performance tests validate <2 second validation targets"
+    - "Integration tests cover complex multi-artifact scenarios"
+    - "Tests each artifact type's readiness validation logic"
+    - "Tests dependency cycle detection algorithms"
+    - "Tests cross-reference validation for bidirectional relationships"
+    - "Tests state transition validation matrix"
+    - "Tests complete validation flows for complex artifact hierarchies"
+    - "Tests validation performance with large artifact sets (>100 artifacts)"
+    - "Tests validation caching and performance optimization"
+    - "Generates test artifacts covering all edge cases"
+    - "Creates test scenarios for complex dependency graphs"
+    - "Maintains test artifact fixtures for consistent testing"
+    - "Integrates Jest/Vitest test framework"
+    - "Implements test data factories for artifact generation"
+    - "Includes performance benchmarking suite"
+    - "Provides coverage reporting for validation logic"
+
+notes: |
+  Technical Specifications from Initiative Planning:
+
+  **Testing Framework:**
+  - Jest/Vitest integration for comprehensive test coverage
+  - Coverage reporting targeting 95%+ for all validation logic
+  - Performance benchmarking suite for <2 second validation targets
+
+  **Validation Rules Testing:**
+  - Initiative Readiness: Required fields (title, content.vision, content.scope, content.success_criteria), ≥1 Milestone in READY/BLOCKED state, measurable success criteria, no circular dependencies
+  - Milestone Readiness: Required fields (title, content.deliverables, content.validation_criteria), ≥1 Issue in READY/BLOCKED state, valid child references, no circular dependencies
+  - Issue Readiness: Required fields (title, content.description, content.acceptance_criteria), acceptance criteria as array of strings (≥1 item), all blocked_by artifacts in READY state, proper metadata (priority, estimation, created_by, assignee)
+
+  **Dependency Graph Testing:**
+  - Cycle detection using DFS traversal algorithms
+  - Cross-reference validation for bidirectional relationship consistency
+  - Complex dependency graph scenarios with deep nesting
+  - Performance testing with large artifact sets (>100 artifacts)
+
+  **Test Data Management:**
+  - Test data factories for artifact generation covering all edge cases
+  - Comprehensive test scenarios for complex dependency relationships
+  - Test artifact fixtures for consistent testing across scenarios
+  - Mock artifact repositories with validation result caching
+
+  **Performance Requirements:**
+  - Individual artifact validation: <2 seconds
+  - Full project validation: <30 seconds for <100 artifacts
+  - Validation result caching for optimization
+  - Performance monitoring integration for continuous optimization
+
+  **Integration with Core Components:**
+  - Rule-based validation engine with type-specific validators (@kodebase/core)
+  - Schema validation using Zod for structure compliance
+  - Integration with existing CLI validation commands
+  - Support for validation error reporting with remediation steps

@@ -1,0 +1,96 @@
+metadata:
+  title: "CLI Command Integration Testing"
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: "0.1.0"
+  relationships:
+    blocks: ["I.4.5"]
+    blocked_by: []
+  events:
+    - timestamp: "2025-08-04T18:15:00Z"
+      event: draft
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-08-04T18:20:00Z"
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+
+content:
+  summary: "Implement end-to-end integration tests for all CLI commands ensuring complete workflow coverage and reliability. Tests will validate 'kodebase create' with branch creation and event generation, 'kodebase submit' with validation and PR creation, 'kodebase validate' and 'kodebase deps' commands, and the enhanced 'kodebase status' command. Complete artifact lifecycle testing will cover the full flow from create→submit→merge→cascade, with comprehensive error handling and recovery verification for each command. GitHub API integration will be tested with mocked responses, while git operations testing will cover branch creation, commit generation for cascade events, and conflict resolution. The test framework will use command simulation, temporary git repositories, and comprehensive error scenario coverage to ensure all CLI operations work correctly in both success and failure cases."
+
+  acceptance_criteria:
+    - "All CLI commands tested with success and failure scenarios"
+    - "Complete workflows tested end-to-end with validation"
+    - "GitHub API integration tested with comprehensive mocking"
+    - "Git operations tested with error handling and recovery"
+    - "Tests kodebase create with branch creation and event generation"
+    - "Tests kodebase submit with validation and PR creation"
+    - "Tests kodebase validate and kodebase deps commands"
+    - "Tests enhanced kodebase status command"
+    - "Tests complete artifact lifecycle (create → submit → merge → cascade)"
+    - "Tests error handling and recovery in each command"
+    - "Tests GitHub API integration with mocked responses"
+    - "Tests branch creation and management"
+    - "Tests git commit generation for cascade events"
+    - "Tests git error handling and conflict resolution"
+    - "Uses CLI testing framework with command simulation"
+    - "Mocks GitHub API for testing PR operations"
+    - "Sets up temporary git repository for testing"
+    - "Includes error scenario simulation and testing"
+
+notes: |
+  Technical Specifications from Initiative Planning:
+
+  **CLI Command Structure (from cli-automation-specs.md):**
+  - Create: `kodebase create {parent-id} "prompt"` → artifact with slug-based directory structure
+  - Ready: `kodebase ready {artifact-id}` → validates and transitions to ready state
+  - Start: `kodebase start {artifact-id}` → creates branch, draft PR, transitions to in_progress
+  - Block: `kodebase block {artifact-id} --reason "text"` → marks as blocked with reason
+  - Cancel: `kodebase cancel {artifact-id} --reason "text"` → cancels with reactivation capability
+  - Submit: `kodebase pr {artifact-id}` → creates PR and transitions to in_review
+  - Validate: `kodebase validate [artifact-id]` → schema and state validation
+  - Status: `kodebase status [artifact-id] [--analytics] [--predictions]` → comprehensive status
+  - Context: `kodebase context {artifact-id}` → full context assembly for AI agents
+  - Event: `kodebase event add {artifact-id} {event-type}` → manual event addition
+
+  **Branch Naming Conventions:**
+  - New Artifacts: `add-{artifact-id}` (e.g., `add-I.4.10`)
+  - Artifact Updates: `update-{artifact-id}` (e.g., `update-I.4.9`)
+  - Implementation Work: `{artifact-id}` (e.g., `I.4.10`)
+
+  **PR Creation and Management:**
+  - PR Title Generation: "Add {artifact-type} {artifact-id}: {title}" for new artifacts
+  - PR Title Updates: "Update {artifact-type} {artifact-id}: {summary-of-changes}"
+  - PR Description Template with artifact summary, validation results, impact analysis
+  - GitHub API integration with error handling and retries
+
+  **Git Integration:**
+  - Post-checkout hook for in_progress transition integration
+  - Auto-create draft PR for team visibility
+  - Commit message conventions from git-workflow.md
+  - Direct git operations for main branch cascade commits
+  - Conflict detection and resolution strategies
+
+  **Error Handling and Recovery:**
+  - Validation failures: specific errors with remediation steps
+  - GitHub API errors: retry with exponential backoff, fallback guidance
+  - Network errors: cache validation results, retry submission
+  - Git conflicts: graceful handling with retry logic
+  - Emergency stop mechanisms for critical failures
+
+  **Testing Infrastructure:**
+  - CLI testing framework with command simulation capabilities
+  - Mock GitHub API for comprehensive PR operation testing
+  - Temporary git repository setup for testing git operations
+  - Error scenario simulation for comprehensive failure testing
+  - Integration with existing @kodebase/cli command structure
+  - Compatibility testing with existing workflow commands (pnpm ictx, pnpm cpr)
+
+  **Workflow Integration:**
+  - Complete artifact lifecycle testing (create → submit → merge → cascade)
+  - Integration with existing git hooks and PR automation
+  - Compatibility with current branch lifecycle patterns
+  - Integration with validation engine from I.1.3

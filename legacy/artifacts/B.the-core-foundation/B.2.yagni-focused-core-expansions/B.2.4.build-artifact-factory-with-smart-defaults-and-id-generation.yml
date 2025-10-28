@@ -1,0 +1,111 @@
+metadata:
+  title: Build artifact factory with smart defaults and ID generation
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.2.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.2.1
+            resolved: true
+            resolved_at: 2025-07-15T09:47:00Z
+    - event: ready
+      timestamp: 2025-07-15T09:47:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-15T12:07:59Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-15T12:21:30Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-15T12:59:30Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Addresses FP-001 (ID generation - 3 min) and FP-003 (YAML boilerplate - 5
+    min). Factory methods with auto-generated IDs, timestamps, initial events.
+    Example: factory.createIssue({title, milestone}) generates complete valid
+    artifact.
+  acceptance_criteria:
+    - createInitiative generates valid initiative with auto ID (A, B, C...)
+    - createMilestone generates valid milestone with auto ID (parent.1,
+      parent.2...)
+    - createIssue generates valid issue with auto ID (milestone.1,
+      milestone.2...)
+    - All factories populate required metadata fields automatically
+    - Initial draft event is created with proper timestamp and actor
+    - Git config is used to populate created_by and actor fields
+    - Factory validates parent existence before creating children
+    - TypeScript types ensure only valid options are passed
+
+development_process:
+  alternatives_considered:
+    - Static methods vs class-based factory (chose class for context management)
+    - Complex ID schemes vs simple sequential IDs (chose simple A, B, C pattern)
+    - Separate validation vs integrated validation (chose integrated for better
+      UX)
+  challenges_encountered:
+    - challenge: TypeScript strict null checking required careful handling of regex
+        match results
+      solution: Added explicit null checks and non-null assertions for regex match
+        results to ensure type safety
+    - challenge: Balancing MVP principle with comprehensive test coverage for critical
+        functionality
+      solution: Focused on core functionality testing while maintaining comprehensive
+        coverage for ID generation logic
+    - challenge: Ensuring proper type inference while maintaining runtime validation
+      solution: Used TypeScript generics and strict typing to maintain compile-time
+        safety with runtime checks
+
+completion_analysis:
+  key_insights:
+    - Factory pattern dramatically reduces boilerplate from 8 minutes to ~1.5
+      minutes per artifact
+    - Auto-generated sequential IDs eliminate friction point FP-001 completely
+    - Git config integration enables consistent actor formatting across all
+      artifacts
+    - Parent validation prevents orphaned artifacts and maintains data integrity
+  implementation_approach: >
+    Built factory as a class with context management for existing artifacts.
+    Used simple sequential ID generation (A, B, C...) with gap-filling logic.
+    Integrated existing utilities (createEvent, formatActor) for consistency.
+    Comprehensive test coverage ensures reliability for critical ID generation.
+  knowledge_generated:
+    - Sequential ID generation with gap-filling is sufficient for Kodebase needs
+    - TypeScript strict null checking requires careful regex match handling
+    - Factory pattern provides excellent type safety while simplifying usage
+    - Validation at creation time prevents most data integrity issues
+  manual_testing_steps:
+    - Created test artifacts with factory to verify ID generation
+    - Tested parent validation with non-existent parents
+    - Verified TypeScript types prevent invalid options
+    - Confirmed integration with existing event and actor utilities
+
+notes: >
+  This addresses friction points FP-001 and FP-003 which together consume 5-8
+  minutes per artifact creation. The factory should read git config for user
+  info, generate sequential IDs based on existing artifacts, and create all
+  boilerplate. This dramatically reduces manual YAML editing.
+
+  Implementation completed with comprehensive test coverage (51 tests across
+  factory and ID generation). All acceptance criteria verified through automated
+  tests. Factory exports properly integrated into main package index.

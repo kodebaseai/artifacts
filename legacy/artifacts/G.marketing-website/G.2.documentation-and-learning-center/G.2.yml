@@ -1,0 +1,43 @@
+metadata:
+  title: Documentation and Learning Center
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-07T21:21:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Build the documentation portal that helps users learn and adopt Kodebase.
+    This includes getting started guides, methodology explanation, video
+    tutorials, and API references. Make documentation searchable, skimmable, and
+    example-rich.
+  deliverables:
+    - Documentation homepage
+    - Quick start guide
+    - Methodology deep dive
+    - Interactive tutorials
+    - API reference
+    - Search functionality
+  acceptance_criteria:
+    - Documentation homepage loads in under 1 second globally
+    - Search returns relevant results within 300 ms and indexes all pages
+    - Quick start guide leads a new user to first success within 5 minutes
+    - Methodology deep-dive page contains anchor links and runnable code snippets
+    - Interactive tutorials execute without JavaScript errors in latest Chrome,
+      Firefox, Safari
+    - API reference is auto-generated from source and fully typed
+    - Navigation is intuitive and passes hallway test with 3 external developers
+    - Lighthouse performance score ≥ 90 for all docs pages
+    - All pages comply with WCAG AA accessibility guidelines
+  notes: >
+    Reuse the docs layout from apps/docs where possible to maintain consistency.
+    Ensure code examples are kept up to date via CI.

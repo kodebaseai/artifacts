@@ -1,0 +1,23 @@
+metadata:
+  title: State machine and builder tests/fixtures
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.4.3]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:08:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Add unit tests and golden fixtures for state transitions, chronology validation,
+    and event builder behavior across all artifact types.
+  acceptance_criteria:
+    - Valid and invalid transition sequences covered per artifact type
+    - Chronology validation tests include edge cases (equal timestamps, out-of-order)
+    - Builder helper tests confirm triggers and timestamps; CI runs green

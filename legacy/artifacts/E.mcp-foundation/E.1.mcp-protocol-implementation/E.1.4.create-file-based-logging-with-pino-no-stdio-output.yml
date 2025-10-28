@@ -1,0 +1,108 @@
+metadata:
+  title: Create file-based logging with Pino (no stdio output)
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: []
+    blocked_by: [ E.1.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:36:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: in_progress
+      timestamp: 2025-07-30T18:00:48Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: E.1.4
+    - event: in_review
+      timestamp: 2025-07-30T18:43:42Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-30T18:45:42Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Set up structured logging using Pino that writes to files instead of
+    stdout/stderr to avoid interfering with JSON-RPC communication. This logging
+    system will track server operations, performance metrics, errors, and debug
+    information for development and troubleshooting without breaking the MCP
+    protocol.
+
+  acceptance_criteria:
+    - Pino logger configured for file-based output only
+    - Log rotation configured (daily rotation, 7-day retention)
+    - Structured logging with appropriate log levels
+    - No output to stdout/stderr from logging system
+    - Performance and error metrics captured
+    - Configurable log level via environment variables
+
+development_process:
+  alternatives_considered:
+    - "Winston logging library - rejected due to heavier footprint and more
+      complex configuration"
+    - "Built-in Node.js console with file redirection - rejected due to lack of
+      rotation and structured logging"
+    - "Custom logging solution - rejected due to time investment and maintenance
+      overhead"
+    - "pino-rotating-file-stream third-party package - initially tried but
+      replaced with Pino's built-in transport for better compatibility"
+  challenges_encountered:
+    - challenge: "TypeScript type incompatibility between tool registry JSON schema
+        and MCP SDK expectations"
+      solution: "Removed inputSchema from MCP SDK registration to avoid type conflicts
+        while maintaining validation in our tool registry"
+    - challenge: "pino-rotating-file-stream package had import and API compatibility
+        issues"
+      solution: "Switched to Pino's built-in transport system with pino/file target
+        for better type safety and compatibility"
+
+completion_analysis:
+  key_insights:
+    - "Pino's transport system provides clean separation between logging
+      configuration and application code"
+    - "File-based logging is critical for MCP servers to maintain stdio protocol
+      compliance"
+    - "Daily log rotation with filename timestamps provides effective log
+      management without complex scheduling"
+    - "Environment variable configuration allows for flexible deployment without
+      code changes"
+  implementation_approach:
+    - "Created dedicated logger.ts module with factory pattern for clean
+      separation of concerns"
+    - "Used Pino's transport system instead of direct streams for better
+      abstraction and maintainability"
+    - "Integrated logging throughout the server lifecycle (startup, shutdown,
+      errors, tool execution)"
+    - "Exported all logging utilities from package index for external
+      consumption"
+  knowledge_generated:
+    - "Understanding of MCP protocol requirement for clean stdio channels"
+    - "Pino transport system architecture and configuration patterns"
+    - "Proper error handling integration in Node.js process event handlers"
+    - "TypeScript module export patterns for logging utilities"
+  manual_testing_steps:
+    - "Verified no console output during server startup and operation"
+    - "Confirmed log files are created in logs/ directory with correct timestamp
+      format"
+    - "Tested LOG_LEVEL environment variable controls log output level"
+    - "Validated structured logging format includes all required metadata fields"
+    - "Confirmed log rotation creates new files daily with proper naming
+      convention"
+
+notes: |
+  Critical requirement: absolutely no output to stdout/stderr as this breaks MCP
+  communication. All logging must go to files with proper rotation to prevent
+  disk space issues during long-running operations.
+
+  Implementation successfully delivers comprehensive file-based logging that maintains
+  MCP protocol compliance while providing rich debugging and monitoring capabilities.

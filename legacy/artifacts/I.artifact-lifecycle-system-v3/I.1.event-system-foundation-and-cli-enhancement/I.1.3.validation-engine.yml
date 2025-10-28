@@ -1,0 +1,140 @@
+metadata:
+  title: Core Validation Engine Implementation
+  priority: critical
+  estimation: XL
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ "I.1.4", "I.1.5" ]
+    blocked_by: [ "I.1.1" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T17:30:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T17:31:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.1.1
+            resolved: true
+            resolved_at: 2025-08-04T17:33:18Z
+    - event: ready
+      timestamp: 2025-08-04T17:33:18Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-08-05T09:10:32Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: I.1.3
+    - event: in_review
+      timestamp: 2025-08-05T09:47:46Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_ready
+    - event: completed
+      timestamp: 2025-08-05T18:23:27Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+content:
+  summary: |
+    Implement a rule-based validation engine that enforces readiness rules for Issues, Milestones, and Initiatives, detects sibling-only dependency violations and cycles, and offers an optional `--fix` pathway. Must return structured errors in under two seconds for projects ≤100 artifacts.
+  acceptance_criteria:
+    - Validates Issue, Milestone, Initiative readiness per spec.
+    - Detects circular dependencies and cross-level relationships.
+    - CLI `kodebase validate` exits 0 when clean, 1 with violations.
+    - --fix auto-repairs safe issues (e.g., sorting fields).
+    - Average runtime <2 s for 100-artifact repo.
+
+development_process:
+  alternatives_considered:
+    - "Single monolithic validator vs. type-specific validators (chose
+      type-specific for maintainability)"
+    - "Graph database for dependencies vs. in-memory DFS (chose DFS for
+      simplicity and performance)"
+    - "Async validation vs. sync (chose sync for predictability and simpler
+      error handling)"
+    - "JSON Schema vs. Zod validation (chose Zod for existing integration)"
+  challenges_encountered:
+    - challenge: "TypeScript strict mode compliance with complex type guards"
+      solution: "Made type guard methods public on ReadinessValidator class"
+    - challenge: "React hooks error in CLI component when conditionally rendering"
+      solution: "Moved useEffect hooks before conditional returns to comply with hooks
+        rules"
+    - challenge: "Artifacts using v0.2.0 schema missing event_id fields"
+      solution: "Validation correctly identifies schema mismatches - working as designed"
+
+completion_analysis:
+  key_insights:
+    - "Separation of concerns between schema validation and business rules
+      validation proved essential"
+    - "Caching strategy significantly improves performance for large artifact
+      sets"
+    - "Type-specific validation allows for precise error messages and better
+      maintainability"
+    - "DFS algorithm effectively detects circular dependencies with O(V+E)
+      complexity"
+  implementation_approach:
+    - "Created ReadinessValidator class for business rule validation"
+    - "Implemented ValidationEngine as orchestrator for all validation types"
+    - "Integrated with CLI via new Validate command component"
+    - "Added comprehensive test coverage including performance tests"
+    - "Used existing ArtifactLoader and file service patterns for consistency"
+  knowledge_generated:
+    - "Validation as a separate concern from schema enforcement enables flexible
+      rule evolution"
+    - "Performance optimization through caching is critical for large monorepos"
+    - "Clear error messages with field-level details greatly improve developer
+      experience"
+    - "Separation between fixable and non-fixable errors helps prioritize
+      remediation"
+  manual_testing_steps:
+    - "Run: pnpm kodebase validate (validates all artifacts)"
+    - "Run: pnpm kodebase validate .kodebase/artifacts/path/to/artifact.yml"
+    - "Run: pnpm kodebase validate --fix (auto-repairs fixable issues)"
+    - "Verify: Exit code 0 for valid artifacts, 1 for validation errors"
+    - "Performance: Create 100 test artifacts and verify <2s validation time"
+
+notes: |
+  Technical Specifications from Planning Document:
+
+  Issue Readiness Validation:
+  - Required fields: title, content.description, content.acceptance_criteria (≥1 item)
+  - Dependency validation: all `blocked_by` artifacts must be in `ready` state
+  - Format validation: acceptance_criteria as array of strings
+  - Proper metadata: priority, estimation, created_by, assignee
+
+  Milestone Readiness Validation:
+  - Required fields: title, content.deliverables, content.validation_criteria
+  - Child requirement: ≥1 child Issue in `ready` or `blocked` state
+  - Reference validation: all child issues exist and reference this milestone
+  - No circular dependencies
+
+  Initiative Readiness Validation:
+  - Required fields: title, content.vision, content.scope, content.success_criteria
+  - Child requirement: ≥1 child Milestone meeting milestone readiness criteria
+  - Strategic alignment: success_criteria must be measurable (contain metrics)
+  - No circular dependencies in relationships
+
+  Technical Implementation:
+  - Rule-based validation engine with type-specific validators
+  - Dependency graph algorithms (DFS for cycle detection)
+  - Schema validation using Zod for structure compliance
+  - Performance optimization with validation result caching
+  - Cross-reference validation for bidirectional relationships
+
+  Performance Requirements:
+  - 100% accuracy in detecting invalid readiness states
+  - Detects all circular dependencies in dependency graphs
+  - Validates bidirectional relationship consistency
+  - Processes validation in <2 seconds for projects with <100 artifacts
+
+  Integration Points:
+  - Used by I.2.1 for pre-merge validation workflow
+  - Used by I.3.1 for content completeness validation
+  - Used by I.3.3 for post-processing validation
+  - Foundation for all validation throughout the system

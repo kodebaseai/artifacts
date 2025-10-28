@@ -1,0 +1,158 @@
+metadata:
+  title: MCP Foundation - Building @kodebase/mcp-server
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ F, H ]
+    blocked_by: [ D, I ]
+  events:
+    - event: draft
+      timestamp: 2025-07-05T11:57:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-05T11:54:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by A, B, C and D
+        blocking_dependencies:
+          - artifact_id: D
+            resolved: false
+          - artifact_id: I
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-30T14:20:24Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-30T15:13:21Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started:E.1
+
+content:
+  vision: >
+    Build the Model Context Protocol (MCP) server that serves as the intelligent
+    read-only API for Kodebase. This server provides AI assistants with
+    comprehensive project context, enabling them to understand the full scope of
+    work, historical patterns, and relevant documentation. The MCP transforms
+    raw Git artifacts into actionable intelligence, making AI agents
+    dramatically more effective development partners.
+  scope: >
+    This initiative focuses on building the @kodebase/mcp-server package with
+    essential context assembly and serving capabilities. Includes: MCP protocol
+    implementation, context gathering, intelligent filtering, artifact reading,
+    and API endpoints. Excludes: Write operations (CLI responsibility), advanced
+    analytics, web interface, enterprise features.
+  success_criteria:
+    - MCP server auto-discovers .kodebase folders and serves context
+    - AI assistants receive relevant context without manual prompting
+    - Fast response times (<500ms) for context queries
+    - Works with any MCP-compliant AI assistant (Claude, Cursor, etc.)
+    - Published to npm as @kodebase/mcp-server (basic version only)
+
+notes:
+  testing_strategy: >
+    Use memfs for testing file operations and context assembly without disk I/O.
+    Mock Git operations for testing artifact discovery. Follow MCP best
+    practices including no stdio output and proper error handling.
+
+  configuration_strategy: >
+    All runtime parameters should be configurable via environment variables with
+    sensible defaults. A kodebase-mcp.config.yml file can override these
+    settings for response size limits, timeouts, cache TTLs, and file discovery
+    patterns. Configuration follows a hierarchy: defaults → config file → env
+    vars.
+
+  monitoring_strategy: >
+    Implement structured logging using Pino to track errors, performance
+    metrics, and usage patterns. Log files rotate daily with configurable
+    retention. Key metrics include response times, cache hit rates, context size
+    distributions, and error frequencies. Performance logs enable debugging
+    without stdout interference.
+
+  schema_evolution: >
+    The @kodebase/core package handles schema versioning. MCP server must
+    support multiple schema versions for backward compatibility. Migration
+    strategy includes version detection in artifact files, automatic upgrading
+    when reading old formats, and clear error messages for unsupported versions.
+
+  security_considerations: >
+    Despite being read-only, implement path traversal prevention, file access
+    limited to repository boundaries, input validation for all tool parameters,
+    rate limiting for resource-intensive operations, and sanitization of file
+    paths in responses. No execution of external commands or evaluation of user
+    input.
+  milestone_details:
+    E.1:
+      title: MCP protocol implementation
+      summary: >
+        Implement the core MCP protocol server with proper JSON-RPC 2.0 over
+        stdio communication. This includes the MCP server foundation using the
+        official SDK, protocol compliance with tool registration, proper logging
+        without stdio output, and configuration with sensible defaults.
+      deliverables:
+        - MCP server skeleton with @modelcontextprotocol/sdk
+        - JSON-RPC 2.0 stdio transport
+        - Protocol-compliant tool registration
+        - File-based logging with Pino (no stdio output)
+        - Configuration system (env vars + config file)
+        - Security middleware (path validation)
+      validation:
+        - Server starts without errors
+        - MCP inspector shows registered tools
+        - No output to stdout/stderr
+    E.2:
+      title: Context gathering and assembly
+      summary: >
+        Build the context gathering system that reads from multiple sources and
+        assembles comprehensive project context. This includes artifact readers
+        for YAML files, code analysis for finding relevant files, documentation
+        discovery across the project, and event log parsing for historical
+        insights.
+      deliverables:
+        - Artifact file reader (uses @kodebase/core)
+        - Documentation scanner
+        - Event history analyzer
+        - Context assembly pipeline
+      validation:
+        - Reads all artifact types correctly
+        - Discovers relevant documentation
+        - Assembles context under 500ms
+    E.3:
+      title: Basic filtering and context assembly
+      summary: >
+        Implement basic filtering to provide relevant context for each query.
+        This includes simple issue hierarchy filtering, basic file discovery
+        based on artifact references, and context size management to fit within
+        AI limits. Advanced intelligence features are reserved for future cloud
+        service.
+      deliverables:
+        - Basic hierarchy filtering
+        - Simple file discovery
+        - Context size limiter
+        - Response formatting
+      validation:
+        - Returns relevant artifacts
+        - Excludes unrelated issues
+        - Respects context size limits
+    E.4:
+      title: MCP tools and distribution
+      summary: >
+        Finalize the MCP server with proper tool implementations and prepare for
+        distribution. This includes MCP tool definitions for artifact queries,
+        context retrieval commands, comprehensive error handling, and npm
+        packaging with installation scripts.
+      deliverables:
+        - getArtifacts tool implementation
+        - getContext tool implementation
+        - listIssues/listMilestones tools
+        - npm package configuration
+        - Installation documentation
+      validation:
+        - All MCP tools respond correctly
+        - Works with Claude and Cursor
+        - Installs cleanly via npm

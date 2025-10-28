@@ -1,0 +1,28 @@
+metadata:
+  title: Readiness and Constraints
+  priority: critical
+  estimation: L
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.4]
+    blocked_by: [A.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Implement readiness validation per type and enforce sibling-only
+    dependencies with same-parent constraints and graph safety checks.
+  deliverables:
+    - Sibling-only dependency rules (initiative↔initiative, milestone↔sibling milestone, issue↔sibling issue)
+    - Same-parent enforcement for milestones and issues (ID prefix matching)
+    - Cycle detection over relationships.blocked_by
+    - Cross-level dependency detection with clear error codes
+  validation:
+    - Invalid dependencies rejected with explicit error codes and fields
+    - Cycle detection surfaces the cycle path for debugging
+    - Tests and fixtures covering same-parent enforcement and cross-level rejections

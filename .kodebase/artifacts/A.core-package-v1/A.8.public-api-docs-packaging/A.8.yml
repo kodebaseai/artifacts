@@ -1,0 +1,26 @@
+metadata:
+  title: Public API, Docs, Packaging
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.9]
+    blocked_by: [A.7]
+  events:
+    - event: draft
+      timestamp: "2025-10-27T20:48:44Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Finalize the core’s public surface, documentation, and packaging so that it
+    is easy to consume and tree-shake.
+  deliverables:
+    - Curated index.ts exports (remove non-MVP surfaces)
+    - README and docs aligned with actual exports
+    - Clean ESM build and type declarations
+  validation:
+    - CLI consumes stable surface without workarounds
+    - Docs match exports; smoke tests pass for ESM imports and d.ts

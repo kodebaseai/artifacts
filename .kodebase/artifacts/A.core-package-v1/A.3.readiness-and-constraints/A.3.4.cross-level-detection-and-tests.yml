@@ -1,0 +1,23 @@
+metadata:
+  title: Detect cross-level dependencies and add tests/fixtures
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.3.3]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T09:59:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Reject cross-level dependencies (e.g., issue → initiative, milestone → initiative),
+    and provide comprehensive tests and fixtures covering valid/invalid patterns.
+  acceptance_criteria:
+    - Validator emits specific error codes for cross-level references
+    - Fixture set includes valid sibling-only cases and invalid cross-level cases
+    - Integration tests assert rejections with clear messages and fields

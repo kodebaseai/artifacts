@@ -1,0 +1,35 @@
+metadata:
+  title: Develop response formatting system
+  priority: medium
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.4 ]
+    blocked_by: [ E.3.1, E.3.2, E.3.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T15:11:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+
+content:
+  summary: >
+    Format context responses optimally for AI assistant consumption. This system
+    takes the filtered and size-limited context and formats it in a way that
+    maximizes AI assistant comprehension and effectiveness. Includes structured
+    formatting, clear section headers, and metadata.
+
+  acceptance_criteria:
+    - "Formats context with clear section headers and structure"
+    - "Provides consistent formatting across all response types"
+    - "Includes relevant metadata and context indicators"
+    - "Supports multiple output formats (markdown, JSON, plain text)"
+    - "Optimizes formatting for AI assistant understanding"
+    - "Maintains readability and logical flow in responses"
+
+notes: |
+  The final step in the context pipeline that ensures AI assistants receive
+  well-structured, easily parseable context that maximizes their ability
+  to provide helpful responses.

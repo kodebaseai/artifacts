@@ -1,0 +1,86 @@
+metadata:
+  title: Set up CLI project structure with Ink and TypeScript
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ D.1.2, D.1.3, D.1.4, D.1.5 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-18T13:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-18T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-18T13:41:31Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-18T14:21:58Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Initialize the @kodebase/cli package with Ink (React for CLIs) and
+    TypeScript. Set up the project structure, build system, and basic command
+    framework that will serve as the foundation for all CLI commands. This
+    includes configuring the development environment and establishing patterns
+    for command implementation.
+
+  problem_statement: >
+    The CLI needs a solid foundation using modern tools. Ink provides a
+    React-based approach to building terminal UIs, which will enable rich
+    interactive features. TypeScript ensures type safety and better developer
+    experience. We need proper build configuration and a scalable command
+    structure.
+
+  acceptance_criteria:
+    - "@kodebase/cli package initialized in packages directory"
+    - "TypeScript configuration set up with strict mode"
+    - "Ink React framework installed and configured"
+    - "Basic command structure established (commander.js or yargs)"
+    - "Build system configured with tsup"
+    - "Development scripts added (dev, build, test)"
+    - "Basic CLI entry point working with 'kodebase' command"
+
+  deliverables:
+    - Initialize @kodebase/cli package
+    - Configure TypeScript and build system
+    - Set up Ink React framework
+    - Create basic command structure
+    - Add commander.js or yargs for argument parsing
+
+  technical_notes: >
+    Use tsup for building as it's already used in other packages. Configure
+    TypeScript with strict mode and ES2022 target. Set up Ink with its testing
+    utilities for future test implementation. Choose commander.js for its
+    simplicity and wide adoption. Structure commands in a modular way to support
+    future additions.
+
+  validation:
+    - Running 'pnpm build' in CLI package produces dist output
+    - TypeScript compiles without errors
+    - Basic 'kodebase --version' command works
+    - Ink components render in terminal
+    - Command structure supports adding new commands easily
+
+notes:
+  implementation_approach: >
+    Start by creating the package.json with necessary dependencies. Set up
+    TypeScript configuration extending from @kodebase/typescript-config. Create
+    the basic file structure: src/index.ts as entry point, src/commands/ for
+    command modules, src/components/ for Ink UI components. Use commander.js for
+    parsing and Ink for rendering.

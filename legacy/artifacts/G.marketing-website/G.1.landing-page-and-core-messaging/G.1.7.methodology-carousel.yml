@@ -1,0 +1,117 @@
+metadata:
+  title: Methodology Carousel - Define, Execute, Distill
+  priority: medium
+  estimation: M
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ G.1.2 ]
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-22T16:00:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-22T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-25T14:19:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: G.1.7
+    - event: in_review
+      timestamp: 2025-07-28T11:56:54Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-28T11:58:19Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create an interactive carousel showcasing the 3 main movements of the
+    Kodebase methodology: Define, Execute, Distill. Each slide contains a brief
+    description and supporting imagery. Design:
+    .kodebase/docs/product/design/marketing landing page/Homepage.jpg
+  acceptance_criteria:
+    - Interactive carousel with 3 slides for each methodology phase
+    - Slide 1 - "Define" - brief description + methodology image
+    - Slide 2 - "Execute" - brief description + methodology image
+    - Slide 3 - "Distill" - brief description + methodology image
+    - Smooth carousel transitions with navigation controls
+    - Each slide has clear, actionable description (≤60 words)
+    - High-quality imagery representing each methodology phase
+    - Auto-advance functionality with manual override
+    - Mobile-responsive with touch/swipe support
+    - Navigation dots and arrow controls
+    - Link to full methodology documentation
+    - Consistent styling with other carousel sections
+
+development_process:
+  implementation_approach: >
+    Implemented scroll-based carousel using Framer Motion's useScroll and
+    useTransform hooks. Created a 300vh section height to track user scroll
+    progress across three viewport sections, each representing one methodology
+    phase. Used sticky positioning for content container with AnimatePresence
+    for smooth fade transitions between carousel items.
+  alternatives_considered:
+    - "Click-based navigation only: Simpler but less engaging than scroll-based
+      interaction"
+    - "Horizontal scroll snap: More traditional carousel but less integrated
+      with vertical page flow"
+    - "Intersection Observer API: Lower-level but Framer Motion provides better
+      animation integration"
+    - "CSS-only transitions: Lighter weight but limited animation capabilities"
+  challenges_encountered:
+    - challenge: "React hooks rule violation when using useTransform inside map functions"
+      solution: "Moved transform calculations outside of component render loops and
+        used useEffect for scroll tracking"
+    - challenge: "Z-index layering issue with text appearing behind background images"
+      solution: "Applied proper z-index values (z-3) to content container to ensure
+        text visibility"
+    - challenge: "Smooth transition timing between scroll positions"
+      solution: "Used viewport progress thresholds (0.333, 0.666) to create clean
+        breakpoints between movements"
+
+completion_analysis:
+  key_insights:
+    - "Scroll-based interactions create more immersive user experience than
+      traditional carousels"
+    - "Framer Motion's declarative API simplifies complex scroll-linked
+      animations"
+    - "Sticky positioning combined with viewport height sections enables
+      parallax-like effects"
+  implementation_approach:
+    - "Used identical scroll tracking pattern from solution-section.tsx for
+      consistency"
+    - "Implemented fade animations with y-axis movement for smooth content
+      transitions"
+    - "Preloaded all background images to prevent visual flashing during
+      transitions"
+  knowledge_generated:
+    - "AnimatePresence with mode='wait' ensures clean transitions between
+      carousel items"
+    - "useScroll hook with offset configuration provides precise viewport
+      tracking"
+    - "Combining motion.div opacity with CSS z-index creates layered visual
+      effects"
+  manual_testing_steps:
+    - "Scroll through methodology section to verify smooth transitions at 33%,
+      66%, and 100% scroll progress"
+    - "Check text visibility against all three background images (Define,
+      Execute, Distill)"
+    - "Verify fade in/out animations trigger correctly on index changes"
+    - "Test on mobile devices for touch scroll behavior"
+    - "Ensure background images preload without flashing"
+
+notes: >
+  This should bridge the solution concept with concrete implementation. Focus on
+  how the methodology creates the transformation promised in the previous
+  section. Keep technical but accessible.

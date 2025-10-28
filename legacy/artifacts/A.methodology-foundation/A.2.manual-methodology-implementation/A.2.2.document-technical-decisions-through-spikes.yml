@@ -1,0 +1,74 @@
+metadata:
+  title: Document Technical Decisions Through Spikes
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T13:52:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: cancelled
+      timestamp: 2025-07-07T19:35:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: cancelled
+      metadata:
+        reason: "We have already made all the spikes necessary: Check
+          .kodebase/docs/engineering/spikes/_README.md"
+
+content:
+  summary: >
+    Create spike artifacts for all significant technical decisions during
+    development. This includes technology choices, architecture patterns, and
+    implementation strategies.
+  acceptance_criteria:
+    - Spike template created with sections:
+        - Problem Statement
+        - Decision Criteria
+        - Options Investigated
+        - Analysis (pros/cons)
+        - Decision & Rationale
+        - Implementation Plan
+        - Validation Approach
+        - Related Issues
+        - Metadata (author, dates, status)
+    - Minimum 5 spikes documented covering:
+        - Package structure decision
+        - Testing framework choice
+        - State management approach
+        - Error handling strategy
+        - Build tooling selection
+    - Decision rationale includes:
+        - Clear problem context
+        - Evaluation criteria weights
+        - Trade-off analysis
+        - Long-term implications
+    - Alternatives documented with:
+        - Option description
+        - Pros and cons list
+        - Why rejected reasoning
+        - Could revisit conditions
+    - Time-boxing enforced:
+        - Each spike has defined time limit
+        - Actual time tracked
+        - Extension justification if needed
+        - Lessons on estimation accuracy
+    - Issue linkage established:
+        - Spikes reference originating issues
+        - Issues reference spike decisions
+        - Bidirectional traceability
+        - Implementation validates spike
+
+notes: >
+  Spikes live in .kodebase/docs/engineering/spikes/ as markdown files. They are
+  NOT artifacts but supporting documentation. Reference: A.1.4 for spike
+  framework specification.

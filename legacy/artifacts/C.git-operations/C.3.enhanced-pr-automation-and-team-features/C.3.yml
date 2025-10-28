@@ -1,0 +1,87 @@
+metadata:
+  title: Enhanced PR automation and team features
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ C.4 ]
+    blocked_by: [ C.2 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-16T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-16T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        reason: Blocked by C.2 - need CLI integration before enhancing PR features
+        blocking_dependencies:
+          - artifact_id: C.2
+            resolved: false
+    - event: in_progress
+      timestamp: 2025-07-17T18:04:56Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started
+    - event: in_review
+      timestamp: 2025-07-18T12:25:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-18T12:36:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Extend the existing PR automation with advanced team coordination features.
+    The basic GitHub integration exists but needs enhancement with artifact
+    context, template generation, and bidirectional status synchronization.
+    Focus on making PR workflows intelligent and artifact-aware.
+  deliverables:
+    - Enhanced PR templates with artifact context injection
+    - Bidirectional status sync between PRs and artifacts
+    - PR body generation using artifact data
+    - Review assignment based on artifact ownership
+    - PR milestone tracking and progress reporting
+  validation:
+    - PR descriptions automatically include artifact details
+    - PR status changes update artifact states
+    - Artifact updates reflect in PR conversations
+    - Team coordination features work across repositories
+
+completion_summary:
+  key_achievements:
+    - "Enhanced PR templates with artifact context injection implemented"
+    - "Bidirectional status synchronization between PRs and artifacts
+      established"
+    - "PR context generation system with LLM guidance templates created"
+    - "Workflow coordination features for team collaboration integrated"
+  strategic_decisions:
+    - "Focused on context generation over static body generation due to
+      methodology changes"
+    - "Cancelled C.3.3, C.3.4, C.3.5 as context system handles these
+      requirements"
+    - "Prioritized LLM-guided PR descriptions over template-based generation"
+  knowledge_generated:
+    - "Context-driven PR workflows are more flexible than static templates"
+    - "Methodology evolution made some PR automation features redundant"
+    - "LLM guidance templates provide better PR descriptions than rigid
+      templates"
+    - "Bidirectional sync enables artifact-aware PR workflows"
+  team_impact:
+    - "Streamlined PR workflow with better artifact integration and context
+      awareness"
+  next_milestone_insights:
+    - "Future PR enhancements should focus on context quality over feature
+      quantity"
+
+notes:
+  implementation_priority: >
+    Start with enhanced PR templates that inject artifact context into PR
+    descriptions. Then implement bidirectional status synchronization. Focus on
+    PR body generation using artifact data and review assignment features.
+    Finally, add milestone tracking and progress reporting.

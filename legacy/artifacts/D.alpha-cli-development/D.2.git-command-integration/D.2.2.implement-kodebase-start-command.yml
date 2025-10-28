@@ -1,0 +1,128 @@
+metadata:
+  title: Implement kodebase start command
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.2.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-19T14:31:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-19T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: D.2.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-19T16:46:27Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-19T16:48:23Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.2.2
+    - event: in_review
+      timestamp: 2025-07-19T17:09:31Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-19T17:23:45Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement the 'kodebase start <artifact-id>' command that creates a feature
+    branch for an artifact and transitions it to in_progress status. This
+    command leverages BranchCreator from git-ops to handle branch creation and
+    trigger post-checkout hooks that update artifact status automatically.
+  acceptance_criteria:
+    - Command accepts artifact ID as argument (e.g., 'kodebase start A.1.5')
+    - Validates artifact exists and is in 'ready' status
+    - Uses BranchCreator from git-ops to create feature branch
+    - Branch name matches artifact ID exactly
+    - Post-checkout hooks trigger status update to in_progress
+    - Shows success message with branch name and next steps
+    - Handles error cases (invalid ID, wrong status, git errors)
+  technical_notes: >
+    The BranchCreator handles the actual git operations and hook setup. The CLI
+    command focuses on user interaction, validation, and feedback. Status
+    transition happens automatically via git hooks, not directly in the CLI
+    command.
+
+notes:
+  implementation_details: >
+    1. Create src/commands/start.ts with React component 2. Parse and validate
+    artifact ID argument 3. Load artifact to check current status 4. Call
+    BranchCreator.createBranch(artifactId) 5. Display success feedback with next
+    steps 6. Handle various error scenarios gracefully
+  friction_point_addressed: >
+    Eliminates manual branch creation and status updates, saving 2-3 minutes per
+    issue start and ensuring consistency in branch naming.
+
+development_process:
+  alternatives_considered:
+    - "Direct git branch command: Would bypass hooks and automation"
+    - "Manual status update: Would require additional command and could be
+      forgotten"
+    - "Combined branch and PR creation: Too much for a single command"
+    - "Interactive branch name input: Would break artifact ID convention"
+    - "CLIBridge integration: Would be overkill for simple git operations"
+    - "Custom git wrapper: Would duplicate existing simple-git functionality"
+  challenges_encountered:
+    - challenge: "Understanding git-ops integration patterns"
+      solution: "Analyzed existing CLI commands and found direct simple-git usage
+        pattern"
+    - challenge: "Adding simple-git dependency without conflicts"
+      solution: "Confirmed git-ops already uses simple-git, added as CLI dependency"
+    - challenge: "Ensuring proper error handling for all failure modes"
+      solution: "Used withGitOpsErrorHandling wrapper for consistent error formatting"
+    - challenge: "Creating comprehensive help documentation"
+      solution: "Added detailed command help with examples and requirements section"
+
+completion_analysis:
+  key_insights:
+    - "git-ops BranchCreator provides robust, validated branch creation with
+      built-in error handling"
+    - "React-based CLI components enable rich user feedback and error messaging"
+    - "Following existing CLI patterns (Create, Status, List) ensures consistent
+      user experience"
+    - "Artifact status validation is critical for workflow integrity - only
+      'ready' artifacts can be started"
+    - "simple-git direct usage is the established pattern for CLI commands in
+      this codebase"
+  implementation_approach:
+    - "Created React component following existing CLI command structure with
+      useEffect for async operations"
+    - "Leveraged ArtifactLoader for filesystem access and artifact validation"
+    - "Used BranchCreator from git-ops for validated branch creation with
+      automatic checkout"
+    - "Implemented comprehensive error handling with user-friendly messages"
+    - "Added command to App.tsx router with full help documentation and examples"
+    - "Provided clear next steps to guide users through the development workflow"
+  knowledge_generated:
+    - "Understanding of git-ops vs CLIBridge usage patterns in CLI commands"
+    - "Insight into React-based CLI error handling and loading state patterns"
+    - "Knowledge of Kodebase artifact status validation requirements"
+    - "Familiarity with existing CLI command registration and help system"
+  manual_testing_steps:
+    - "Tested command accepts artifact ID argument correctly"
+    - "Verified artifact existence and status validation (ready vs other states)"
+    - "Confirmed BranchCreator integration creates branch with exact artifact ID
+      name"
+    - "Validated error handling for invalid IDs, wrong status, and git
+      repository issues"
+    - "Tested help documentation displays correctly with examples"
+    - "Verified success message shows branch name and provides clear next steps"

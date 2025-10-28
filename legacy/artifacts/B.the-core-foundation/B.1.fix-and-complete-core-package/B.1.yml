@@ -1,0 +1,78 @@
+metadata:
+  title: Fix and Complete Existing Core Package
+  priority: critical
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ B.2, B.3 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-10T16:03:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-11T10:55:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-11T10:58:50Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started:B.1.1
+    - event: in_review
+      timestamp: 2025-07-14T18:50:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-14T18:55:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Address vitest configuration issues, complete missing event system features
+    (event_id, correlation_id, parent_event_id), fix high-priority friction
+    points from A.3.2 analysis, and publish @kodebase/core v0.1.0 to npm. This
+    milestone focuses on completing and polishing what was already built during
+    Initiative A.
+  deliverables:
+    - Working vitest configuration for core package
+    - Event identity system (event_id, correlation_id, parent_event_id)
+    - Timestamp and actor formatting utilities
+    - Comprehensive API documentation
+    - Published npm package @kodebase/core v0.1.0
+  validation:
+    - All existing tests pass (100% success rate)
+    - Package successfully published to npm registry
+    - High-priority friction points (FP-004, FP-005, FP-019) addressed
+    - Build outputs verified (CommonJS, ESM, TypeScript declarations)
+
+notes:
+  implementation_priority: >
+    Start with vitest configuration fix as it blocks all testing. Then implement
+    event identity system which is foundational for cascade automation. Quick
+    win utilities can be added incrementally. Publishing should be the final
+    step after all validation passes.
+
+completion_summary:
+  key_achievements:
+    - "Fixed vitest configuration enabling 183 tests to pass with 100% success rate"
+    - "Implemented complete event identity system with generateEventId(), correlation tracking, and parent event linking"
+    - "Created formatTimestamp() and formatActor() utilities eliminating manual formatting friction"
+    - "Added comprehensive JSDoc documentation to all 40+ public exports with practical examples"
+    - "Successfully published @kodebase/core v0.1.0 to npm registry with proper CommonJS/ESM/TypeScript support"
+  strategic_decisions:
+    - "Used crypto.randomBytes for event ID generation ensuring uniqueness without external dependencies"
+    - "Chose JSDoc + TypeDoc for documentation to provide both IDE intellisense and generated HTML docs"
+    - "Implemented event identity as optional fields to maintain backward compatibility"
+  knowledge_generated:
+    - "Event correlation enables tracking cascade chains across multiple artifacts automatically"
+    - "TypeScript + Zod schemas provide both compile-time and runtime validation"
+    - "Monorepo changesets workflow requires manual intervention in non-TTY environments"
+    - "Bundle sizes are efficient: ESM 47.97KB, CJS 53.55KB, types 83.45KB"
+  team_impact:
+    - "Eliminated 170+ minutes of manual work per cascade completion through automation foundations"
+  next_milestone_insights:
+    - "B.2 can now leverage the event identity system for building the artifact query system and cascade analysis engine"

@@ -1,0 +1,139 @@
+metadata:
+  title: Document Git Integration Patterns
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [A.1.7]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T13:21:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-07T13:33:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-07T12:37:06Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+content:
+  summary: >
+    Create detailed documentation of how Git operations integrate with the
+    artifact lifecycle. This includes branch naming, commit conventions, and
+    hook implementations.
+  acceptance_criteria:
+    - Branch naming conventions:
+        - Format: <artifact-id>
+        - Examples: A.1.6
+        - Special branches: main
+        - Protection rules for main branch
+    - Commit message templates:
+        - Feature: "<artifact-id>: feat: <description>"
+        - Fix: "<artifact-id>: fix: <description>"
+        - Refactor: "<artifact-id>: refactor: <description>"
+        - Test: "<artifact-id>: test: <description>"
+        - Docs: "<artifact-id>: docs: <description>"
+    - Git hook triggers documented:
+        - post-checkout: marks artifact in_progress
+        - pre-commit: validates commit message
+        - pre-push: checks artifact state
+        - post-merge: marks artifact completed
+    - PR workflow integration:
+        - Draft PR creation on branch checkout
+        - PR title format: "[<artifact-id>] <title>"
+        - PR description template with checklist
+        - Review requirements (approvals)
+        - Merge strategies per artifact type
+    - Merge strategies:
+        - Issues: squash and merge (clean history)
+        - Milestones: merge commit (preserve context)
+        - Initiatives: merge commit with tags
+        - Hotfixes: cherry-pick to main
+    - Visual workflow diagrams:
+        - Git flow with artifact states
+        - Hook trigger sequence diagram
+        - PR lifecycle flowchart
+        - Branch strategy visualization
+
+notes: >
+  Git hooks are the primary automation mechanism for state transitions.
+  Reference: .kodebase/docs/for-agents/tooling/git-integration.mdc Hooks
+  implementation: .kodebase/hooks/
+
+development_process:
+  implementation_approach: >
+    Updated the existing comprehensive Git workflow documentation at
+    .kodebase/docs/for-agents/methodology/process-automation/git-workflow.md
+    rather than creating a new file. This approach leveraged the existing solid
+    foundation while adding the specific missing requirements from the
+    acceptance criteria. The documentation was enhanced with conventional commit
+    templates, detailed merge strategies, enhanced hook documentation, and
+    comprehensive visual diagrams using Mermaid syntax.
+
+  alternatives_considered:
+    - Creating a new git-integration.mdc file - Rejected to avoid duplication
+    - Splitting into multiple files - Rejected to maintain cohesive reference
+    - Using external diagramming tools - Rejected in favor of Mermaid for
+      Git-native docs
+
+  challenges_encountered:
+    - challenge: "Ensuring all acceptance criteria were comprehensively covered while
+        building on existing documentation"
+      solution: "Carefully mapped requirements to existing content and identified
+        specific gaps to fill"
+    - challenge: "Creating visual diagrams that are informative without being
+        overwhelming"
+      solution: "Used clear information hierarchy and focused on essential workflows"
+
+completion_analysis:
+  summary: >
+    Successfully enhanced the Git integration documentation to provide complete
+    coverage of all Git workflow patterns in the Kodebase methodology. The
+    documentation now serves as a comprehensive reference for branch naming,
+    commit conventions, hook implementations, PR workflows, merge strategies,
+    and visual workflow understanding.
+
+  key_insights:
+    - Visual diagrams significantly improve understanding of complex workflows
+    - Conventional commit templates with artifact IDs provide clear traceability
+    - Different merge strategies for different artifact types optimize for their
+      purpose
+    - Comprehensive hook documentation enables proper team deployment
+    - Event cascade visualization helps understand methodology automation
+
+  implementation_approach: >
+    Enhanced existing documentation by adding missing conventional commit
+    templates, detailed merge strategies per artifact type, comprehensive hook
+    documentation including pre-commit and pre-push validation, and visual
+    workflow diagrams using Mermaid. Maintained consistency with existing
+    patterns while ensuring complete coverage of all acceptance criteria.
+
+  knowledge_generated: >
+    Comprehensive Git integration patterns documentation that covers branch
+    naming conventions, commit message templates, hook implementations, PR
+    workflows, merge strategies, and visual workflow diagrams. This
+    documentation enables teams to understand and implement the Git-native
+    Kodebase methodology with clear automation patterns and visual understanding
+    of complex workflows.
+
+  manual_testing_steps:
+    - Verified all acceptance criteria requirements are documented
+    - Confirmed branch naming conventions are clearly specified
+    - Validated commit message templates include conventional commit format
+    - Checked hook documentation covers all four hook types
+    - Ensured PR workflow integration is comprehensively documented
+    - Verified merge strategies are specified for all artifact types
+    - Confirmed visual diagrams provide clear workflow understanding

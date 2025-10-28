@@ -1,0 +1,103 @@
+metadata:
+  title: CLI foundation and core commands
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: [ D.2 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-18T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-18T12:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-18T13:05:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: child_started
+    - event: in_review
+      timestamp: 2025-07-18T21:26:48Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-18T21:30:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+      metadata:
+        all_child_issues_completed: true
+
+content:
+  summary: >
+    Establish the CLI foundation using Ink (React for CLIs) and implement the
+    core artifact management commands. This includes the basic commands for
+    creating, viewing, and transitioning artifacts, with a focus on developer
+    experience and clear feedback.
+  deliverables:
+    - CLI project structure with Ink
+    - kodebase create command
+    - kodebase status command
+    - kodebase list command
+    - Basic error handling and help system
+  validation:
+    - Commands execute successfully
+    - Clear output formatting
+    - Helpful error messages
+
+completion_summary:
+  key_achievements:
+    - "Complete @kodebase/cli package with Ink React framework foundation"
+    - "Full CRUD operations: create, status, list commands with comprehensive
+      functionality"
+    - "Professional CLI UX with error handling, help system, and <100ms response
+      times"
+    - "Type-safe integration with @kodebase/core artifact management system"
+    - "Comprehensive test coverage with memfs mocking for file system operations"
+  strategic_decisions:
+    - "Chose Ink React framework over traditional CLI libraries for modern
+      component-based architecture"
+    - "Implemented auto-detection in create command (parent ID determines type)
+      for simplified UX"
+    - "Built custom table formatting instead of ink-table for React 18
+      compatibility"
+    - "Used @kodebase/core ArtifactFactory for consistent artifact generation
+      across CLI and core"
+    - "Applied building-while-using protocol with automation fallbacks during
+      development"
+  knowledge_generated:
+    - "React patterns for CLI applications using Ink framework"
+    - "File system mocking techniques with memfs for testing without side
+      effects"
+    - "Performance optimization patterns for CLI tools (in-memory operations,
+      caching)"
+    - "Error handling patterns combining React components and Node.js process
+      handlers"
+    - "Dynamic artifact type detection based on hierarchical ID patterns"
+  team_impact:
+    - "Established foundation for all future CLI development with reusable
+      components"
+    - "Created development patterns and testing strategies for CLI packages"
+    - "Delivered professional-grade tool that enhances developer productivity"
+    - "Demonstrated successful integration between CLI and core packages"
+    - "Set performance and UX standards for subsequent CLI features"
+  next_milestone_insights:
+    - "D.2 can leverage established CLI foundation and component library"
+    - "Git integration patterns from D.1.5 provide foundation for advanced git
+      operations"
+    - "Performance monitoring architecture supports scaling to larger artifact
+      collections"
+    - "Error handling system provides framework for complex validation scenarios"
+    - "Component-based architecture enables rapid development of new CLI
+      features"
+
+notes:
+  implementation_priority: >
+    Start with basic CLI project setup using Ink and TypeScript. Then implement
+    core commands one by one: create, status, list. Focus on clear output
+    formatting and helpful error messages. Use @kodebase/core for artifact
+    operations and ensure <100ms response time for all commands.

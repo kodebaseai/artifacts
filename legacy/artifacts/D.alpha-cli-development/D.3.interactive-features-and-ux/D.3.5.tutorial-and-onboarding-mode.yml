@@ -1,0 +1,154 @@
+metadata:
+  title: Implement tutorial and onboarding mode
+  priority: low
+  estimation: L
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.3.3 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-21T19:55:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-21T19:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        reason: D.2 completed - CLI is more advanced than anticipated, updating scope
+    - event: in_progress
+      timestamp: 2025-07-21T18:46:54Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: completed
+      timestamp: 2025-07-21T19:32:44Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create an interactive tutorial system that guides new users through their
+    first kodebase experience in a safe sandbox environment. Teach core
+    workflows and Git integration patterns.
+
+  acceptance_criteria:
+    - Tutorial mode launched via 'kodebase tutorial' or 'kb tutorial'
+    - Creates temporary sandbox environment for safe experimentation
+    - Guides through creating first initiative, milestone, and issue
+    - Demonstrates Git workflow integration and branch management
+    - Interactive steps with progress tracking and completion status
+    - Provides clear next steps after tutorial completion
+    - Can be resumed if interrupted partway through
+    - Cleans up sandbox environment when complete
+
+development_process:
+  alternatives_considered:
+    - "Mock artifact creation vs real ArtifactFactory integration (chose real
+      for authenticity)"
+    - "JSON state persistence vs YAML vs simple file storage (chose JSON for
+      structured data)"
+    - "Single monolithic tutorial component vs modular components (chose modular
+      for maintainability)"
+    - "Temporary directory in project vs system temp (chose system temp for
+      isolation)"
+    - "Static tutorial content vs dynamic artifact creation (chose dynamic for
+      hands-on learning)"
+
+  challenges_encountered:
+    - challenge: "ArtifactFactory API integration required understanding instance vs
+        static methods and proper options interfaces"
+      solution: "Studied ArtifactFactory source code, used instance methods with
+        proper factory context, and provided complete options objects with user
+        info and content fields"
+
+    - challenge: "YAML serialization needed manual template construction since
+        artifacts don't provide toYAML() method"
+      solution: "Created manual YAML templates with proper indentation and field
+        mapping, ensuring valid YAML structure for all artifact types"
+
+    - challenge: "TypeScript strict typing with React useEffect dependencies required
+        useCallback optimization"
+      solution: "Wrapped async functions in useCallback with proper dependency arrays
+        to satisfy TypeScript and prevent infinite re-renders"
+
+    - challenge: "Git command execution in sandbox required proper error handling for
+        commands that might fail in isolated environment"
+      solution: "Added comprehensive try-catch blocks with graceful fallbacks and
+        educational messaging for demo purposes when commands fail"
+
+completion_analysis:
+  key_insights:
+    - "Interactive tutorials with real artifact creation provide much better
+      learning than mock examples"
+    - "State persistence enables seamless resume functionality without
+      complexity"
+    - "Sandbox isolation with system temp directories provides complete safety"
+    - "Visual progress indicators significantly improve user experience and
+      completion rates"
+    - "Modular component architecture makes tutorial system extensible for
+      future enhancements"
+
+  implementation_approach:
+    - "Created modular React component architecture with clear separation of
+      concerns"
+    - "Integrated real ArtifactFactory for authentic artifact creation
+      experience"
+    - "Implemented comprehensive state management with persistence and resume
+      capabilities"
+    - "Built safe sandbox environment with unique timestamped directories and
+      full cleanup"
+    - "Added visual progress tracking with progress bars and step completion
+      indicators"
+    - "Integrated Git workflow demonstration with real commands in sandbox
+      environment"
+
+  knowledge_generated:
+    - "ArtifactFactory requires instance creation with existing artifact map for
+      context"
+    - "Ink components support complex interactive flows with proper state
+      management"
+    - "System temp directories with unique timestamps provide safe isolation"
+    - "React useCallback optimization is crucial for TypeScript strict mode
+      compliance"
+    - "Educational content should progress from concepts to hands-on practice to
+      real workflow"
+
+  manual_testing_steps:
+    - "Verified tutorial launches via 'kodebase tutorial' and 'kb t' commands"
+    - "Confirmed sandbox creation in system temp with proper isolation"
+    - "Tested complete tutorial flow from welcome to completion"
+    - "Validated artifact creation produces real YAML files with correct
+      structure"
+    - "Verified Git workflow demonstration works in sandbox environment"
+    - "Tested progress tracking updates correctly throughout tutorial"
+    - "Confirmed resume functionality works after interruption at various steps"
+    - "Validated comprehensive cleanup removes all sandbox files"
+
+review_details:
+  url: "https://github.com/kodebaseai/kodebase/pull/70"
+
+notes:
+  files_affected:
+    - packages/cli/src/commands/Tutorial.tsx (main tutorial command component)
+    - packages/cli/src/components/tutorial/TutorialFlow.tsx (tutorial
+      orchestration)
+    - packages/cli/src/components/tutorial/TutorialStep.tsx (individual tutorial
+      steps)
+    - packages/cli/src/components/tutorial/types.ts (tutorial type definitions)
+    - packages/cli/src/utils/tutorial-artifact-creator.ts (artifact creation for
+      tutorial)
+    - packages/cli/src/utils/tutorial-state.ts (progress tracking and resume)
+    - packages/cli/src/utils/sandbox.ts (safe sandbox environment management)
+    - packages/cli/src/components/App.tsx (added tutorial command routing)
+
+  technical_details: >
+    Comprehensive interactive tutorial system with 8 tutorial steps: welcome,
+    concepts, create-initiative, create-milestone, create-issue,
+    git-integration, and completion. Uses modular React/Ink component
+    architecture with state persistence to ~/.kodebase/tutorial/. Sandbox
+    environments created in system temp with Git initialization. Real
+    ArtifactFactory integration for authentic learning experience. Visual
+    progress tracking and resume capabilities.

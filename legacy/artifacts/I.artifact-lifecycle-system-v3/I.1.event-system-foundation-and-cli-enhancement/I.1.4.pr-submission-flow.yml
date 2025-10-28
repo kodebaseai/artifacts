@@ -1,0 +1,135 @@
+metadata:
+  title: PR Submission Flow via --submit Flags
+  priority: high
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ "I.1.3" ]
+  events:
+    - event: draft
+      timestamp: 2025-08-04T17:35:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-08-04T17:40:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: I.1.3
+            resolved: true
+            resolved_at: 2025-08-05T18:23:27Z
+    - event: ready
+      timestamp: 2025-08-05T18:23:27Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependency_completed
+    - event: in_progress
+      timestamp: 2025-08-05T18:33:05Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-08-06T19:33:53Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-08-07T10:28:58Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+content:
+  summary: |
+    Implement the `--submit` flag behaviour for `kodebase create` and `kodebase start`: run full validation, open or update a draft PR, inject template content, and mark the artifact `in_review`. Handles retries, API errors, and branch cleanup.
+  acceptance_criteria:
+    - Validation runs and blocks PR creation on failure.
+    - PR titles follow required format (Add/Update).
+    - PR body includes validation summary & dependency impact.
+    - Reviewer assignment rules applied via GitHub API.
+    - Handles API / network errors with retries and user feedback.
+
+development_process:
+  alternatives_considered:
+    - "Static PR templates: Rejected in favor of guidance-based approach for
+      agent workflows"
+    - "Complex validation caching: Simplified to direct ValidationEngine
+      integration"
+    - "Advanced reviewer assignment: Reduced to repository owner detection for
+      MVP"
+    - "Batch processing in I.1.4: Deferred to I.1.6 to maintain focused scope"
+  challenges_encountered:
+    - challenge: "ValidationError interface mismatch - attempted to access
+        non-existent artifactPath property"
+      solution: "Used error.message.includes(artifactId) and
+        error.field?.includes(artifactId) for artifact-specific error filtering"
+    - challenge: "React useEffect dependency warnings causing linting failures"
+      solution: "Added missing submit and verbose dependencies to useEffect hook in
+        Start.tsx"
+    - challenge: "TypeScript any types violating project standards"
+      solution: "Implemented proper typing with ValidationError interface from
+        @kodebase/core"
+    - challenge: "User feedback on static PR description templates not fitting agent
+        workflow"
+      solution: "Replaced rigid checklist template with guidance-based approach
+        focusing on reviewer guidance"
+
+completion_analysis:
+  key_insights:
+    - "Agent workflows require guidance-based approaches rather than static
+      templates"
+    - "Single artifact scope provides solid foundation for future batch
+      processing"
+    - "ValidationEngine integration from @kodebase/core works seamlessly for PR
+      gating"
+    - "GitHub CLI handles PR creation and reviewer assignment effectively"
+  implementation_approach:
+    - "Created submission.ts utility implementing all 5 acceptance criteria"
+    - "Integrated --submit flag support in both Create and Start commands"
+    - "Used ValidationEngine for comprehensive artifact validation before PR
+      creation"
+    - "Implemented retry logic with exponential backoff for GitHub API errors"
+    - "Generated dynamic PR titles/descriptions based on artifact context"
+  knowledge_generated:
+    - "Understanding of ValidationError interface and proper error filtering
+      patterns"
+    - "React/Ink component integration patterns for CLI flag support"
+    - "GitHub CLI command patterns for automated PR creation with reviewer
+      assignment"
+    - "Distinction between Create Flow (artifact addition) and Start Flow (work
+      implementation)"
+  manual_testing_steps:
+    - "Tested --submit flag with create command for new artifact validation and
+      PR creation"
+    - "Verified Start command --submit integration after branch creation"
+    - "Confirmed validation failures properly block PR creation with clear error
+      messages"
+    - "Validated retry logic handles GitHub API timeouts with exponential
+      backoff"
+
+notes: |
+  Technical Implementation Details:
+
+  Files Created:
+  - packages/cli/src/utils/submission.ts: Main submission utility (309 lines)
+    - validateArtifact(): ValidationEngine integration with error filtering
+    - generatePRTitle(): Dynamic title generation following Add/Update format
+    - generatePRDescription(): Guidance-based PR descriptions for reviewers
+    - createGitHubPR(): GitHub CLI integration with retry logic
+    - submitArtifact(): Main orchestration function implementing all acceptance criteria
+
+  Files Modified:
+  - packages/cli/src/utils/artifact-creator.ts: Added --submit flag support for create command
+  - packages/cli/src/components/App.tsx: Added --submit flag recognition for both commands
+  - packages/cli/src/commands/Start.tsx: Integrated submission utility for start command
+
+  Architecture Decisions:
+  - Guidance-based PR descriptions over static templates (supports agent workflows)
+  - Single artifact scope in I.1.4 with batch processing deferred to I.1.6
+  - Direct ValidationEngine integration without complex caching layer
+  - Repository owner detection for reviewer assignment (expandable pattern)
+
+  Integration Points:
+  - @kodebase/core ValidationEngine for artifact validation
+  - GitHub CLI (gh) for PR creation and management
+  - Git workflow integration with automatic branch detection
+  - Existing artifact creation and start command flows

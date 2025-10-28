@@ -1,0 +1,121 @@
+metadata:
+  title: Implement kodebase ready command
+  priority: high
+  estimation: XS
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ D.2.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-19T14:32:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-19T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: D.2.1
+            resolved: false
+    - event: ready
+      timestamp: 2025-07-19T16:46:27Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-19T17:42:37Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: D.2.3
+    - event: in_review
+      timestamp: 2025-07-19T18:55:14Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-19T19:43:15Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Implement the 'kodebase ready <artifact-id>' command that transitions an
+    artifact from draft to ready status. This command validates that the
+    artifact has no blocking dependencies and all required fields are complete
+    before updating the status and adding the appropriate event.
+  acceptance_criteria:
+    - Command accepts artifact ID as argument
+    - Validates artifact exists and is in 'draft' status
+    - Checks for blocking dependencies (blocked_by relationships)
+    - Validates all required fields are present
+    - Updates artifact status to 'ready' with new event
+    - Shows confirmation prompt before making changes
+    - Handles edge cases (wrong status, has blockers, validation errors)
+  technical_notes: >
+    This command modifies artifact files directly since it's a simple status
+    transition that doesn't involve git operations. Use git-ops status
+    validation utilities to ensure consistency.
+
+notes:
+  implementation_details: >
+    1. Create src/commands/ready.ts with React component 2. Load and validate
+    artifact 3. Check blocked_by relationships are resolved 4. Validate against
+    artifact schema 5. Show confirmation prompt with summary 6. Update status
+    and add ready event 7. Save artifact file
+  friction_point_addressed: >
+    Automates status transition validation and ensures artifacts are properly
+    validated before being marked as ready for work.
+
+development_process:
+  alternatives_considered:
+    - "Automatic ready transition: Could mark incomplete artifacts as ready"
+    - "No confirmation prompt: Could lead to accidental transitions"
+    - "Batch ready command: Overly complex for typical workflow"
+    - "GUI-based validation: Outside scope of CLI tool"
+    - "Server-side validation: Would require API backend, not needed for local
+      CLI"
+    - "Complex state machine transitions: Current simple status check is
+      sufficient"
+  challenges_encountered:
+    - challenge: "TypeScript type safety with unknown artifact content structure"
+      solution: "Used Record<string, unknown> and runtime validation with
+        Array.isArray checks"
+    - challenge: "Issue artifact detection logic had incorrect boolean condition"
+      solution: "Fixed artifactId.split('.').length === 3 check for proper issue
+        identification"
+    - challenge: "Interactive confirmation in non-TTY environments breaks testing"
+      solution: "Added comprehensive test suite with mocked input handling"
+    - challenge: "Ink useInput hook conflicts with test environment raw mode"
+      solution: "Isolated interactive logic and tested validation separately"
+
+completion_analysis:
+  key_insights:
+    - "Multi-state React components with useInput provide excellent UX for CLI
+      confirmations"
+    - "TypeScript strict typing catches edge cases early in validation logic"
+    - "Artifact ID parsing patterns need careful validation for different
+      artifact types"
+    - "Comprehensive test coverage prevents regression bugs in validation logic"
+  implementation_approach:
+    - "Built multi-state React component (loading → confirming → processing →
+      completed/error)"
+    - "Implemented comprehensive validation pipeline with clear error messages"
+    - "Used event-driven state transitions with proper correlation tracking"
+    - "Created interactive confirmation flow showing operation details"
+  knowledge_generated:
+    - "Learned Ink framework patterns for complex CLI interactions"
+    - "Gained experience with React testing for CLI components using
+      ink-testing-library"
+    - "Discovered importance of TypeScript unknown types for dynamic content
+      validation"
+    - "Understanding of Kodebase artifact structure and validation requirements"
+  manual_testing_steps:
+    - "Created test artifact in .kodebase/artifacts/T.test-initiative/ structure"
+    - "Verified command accepts artifact ID correctly via tsx execution"
+    - "Confirmed validation logic catches missing fields, wrong status, blockers"
+    - "Tested interactive confirmation flow (Y/N input handling)"

@@ -1,0 +1,24 @@
+metadata:
+  title: Implement validateEventOrder (chronology enforcement)
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.4.3]
+    blocked_by: [A.4.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:06:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Enforce chronological ordering of events per artifact, ensuring the first event
+    is draft and subsequent events are in non-decreasing timestamp order.
+  acceptance_criteria:
+    - First event must be `draft`, otherwise validation fails with a specific error code
+    - Events must be in chronological (non-decreasing) order; out-of-order sequences are rejected
+    - Error messages include the offending timestamps to aid debugging
+

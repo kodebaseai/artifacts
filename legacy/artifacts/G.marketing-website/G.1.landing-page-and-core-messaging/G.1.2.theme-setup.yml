@@ -1,0 +1,97 @@
+metadata:
+  title: Theme Setup and Global Elements (Header & Footer)
+  priority: high
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ G.1.1 ]
+    blocks: [ G.1.3, G.1.4, G.1.5, G.1.6, G.1.7, G.1.8, G.1.9 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-07T22:00:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-22T15:01:32Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-22T23:42:42Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-23T00:09:09Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Set up the new dark theme design system and implement global elements
+    (header navigation and footer) based on the new homepage design direction.
+    Design: .kodebase/docs/product/design/marketing landing page/Homepage.jpg
+  acceptance_criteria:
+    - Dark theme color palette and typography system implemented
+    - Header navigation with logo, menu items, and CTA button
+    - Footer with essential links and branding
+    - Responsive header/footer work on mobile, tablet, desktop
+    - Global CSS variables and design tokens established
+    - Header navigation is sticky and animates on scroll
+    - All components use consistent spacing and typography
+    - Design system documented for other sections
+
+development_process:
+  alternatives_considered:
+    - Continue using Radix UI NavigationMenu with existing patterns
+    - Build custom navigation from scratch without component library
+    - Use Headless UI instead of Base UI for navigation components
+  challenges_encountered:
+    - challenge: Base UI NavigationMenu uses different data attributes than Radix UI
+      solution: Updated all component selectors from data-[state=open] to
+        data-[popup-open] and data-[open]/data-[closed] to match Base UI
+        conventions
+    - challenge: Complex NavigationMenuContent styling was causing overflow-hidden issues
+      solution: Simplified CSS classes and separated viewport vs non-viewport mode
+        styling for clearer logic
+    - challenge: Nested link structure in navigation data required double iteration
+      solution: Implemented proper nested mapping with unique keys for React rendering
+
+completion_analysis:
+  key_insights:
+    - Base UI requires different data attribute patterns than Radix UI for state
+      management
+    - NavigationMenu component hierarchy in Base UI is more complex (Portal >
+      Positioner > Popup > Viewport)
+    - Dark-first design requires careful CSS variable management for theme
+      switching
+  implementation_approach:
+    - Migrated from Radix UI to Base UI NavigationMenu components
+    - Established dark theme as default with light theme override using CSS
+      custom properties
+    - Fixed Tailwind CSS configuration issues and updated package.json to use
+      Biome for linting
+    - Implemented proper component data attribute patterns for Base UI
+      compatibility
+  knowledge_generated:
+    - Base UI NavigationMenu uses data-[popup-open] for trigger state vs Radix's
+      data-[state=open]
+    - CSS @theme blocks cannot contain @media queries in Tailwind CSS v4
+    - NavigationMenuLink requires asChild prop for proper Next.js Link
+      integration
+  manual_testing_steps:
+    - Verified chevron rotation animation works on hover/click
+    - Tested navigation dropdown content displays properly in portal
+    - Confirmed responsive behavior on mobile, tablet, and desktop
+    - Validated nested link structure renders correctly with proper grouping
+
+notes: >
+  Foundation for all other homepage sections. Use Tailwind CSS v4 with
+  @kodebase/tailwind-config. Focus on dark theme with gradients and modern
+  aesthetics matching the new design direction.

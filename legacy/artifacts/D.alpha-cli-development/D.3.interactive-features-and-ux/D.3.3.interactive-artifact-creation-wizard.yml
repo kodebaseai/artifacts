@@ -1,0 +1,85 @@
+metadata:
+  title: Create interactive artifact creation wizard
+  priority: high
+  estimation: M
+  created_by: Claude (noreply@anthropic.com)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-21T19:45:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-21T19:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: dependencies_met
+      metadata:
+        reason: D.2 completed - CLI is more advanced than anticipated, updating scope
+    - event: in_progress
+      timestamp: 2025-07-21T11:11:57Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_progress
+      timestamp: 2025-07-21T14:11:57Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: completed
+      timestamp: 2025-07-21T14:16:35Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Build an interactive wizard for artifact creation using the existing Ink
+    components. Guide users through a multi-step process with validation, making
+    artifact creation intuitive and error-free.
+
+  description: >
+    Currently, artifact creation requires understanding the YAML schema and
+    manual file editing. This wizard provides a guided experience that walks
+    users through each field, validates inputs in real-time, and generates
+    properly formatted artifacts. This improves onboarding and reduces errors.
+
+  acceptance_criteria:
+    - Interactive wizard launched via 'kodebase create --wizard' or 'kb create
+      --wizard'
+    - Multi-step flow: type selection → basic info → details → relationships
+    - Uses existing Ink TextInput for title, assignee, description fields
+    - Uses existing Ink Select for type, priority, estimation options
+    - Live validation with helpful error messages and hints
+    - Back/forward navigation between steps with arrow keys or commands
+    - Preview final artifact before creation
+    - Confirmation step before writing to filesystem
+    - Supports creating initiatives, milestones, and issues
+
+  technical_approach: >
+    Build React components using existing Ink infrastructure. Create step
+    management system with navigation controls. Integrate with existing artifact
+    utilities and validation from D.2. Use existing UI components and styling
+    patterns.
+
+  files_affected:
+    - packages/cli/src/commands/create.ts (add --wizard option)
+    - packages/cli/src/components/wizard/ (new wizard components)
+    - packages/cli/src/utils/wizard.ts (wizard logic and validation)
+    - packages/cli/src/components/wizard/Steps.tsx (step management)
+
+notes:
+  implementation_details: >
+    Should reuse existing artifact creation logic and validation from D.2.
+    Leverage existing UI components (TextInput, Select, etc.) for consistency.
+    Consider step state management and validation feedback patterns.
+
+  validation_approach: >
+    Test wizard flow for all artifact types, verify validation accuracy, confirm
+    generated artifacts match manual creation, test navigation and error
+    recovery.
+
+  design_considerations: >
+    Should feel consistent with existing CLI UI patterns. Consider providing
+    sensible defaults and shortcuts for power users while maintaining guidance
+    for new users.

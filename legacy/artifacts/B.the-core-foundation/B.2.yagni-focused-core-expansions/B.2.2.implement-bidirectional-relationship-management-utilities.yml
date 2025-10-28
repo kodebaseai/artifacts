@@ -1,0 +1,62 @@
+metadata:
+  title: Implement bidirectional relationship management utilities
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: [ B.2.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: blocked
+      timestamp: 2025-07-15T09:15:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.2.1
+            resolved: true
+            resolved_at: 2025-07-15T09:47:00Z
+    - event: ready
+      timestamp: 2025-07-15T09:47:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-15T09:52:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-15T10:00:14Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-15T10:28:14Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Addresses FP-007 (bidirectional updates - 10 min/relationship). Single
+    function updates both artifacts: relationships.addBlocks('A.1', 'A.2')
+    updates both A.1 and A.2. Includes validation to prevent orphaned
+    relationships. Critical for data integrity.
+  acceptance_criteria:
+    - addBlocks function updates both artifacts atomically
+    - removeBlocks function removes relationships from both artifacts
+    - addBlockedBy function updates both artifacts atomically
+    - removeBlockedBy function removes relationships from both artifacts
+    - Validation prevents adding non-existent artifact IDs
+    - Validation prevents circular dependencies
+    - TypeScript types ensure correct usage
+    - All relationship operations maintain referential integrity
+
+notes: >
+  This addresses friction point FP-007 which showed that maintaining
+  bidirectional relationships takes 5-10 minutes per relationship update. The
+  utilities must ensure data consistency - if A blocks B, then B must show it's
+  blocked by A. Consider transaction-like behavior for updates.

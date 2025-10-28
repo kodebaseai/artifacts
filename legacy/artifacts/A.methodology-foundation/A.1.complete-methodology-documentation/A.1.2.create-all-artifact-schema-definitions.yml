@@ -1,0 +1,163 @@
+metadata:
+  title: Create All Artifact Schema Definitions
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [A.1.7]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-06T19:42:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-06T19:42:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-06T23:37:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Define the YAML schemas for all artifact types (Initiatives, Milestones, and
+    Issues) with their templates. These schemas will enforce consistency and
+    enable validation across the entire artifact hierarchy.
+  acceptance_criteria:
+    - Artifact metadata schema includes:
+        - title
+        - priority
+        - estimation
+        - created_by
+        - assignee
+        - schema_version
+        - relationships:
+            - blocks
+            - blocked_by
+        - events:
+            - event_id
+            - timestamp
+            - event
+            - actor
+            - commit_hash
+            - correlation_id
+            - parent_event_id
+            - metadata:
+                - trigger
+                - session_id
+    - Initiative schema includes:
+        - content:
+            - vision
+            - scope
+            - success_criteria
+        - completion_summary:
+            - business_impact
+            - strategic_achievements
+            - organizational_learning
+            - architecture_evolution
+            - future_roadmap_impact
+    - Milestone schema includes:
+        - content:
+            - summary
+            - deliverables
+            - validation
+        - completion_summary:
+            - key_achievements
+            - strategic_decisions
+            - knowledge_generated
+            - team_impact
+            - next_milestone_insights
+    - Issue schema includes:
+        - content:
+            - summary
+            - acceptance_criteria
+        - development_process:
+            - spikes generated
+            - alternatives_considered
+            - challenges_encountered - {challenge/solution touple}
+        - completion_analysis:
+            - key_insights
+            - implementation_approach
+            - knowledge_generated
+            - manual_testing_steps
+        - review_details:
+            - url
+            - approved_by
+    - Example YAML files created for each type
+    - Templates for common patterns
+    - Validation rules documented
+    - Schema version management defined
+    - All existing artifact YAMLs updated to move relationships and events
+      inside metadata
+    - All documentation updated to reflect new structure:
+        - AGENTIC_KODEBASE_METHODOLOGY.mdc
+        - artifact-completion-guidelines.mdc
+        - Any other docs referencing artifact structure
+
+notes: >
+  IMPORTANT: relationships and events are now inside metadata section, not at
+  root level. check
+  `.kodebase/docs/for-agents/guidelines/artifact-completion-guidelines.mdc` for
+  guidance check `.kodebase/docs/whats-kodebase/KODEBASE_METHODOLOGY.mdc` for
+  more details
+
+development_process:
+  alternatives_considered:
+    - "Considered placing schemas in .kodebase/schemas/ but chose
+      .kodebase/config/schemas/ for better organization"
+    - "Initially created very restrictive minLength constraints but simplified
+      to follow MVP principle"
+    - "Considered using JSON Schema draft-07 but chose draft 2020-12 for modern
+      features"
+  challenges_encountered:
+    - challenge: "Schema references using $ref to relative files for metadata inheritance"
+      solution: "Used simple relative path references which work well for validation
+        tools"
+    - challenge: "Deciding where to place documentation files (schemas vs docs folder)"
+      solution: "Moved validation rules and versioning docs to
+        .kodebase/docs/engineering/schemas/"
+    - challenge: "Updating 25+ artifact YAML files to move relationships/events to
+        metadata"
+      solution: "Human collaborator handled bulk updates efficiently while I focused
+        on schemas"
+
+completion_analysis:
+  key_insights:
+    - "JSON Schema provides excellent validation foundation for artifact
+      consistency"
+    - "Example files are crucial for understanding proper schema usage"
+    - "Separating config schemas from documentation improves maintainability"
+  implementation_approach:
+    - "Created shared metadata schema with inheritance pattern for consistency"
+    - "Built type-specific schemas (Initiative/Milestone/Issue) with appropriate
+      content fields"
+    - "Provided examples and templates to accelerate adoption"
+  knowledge_generated:
+    - "Schema versioning strategy enables future evolution without breaking
+      changes"
+    - "Metadata structure (with relationships/events inside) provides better
+      organization"
+    - "Validation rules documentation serves as comprehensive reference"
+  manual_testing_steps:
+    - "Copy example YAML from .kodebase/config/schemas/examples/ and validate
+      structure"
+    - "Create new artifact using templates in
+      .kodebase/config/schemas/templates/"
+    - "Run JSON Schema validator against artifact-metadata.schema.yml with real
+      artifact"
+    - "Test inheritance by validating initiative.example.yml against
+      initiative.schema.yml"
+    - "Verify relationships and events are properly nested in metadata section"
+    - "Check that schema versioning docs provide clear migration guidance"

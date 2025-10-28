@@ -1,0 +1,120 @@
+metadata:
+  title: Context gathering and assembly
+  priority: high
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.3 ]
+    blocked_by: [ E.1 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-31T09:58:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_review
+      timestamp: 2025-07-31T12:21:28Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-31T13:30:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: pr_merged
+      metadata:
+        all_issues_completed: true
+
+content:
+  summary: >
+    Build the context gathering system that reads from multiple sources and
+    assembles comprehensive project context. This includes artifact readers for
+    YAML files, code analysis for finding relevant files, documentation
+    discovery across the project, and event log parsing for historical insights.
+
+  deliverables:
+    - Artifact file reader (uses @kodebase/core)
+    - Documentation scanner
+    - Event history analyzer
+    - Context assembly pipeline
+
+  validation:
+    - Reads all artifact types correctly
+    - Discovers relevant documentation
+    - Assembles context under 500ms
+
+notes: |
+  This milestone builds the intelligence layer that can understand and parse the
+  Kodebase project structure. It leverages the existing @kodebase/core package
+  for artifact parsing while adding comprehensive context discovery capabilities.
+
+  Planned Issues:
+  - E.2.1: Build artifact file reader (uses @kodebase/core)
+    Summary: Create system to read and parse all artifact types using existing core parsers
+
+  - E.2.2: Create documentation scanner
+    Summary: Build scanner to discover and index project documentation files
+
+  - E.2.3: Implement event history analyzer
+    Summary: Parse event logs from artifacts to provide historical context and insights
+
+  - E.2.4: Develop context assembly pipeline
+    Summary: Combine all gathered information into coherent context packages for AI consumption
+
+completion_summary:
+  key_achievements:
+    - "Built comprehensive artifact file reader leveraging @kodebase/core
+      parsers with full type safety"
+    - "Implemented intelligent documentation scanner with relevance scoring and
+      location-based categorization"
+    - "Created sophisticated event history analyzer with velocity metrics and
+      dependency chain analysis"
+    - "Developed high-performance context assembly pipeline achieving <500ms
+      target with three-tier optimization"
+    - "Established complete context gathering foundation with recursive project
+      scanning and error resilience"
+
+  strategic_decisions:
+    - "Leveraged existing @kodebase/core infrastructure instead of
+      reimplementing parsing logic for consistency and reliability"
+    - "Implemented three-tier context levels (minimal/standard/comprehensive) to
+      optimize AI consumption while maintaining flexibility"
+    - "Built defensive programming patterns throughout with comprehensive error
+      categorization for production reliability"
+    - "Integrated security validation at the reader level to ensure consistent
+      protection across all context operations"
+
+  knowledge_generated:
+    - "Deep understanding of artifact ecosystem structure and optimal parsing
+      strategies using @kodebase/core"
+    - "Expertise in documentation discovery patterns and relevance scoring
+      algorithms for AI context optimization"
+    - "Advanced knowledge of event timeline analysis including velocity
+      calculations and dependency pattern detection"
+    - "Performance optimization techniques for sub-500ms context assembly across
+      large project hierarchies"
+    - "Error handling and resilience patterns for production-grade context
+      gathering systems"
+
+  team_impact:
+    - "Established comprehensive context gathering patterns that can be extended
+      for future MCP tools"
+    - "Created reusable readers architecture that other packages can leverage
+      for artifact and documentation access"
+    - "Built robust error handling foundation that provides clear debugging
+      information for development and monitoring"
+    - "Demonstrated integration excellence with @kodebase/core that serves as a
+      model for future package interactions"
+
+  next_milestone_insights:
+    - "Context assembly pipeline provides optimal foundation for E.3 filtering
+      and size limiting functionality"
+    - "Reader architecture is ready for extension with additional context
+      sources as E.4 tools are implemented"
+    - "Performance characteristics (500ms assembly) provide sufficient headroom
+      for additional filtering layers in E.3"
+    - "Error categorization system will enable robust MCP tool implementations
+      that can handle edge cases gracefully"

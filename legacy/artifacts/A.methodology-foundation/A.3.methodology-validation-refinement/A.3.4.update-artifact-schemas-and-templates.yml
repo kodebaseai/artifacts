@@ -1,0 +1,109 @@
+metadata:
+  title: Update Artifact Schemas and Templates
+  priority: high
+  estimation: S
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [ A.3.5, A.3.7 ]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-09T20:08:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-10T10:09:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-10T10:24:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-10T10:26:08Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Refine all artifact schemas based on real usage patterns. Add fields that
+    proved necessary and remove those that added no value.
+  acceptance_criteria:
+    - Schema pain points addressed:
+        - Required fields that were often empty
+        - Missing fields that were needed
+        - Confusing field names
+        - Unclear validation rules
+        - Type mismatches
+    - New fields added where needed:
+        - Fields frequently added manually
+        - Metadata for better tracking
+        - Automation hints/flags
+        - Integration points
+        - Context preservation
+    - Unused fields deprecated:
+        - Fields never populated
+        - Redundant information
+        - Over-engineering removed
+        - Clear deprecation timeline
+        - Migration path defined
+    - Templates updated to:
+        - Include helpful comments
+        - Show real examples
+        - Provide sensible defaults
+        - Guide best practices
+        - Prevent common mistakes
+    - Migration guide includes:
+        - Schema version differences
+        - Field mapping table
+        - Conversion scripts
+        - Validation tools
+        - Rollback procedures
+    - Backwards compatibility ensured:
+        - Old schemas still parseable
+        - Graceful degradation
+        - Version detection logic
+        - Upgrade prompts
+        - No data loss
+
+notes: >
+  Focus on what we actually used vs what we thought we'd need. Keep schemas as
+  simple as possible while capturing necessary data. Consider tooling
+  constraints when making changes.
+
+development_process:
+  alternatives_considered:
+    - "Considered removing all optional fields vs making them truly optional
+      (chose optional)"
+    - "Debated keeping event_id for future automation vs removing now (chose
+      remove for simplicity)"
+    - "Evaluated single schema file vs separate v1/v2 directories (chose
+      directories for clarity)"
+  challenges_encountered:
+    - challenge: "Maintaining backwards compatibility while simplifying"
+      solution: "Created v2 schemas that can parse v1 artifacts, with migration tooling"
+    - challenge: "Balancing TypeScript schema alignment with YAML simplification"
+      solution: "Kept structure compatible but removed unused fields from YAML schemas"
+
+completion_analysis:
+  key_insights:
+    - "Moving schemas to packages/core/schemas keeps them with the code that
+      uses them"
+    - "Examples in schemas prevent more errors than strict validation"
+    - "Migration tooling is essential for adoption - manual updates are
+      error-prone"
+  implementation_approach: "Created parallel v1/v2 schema versions with migration
+    and validation scripts. Focused on developer experience with helpful
+    examples and clear deprecation path."
+  manual_testing_steps:
+    - "Run node packages/core/schemas/scripts/validate-schema.js on any artifact"
+    - "Test migration with node
+      packages/core/schemas/scripts/migrate-v1-to-v2.js --dry-run"
+    - "Copy a v2 template and verify it has helpful inline comments"
+    - "Check that old v1 artifacts still validate correctly"

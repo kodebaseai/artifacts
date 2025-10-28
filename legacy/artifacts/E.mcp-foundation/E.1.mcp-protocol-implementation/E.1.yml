@@ -1,0 +1,131 @@
+metadata:
+  title: MCP protocol implementation
+  priority: critical
+  estimation: L
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 2.0.0
+  relationships:
+    blocks: [ E.2 ]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: 2025-07-30T14:25:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-30T15:10:21Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+      metadata:
+        branch_created: E.1.1
+    - event: in_progress
+      timestamp: 2025-07-30T15:13:21Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+      metadata:
+        branch_created: E.1.1
+    - event: in_review
+      timestamp: 2025-07-31T09:57:11Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: children_completed
+    - event: completed
+      timestamp: 2025-07-31T09:58:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+      metadata:
+        all_issues_completed: true
+
+content:
+  summary: >
+    Implement the core MCP protocol server with proper JSON-RPC 2.0 over stdio
+    communication. This includes the MCP server foundation using the official
+    SDK, protocol compliance with tool registration, proper logging without
+    stdio output, and configuration with sensible defaults.
+
+  deliverables:
+    - MCP server skeleton with @modelcontextprotocol/sdk
+    - JSON-RPC 2.0 stdio transport
+    - Protocol-compliant tool registration
+    - File-based logging with Pino (no stdio output)
+    - Configuration system (env vars + config file)
+    - Security middleware (path validation)
+
+  validation:
+    - Server starts without errors
+    - MCP inspector shows registered tools
+    - No output to stdout/stderr
+
+notes: |
+  This milestone establishes the foundational MCP server infrastructure that all subsequent milestones will build upon.
+  The server must be protocol-compliant and ready for tool registration while maintaining clean stdio channels.
+
+  Planned Issues:
+  - E.1.1: Set up MCP server skeleton with @modelcontextprotocol/sdk
+    Summary: Initialize the basic MCP server project structure with the official SDK
+
+  - E.1.2: Implement JSON-RPC 2.0 stdio transport
+    Summary: Configure proper stdin/stdout communication following JSON-RPC 2.0 specification
+
+  - E.1.3: Build protocol-compliant tool registration system
+    Summary: Create the framework for registering and managing MCP tools
+
+  - E.1.4: Create file-based logging with Pino (no stdio output)
+    Summary: Set up structured logging that doesn't interfere with stdio communication
+
+  - E.1.5: Develop configuration system (env vars + config file)
+    Summary: Build flexible configuration management with environment variable overrides
+
+  - E.1.6: Implement security middleware (path validation)
+    Summary: Add path traversal protection and input validation for security
+
+completion_summary:
+  key_achievements:
+    - "Established complete MCP protocol server foundation with
+      @modelcontextprotocol/sdk"
+    - "Implemented JSON-RPC 2.0 stdio transport with clean communication
+      channels"
+    - "Built protocol-compliant tool registration system with security
+      integration"
+    - "Created file-based logging system using Pino without stdio interference"
+    - "Developed flexible configuration system supporting environment variables
+      and config files"
+    - "Integrated comprehensive security middleware with path validation and
+      rate limiting"
+
+  strategic_decisions:
+    - "Chose @modelcontextprotocol/sdk for protocol compliance and future
+      compatibility"
+    - "Adopted file-based logging to maintain clean stdio channels for MCP
+      communication"
+    - "Integrated security at tool registry level for consistent protection
+      across all tools"
+    - "Used Zod schemas for type-safe validation throughout the system"
+
+  knowledge_generated:
+    - "Deep understanding of MCP protocol requirements and JSON-RPC 2.0
+      implementation"
+    - "Expertise in stdio-based communication patterns for AI tool protocols"
+    - "Knowledge of security patterns for file system access and path validation"
+    - "Experience with rate limiting and input validation in TypeScript
+      applications"
+    - "Understanding of logging patterns that don't interfere with protocol
+      communication"
+
+  team_impact:
+    - "Established development patterns for MCP server implementation"
+    - "Created reusable security middleware that can be applied to other
+      projects"
+    - "Built comprehensive test suites that serve as documentation for future
+      developers"
+    - "Demonstrated integration of multiple systems (logging, security,
+      configuration) in a cohesive architecture"
+
+  next_milestone_insights:
+    - "MCP server foundation is solid and ready for tool implementation in E.2"
+    - "Security middleware provides protection patterns that should be extended
+      to specific tools"
+    - "Configuration system is flexible enough to support additional
+      tool-specific settings"
+    - "Logging infrastructure can capture tool-specific events for monitoring
+      and debugging"

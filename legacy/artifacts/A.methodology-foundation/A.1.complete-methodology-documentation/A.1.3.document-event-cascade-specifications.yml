@@ -1,0 +1,117 @@
+metadata:
+  title: Document Event Cascade Specifications
+  priority: critical
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: []
+    blocks: [A.1.7]
+  events:
+    - event: draft
+      timestamp: 2025-07-06T14:32:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-06T15:17:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-07T09:41:13Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-07T10:00:13Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+    - event: completed
+      timestamp: 2025-07-07T10:05:13Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create comprehensive documentation for the event-driven cascade system. This
+    includes event types, cascade rules, correlation IDs, and parent-child state
+    transitions.
+  acceptance_criteria:
+    - Event types catalog includes:
+        - draft (artifact created)
+        - ready (all details/requirements added, validation passed)
+        - blocked (dependency added)
+        - in_progress (work started)
+        - in_review (PR created)
+        - completed (PR merged)
+        - cancelled (work abandoned)
+        - archived (parent completed)
+    - Cascade rules include:
+        - All children complete → parent becomes in_review
+        - Parent completes → cancelled children become archived
+        - Issue blocked → dependent issues become blocked
+        - Milestone ready requires all child issues ready
+        - Initiative ready requires at least one child milestones ready (the
+          first?!?)
+    - Correlation ID documentation includes:
+        - ID generation format: <parent-event-id>-<timestamp>
+        - How correlation IDs link related events
+        - Tracking cascade chains across artifacts
+    - Parent event linking includes:
+        - parent_event_id field usage
+        - Cascade trigger identification
+        - Event propagation rules
+    - State transition matrix includes:
+        - Valid transitions for each artifact type
+        - Guards/conditions for each transition
+        - Forbidden state changes
+        - Rollback scenarios
+    - Example cascade scenarios include:
+        - Completing last issue in milestone
+        - Cancelling a milestone with active issues
+        - Blocking an issue with dependencies
+        - Archiving cancelled artifacts
+
+notes: >
+  Critical for understanding event propagation. Reference:
+  .kodebase/docs/for-agents/methodology/process-automation/event-cascade.md See
+  also: Event structure in A.1.2 for field definitions
+
+development_process:
+  implementation_approach: >
+    Expanded the existing event-cascade.md file in
+    .kodebase/docs/for-agents/methodology/process-automation/ to include all
+    required specifications from the acceptance criteria. This approach
+    consolidates all event cascade documentation in a single comprehensive
+    location.
+  alternatives_considered:
+    - Creating a new separate document - rejected to avoid documentation
+      fragmentation
+    - Breaking into multiple files - rejected to maintain single source of truth
+  challenges_encountered:
+    - challenge: "Redundant cascade rule 'Issue blocked → dependent issues become
+        blocked'"
+      solution: "Added with explanatory note about why it exists despite seeming
+        redundant"
+    - challenge: "Ambiguous initiative readiness rule requiring only one milestone ready"
+      solution: "Documented with clarification note explaining the rationale"
+
+completion_analysis:
+  implementation_summary: >
+    Successfully documented all event cascade specifications by expanding the
+    existing event-cascade.md file. Added comprehensive coverage of event types,
+    cascade rules, correlation IDs, parent event linking, state transition
+    matrices, and example scenarios as required.
+  key_insights:
+    - Some cascade rules in acceptance criteria contain logical redundancies
+    - Initiative readiness rule may need business clarification
+    - Correlation ID format provides clear traceability for cascade chains
+  knowledge_generated: >
+    Documented the complete event-driven cascade system including state
+    transitions, validation rules, and cascade propagation patterns. This
+    provides the foundation for implementing the automated event system in the
+    Kodebase CLI.
+  manual_testing_steps:
+    - Review expanded event-cascade.md file for completeness
+    - Verify all acceptance criteria items are documented
+    - Check state transition matrix accuracy
+    - Validate example scenarios match expected behavior

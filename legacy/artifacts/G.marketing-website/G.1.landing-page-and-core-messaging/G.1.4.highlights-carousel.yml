@@ -1,0 +1,105 @@
+metadata:
+  title: Highlights Carousel Section
+  priority: medium
+  estimation: M
+  created_by: Miguel Carvalho (m@kodebase.ai)
+  assignee: Miguel Carvalho (m@kodebase.ai)
+  schema_version: 0.2.0
+  relationships:
+    blocked_by: [ G.1.2 ]
+    blocks: []
+  events:
+    - event: draft
+      timestamp: 2025-07-22T15:45:00Z
+      actor: Claude (noreply@anthropic.com)
+      trigger: artifact_created
+    - event: ready
+      timestamp: 2025-07-22T15:45:00Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: 2025-07-23T15:27:20Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: branch_created
+    - event: in_review
+      timestamp: 2025-07-24T09:33:22Z
+      actor: Miguel Carvalho (m@kodebase.ai)
+      trigger: pr_created
+      metadata:
+        pr_ready_for_review: true
+    - event: completed
+      timestamp: 2025-07-24T09:36:01Z
+      actor: Github Actions (github-actions[bot]@users.noreply.github.com)
+      trigger: pr_merged
+
+content:
+  summary: >
+    Create a detailed highlights section as part of the extended hero
+    experience. Features a carousel showcasing the main pages/screens of the
+    Kodebase tools, giving users a comprehensive preview of what Kodebase
+    offers. Design: .kodebase/docs/product/design/marketing landing
+    page/Homepage.jpg
+  acceptance_criteria:
+    - Interactive carousel with smooth transitions between slides
+    - Each slide shows a different Kodebase tool interface/screen
+    - Includes CLI interface, artifact management, and methodology views
+    - Navigation dots and arrow controls for manual browsing
+    - Auto-advance with pause on hover functionality
+    - Mobile-responsive carousel with touch/swipe support
+    - High-quality screenshots optimized for web display
+    - Brief descriptive text for each highlighted feature
+    - Smooth animations and loading states for all images
+
+development_process:
+  alternatives_considered:
+    - "Implement as static grid layout with hover effects instead of carousel"
+    - "Use external carousel library like Swiper.js for advanced features"
+    - "Create full-screen modal gallery instead of inline carousel"
+    - "Implement as auto-playing video showcasing tool interfaces"
+  challenges_encountered:
+    - challenge: "Carousel content alignment with container margins"
+      solution: "Used CSS calc() functions to match max-width container behavior with
+        ml-[max(var(--spacing-base),calc(50vw-640px))]"
+    - challenge: "Conditional padding only for first and last carousel items"
+      solution: "Implemented index-based conditional className application using cn()
+        utility"
+    - challenge: "Maintaining responsive design consistency across breakpoints"
+      solution: "Leveraged CSS custom properties with media queries for consistent
+        spacing system"
+
+completion_analysis:
+  key_insights:
+    - "Radix UI Carousel provides excellent accessibility and keyboard
+      navigation out of the box"
+    - "CSS custom properties enable powerful responsive calculations that scale
+      naturally"
+    - "Index-based conditional styling allows for precise control over edge
+      cases"
+  implementation_approach:
+    - "Built React component using Radix UI Carousel primitives for
+      accessibility"
+    - "Implemented responsive width classes using CSS custom properties and
+      calc() functions"
+    - "Created 8 highlight items showcasing different Kodebase features and
+      benefits"
+    - "Used conditional className application for precise edge styling control"
+  knowledge_generated:
+    - "Pattern for aligning carousel content with container margins using CSS
+      calc() expressions"
+    - "Approach for conditional styling based on array index in React components"
+    - "Integration technique for Radix UI components with Tailwind CSS custom
+      properties"
+  manual_testing_steps:
+    - "Verified carousel navigation works with both arrow controls and
+      touch/swipe gestures"
+    - "Tested responsive behavior across mobile, tablet, and desktop breakpoints"
+    - "Confirmed content alignment matches container div margins at all screen
+      sizes"
+    - "Validated accessibility with keyboard navigation and screen reader
+      compatibility"
+
+notes: >
+  This extends the hero section by giving users a detailed look at the actual
+  Kodebase interfaces. Should build excitement and demonstrate the polish of the
+  tools. Consider using actual screenshots from the CLI and future web
+  interface.
