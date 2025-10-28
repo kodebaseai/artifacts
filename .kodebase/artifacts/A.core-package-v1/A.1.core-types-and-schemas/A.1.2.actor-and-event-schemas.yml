@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-10-28T20:09:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-28T20:16:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement strict schemas for actors and event records: support human and AI
