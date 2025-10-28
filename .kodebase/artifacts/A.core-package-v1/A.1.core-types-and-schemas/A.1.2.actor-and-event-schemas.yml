@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.1.1
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-15:30:10Z"
+    - event: ready
+      timestamp: "2025-10-15:30:10Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Implement strict schemas for actors and event records: support human and AI

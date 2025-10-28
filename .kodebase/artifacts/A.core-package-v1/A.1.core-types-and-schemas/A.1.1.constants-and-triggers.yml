@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-28T15:29:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-15:30:10Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Define canonical constants for artifact states, priorities, estimation sizes,
