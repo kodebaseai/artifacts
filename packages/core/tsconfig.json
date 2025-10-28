@@ -1,0 +1,12 @@
+{
+  "extends": "@kodebase/typescript-config/base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "@kodebase/core": ["./src"]
+    }
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules"]
+}

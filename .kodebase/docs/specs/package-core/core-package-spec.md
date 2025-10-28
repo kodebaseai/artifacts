@@ -45,7 +45,7 @@ Scalability note: The hierarchical layout naturally partitions artifacts by init
   - `trigger` (required; string; see below)
   - `metadata?` (object)
 - Triggers used by MVP
-  - `artifact_created`, `dependencies_met`, `has_dependencies`, `branch_created`, `pr_ready`, `pr_merged`, `manual`, `manual_cancel`, `dependency_completed`, `parent_completed`, `parent_archived`.
+  - `artifact_created`, `dependencies_met`, `has_dependencies`, `branch_created`, `pr_ready`, `pr_merged`, `manual_cancel`, `dependency_completed`, `children_started`, `children_completed`, `parent_completed`, `parent_archived`.
 
 ### 3.3 State Machine (per artifact type)
 - States: `draft`, `ready`, `blocked`, `in_progress`, `in_review`, `completed`, `cancelled`, `archived`.

@@ -145,6 +145,15 @@ importers:
         specifier: latest
         version: 4.0.3(@types/debug@4.1.12)(@types/node@22.18.12)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(msw@2.11.6(@types/node@22.18.12)(typescript@5.8.2))(tsx@4.20.6)(yaml@2.8.1)
 
+  packages/core:
+    devDependencies:
+      '@kodebase/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@vitest/coverage-istanbul':
+        specifier: ^3.0.7
+        version: 3.2.4(vitest@4.0.3(@types/debug@4.1.12)(@types/node@22.18.12)(jiti@2.6.1)(jsdom@26.1.0)(lightningcss@1.30.2)(msw@2.11.6(@types/node@22.18.12)(typescript@5.8.2))(tsx@4.20.6)(yaml@2.8.1))
+
   packages/tailwind-config:
     devDependencies:
       postcss:

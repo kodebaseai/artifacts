@@ -17,12 +17,21 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T14:46:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-28T15:29:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Define canonical constants for artifact states, priorities, estimation sizes,
-    event triggers (including parent_completed, parent_archived, manual_cancel), and
+    event triggers (including children_started, children_completed, parent_completed,
+    parent_archived, manual_cancel), and
     artifact type enumerations for v1.
   acceptance_criteria:
     - Constants export includes states, priorities, estimation sizes, artifact types
-    - Triggers include dependencies_met, has_dependencies, branch_created, pr_ready, pr_merged, dependency_completed, parent_completed, parent_archived, manual_cancel
+    - Triggers include dependencies_met, has_dependencies, branch_created, pr_ready, pr_merged, dependency_completed, children_started, children_completed, parent_completed, parent_archived, manual_cancel
     - Types inferred from constants are available for downstream schemas

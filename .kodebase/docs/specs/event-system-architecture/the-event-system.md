@@ -81,7 +81,7 @@ No IDs, no correlation graphs – chronological order alone is authoritative.
 | # | Flow | Initiating Command / Event | Key Rules (concise) | Resulting Events |
 |---|------|----------------------------|--------------------|------------------|
 | 1 | **Creation** | `kodebase create` (+ `--submit` on merge) | • All new artifacts start as `draft`.<br>• Wizard enforces sibling-only dependencies & minimum content.<br>• Validation runs only on newly created files.<br>• When merged to `main`, each artifact ends in **`ready`** or **`blocked`** based on declared dependencies. | `draft` → `ready` or `blocked` |
-| 2 | **Progress Cascade** | `kodebase start` | • Only Issues can be started.<br>• Issue must be `ready`; parent Milestone/Initiative must be `ready` or `in_progress`.<br>• *First* Issue started in a Milestone flips the Milestone to `in_progress` (same for Milestone → Initiative). | `in_progress` on child, then on first-time parent(s) via `child_started:<id>` trigger |
+| 2 | **Progress Cascade** | `kodebase start` | • Only Issues can be started.<br>• Issue must be `ready`; parent Milestone/Initiative must be `ready` or `in_progress`.<br>• *First* Issue started in a Milestone flips the Milestone to `in_progress` (same for Milestone → Initiative). | `in_progress` on child, then on first-time parent(s) via `children_started` trigger |
 | 3 | **Completion Cascade** | `kodebase start --submit` (Issue PR merged) | • Issue PR merge adds `completed` on Issue.<br>• If it’s the last Issue of a Milestone, Milestone moves to `in_review`.<br>• If that Milestone is the last of its Initiative, Initiative moves to `in_review`. | `completed` (Issue) → `in_review` (Milestone / Initiative) via `children_completed` |
 | 4 | **Dependency Resolution** | Merge of blocking Issue PR | • `blocked` events live *only* on the dependent Issue and list siblings in `metadata.blocking_dependencies`.<br>• On completion of a blocker, its dependents update that list (`resolved: true`, `resolved_at`).<br>• When all entries resolved, dependent receives a new `ready` event. | metadata update on `blocked` event; optional new `ready` event |
 | 5 | **Cancel** | `kodebase cancel` | • CLI shows dependency impact report.<br>• Cancelling Milestone cascades `cancelled` to all its Issues; cancelling Initiative cascades to Milestones & Issues.<br>• User decides whether dependents move to `ready` or `cancelled`. | `cancelled` events; possible follow-up `ready` events on dependents |
@@ -93,12 +93,17 @@ No IDs, no correlation graphs – chronological order alone is authoritative.
 Type | Trigger | Emitted By | Typical Flow
 ---- | -------- | ---------- | ------------
 Manual | `artifact_created` | `create` command | Creation
+Manual | `dependencies_met` | `create --submit` | Creation (ready without blockers)
+Manual | `has_dependencies` | `create --submit` | Creation (blocked by siblings)
 Manual | `branch_created` | Git post-checkout hook / `start` | Progress
 Manual | `pr_ready` | `start --submit` | Completion (Issue → PR ready)
+Manual | `pr_merged` | merge hook | Completion (Issue PR merge)
 Manual | `manual_cancel` | `cancel` command | Cancel
-Cascade | `child_started:<id>` | Event engine | Progress cascade
-Cascade | `children_completed` | Event engine | Completion cascade
-Cascade | `dependencies_resolved:<id>` | Event engine | Dependency resolution
+Cascade | `children_started` | Event engine | Progress cascade (first child started → parent in_progress)
+Cascade | `children_completed` | Event engine | Completion cascade (all children done → parent review/completion)
+Cascade | `dependency_completed` | Event engine | Dependency resolution (blocker done)
+Cascade | `parent_completed` | Event engine | Downstream archival/cascade
+Cascade | `parent_archived` | Event engine | Downstream archival/cascade
 Validation | `constraint_violation` | `validate` command | Validation flow
 
 *Only listed triggers are valid; legacy v2 triggers are removed.*

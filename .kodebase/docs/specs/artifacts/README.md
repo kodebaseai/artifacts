@@ -24,7 +24,7 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
 ## Event Basics
 - Event record fields: `event`, `timestamp` (ISO‑8601 UTC), `actor`, `trigger`, optional `metadata`.
 - First event is always `draft`. `draft` must never land on `main` — PRs must contain `ready` or `blocked` before merge.
-- Triggers commonly used: `artifact_created`, `dependencies_met`, `has_dependencies`, `branch_created`, `pr_ready`, `pr_merged`, `dependency_completed`, `parent_completed`, `parent_archived`, `manual_cancel`.
+- Triggers commonly used: `artifact_created`, `dependencies_met`, `has_dependencies`, `branch_created`, `pr_ready`, `pr_merged`, `dependency_completed`, `children_started`, `children_completed`, `parent_completed`, `parent_archived`, `manual_cancel`.
 
 ## Estimation and Priority Rubric
 - Priority

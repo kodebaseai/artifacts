@@ -17,12 +17,16 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T14:46:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: children_started
 content:
   summary: >-
     Define v1 constants, triggers, and artifact/event schemas; ensure strict
     validation of initiative, milestone, and issue documents with tests.
   deliverables:
-    - v1 constants and triggers (states, priorities, estimation, parent_completed, parent_archived, manual_cancel)
+    - v1 constants and triggers (states, priorities, estimation, children_started, children_completed, parent_completed, parent_archived, manual_cancel)
     - Actor schema and eventMetadata schema (required trigger, ISO-8601 timestamp)
     - Relationships and artifactMetadata schemas (no fan-out persistence)
     - Initiative, milestone, and issue schemas (flexible acceptance_criteria)
@@ -30,4 +34,4 @@ content:
   validation:
     - Schemas validate example artifacts and reject invalid structures
     - Event record matches core spec fields and constraints
-    - Trigger catalogue includes parent_completed, parent_archived, manual_cancel
+    - Trigger catalogue includes children_started, children_completed, parent_completed, parent_archived, manual_cancel
