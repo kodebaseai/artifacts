@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T10:28:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.7.2
+            resolved: false
 content:
   summary: >-
     Implement scaffold helpers that build in-memory artifacts with minimal content
@@ -21,4 +29,3 @@ content:
     - Helpers return typed objects that pass schema validation
     - Draft event uses trigger `artifact_created` and ISO-8601 UTC timestamp
     - Notes and optional fields are supported without breaking validation
-

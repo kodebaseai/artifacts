@@ -13,6 +13,10 @@ metadata:
       timestamp: "2025-10-28T09:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Implement enforcement that dependencies only exist among siblings at the same level

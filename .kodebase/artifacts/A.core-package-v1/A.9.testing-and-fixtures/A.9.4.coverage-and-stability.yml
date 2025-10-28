@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T10:47:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.9.3
+            resolved: false
 content:
   summary: >-
     Define coverage thresholds for critical modules and ensure tests are deterministic
@@ -21,4 +29,3 @@ content:
     - 'Coverage thresholds set for schemas, validator, cascade, loader'
     - 'Tests run deterministically locally and in CI'
     - 'Reporting configured (text/summary and lcov)'
-

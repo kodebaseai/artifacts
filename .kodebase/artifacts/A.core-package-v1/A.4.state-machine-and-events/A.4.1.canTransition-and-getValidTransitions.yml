@@ -13,6 +13,10 @@ metadata:
       timestamp: "2025-10-28T10:05:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Define legal state transitions per artifact type (initiative, milestone, issue)
@@ -22,4 +26,3 @@ content:
     - canTransition returns true only for legal transitions; false otherwise
     - getValidTransitions returns an ordered, de-duplicated list of next states
     - Clear errors/messages are available for illegal transitions in validators
-

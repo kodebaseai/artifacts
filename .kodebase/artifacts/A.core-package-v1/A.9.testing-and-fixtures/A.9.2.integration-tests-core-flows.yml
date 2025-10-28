@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T10:45:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.9.1
+            resolved: false
 content:
   summary: >-
     Add end-to-end tests covering the primary flows: create→validate, start→cascade,
@@ -22,4 +30,3 @@ content:
     - 'Cascade: last issue completed → milestone/initiative get in_review recommendations'
     - 'Completion: completion info present → completed event appended (simulated)'
     - 'Tests run under Vitest; no network, deterministic results'
-

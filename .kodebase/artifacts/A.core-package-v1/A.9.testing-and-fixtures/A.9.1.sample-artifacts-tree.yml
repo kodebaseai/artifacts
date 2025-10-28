@@ -13,6 +13,10 @@ metadata:
       timestamp: "2025-10-28T10:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Build a small but representative artifacts tree for tests, including several issues,
@@ -21,4 +25,3 @@ content:
     - 'Fixtures include A.yml, A.1.yml, multiple A.1.X.slug.yml with varied dependencies'
     - 'At least one dependency chain and one independent issue set'
     - 'Fixtures live under a test/fixtures directory and are easy to extend'
-

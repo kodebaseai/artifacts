@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T10:13:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.5.1
+            resolved: false
 content:
   summary: >-
     Provide a factory to build parent-facing cascade events with consistent metadata,
@@ -22,4 +30,3 @@ content:
     - Generates an Event record with required fields (event, timestamp, actor, trigger, metadata)
     - Metadata includes cascade_type and minimal trigger context (event, actor, timestamp)
     - Explicit triggers only; no implicit/manual fallback
-

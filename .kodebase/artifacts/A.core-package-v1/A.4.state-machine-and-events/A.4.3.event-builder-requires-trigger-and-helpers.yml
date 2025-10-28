@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T10:07:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.4.2
+            resolved: false
 content:
   summary: >-
     Enforce that EventBuilder requires an explicit `trigger` (no fallback) and
@@ -21,4 +29,3 @@ content:
     - Builder throws error when `trigger` is missing
     - Helpers generate valid events with the correct triggers and ISO timestamps
     - Unit tests cover required-trigger behavior and helper outputs
-

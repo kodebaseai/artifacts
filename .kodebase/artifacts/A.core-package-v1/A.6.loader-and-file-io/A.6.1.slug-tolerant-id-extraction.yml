@@ -13,6 +13,10 @@ metadata:
       timestamp: "2025-10-28T10:20:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Implement a slug-tolerant filename parser to extract artifact IDs from filenames
@@ -22,4 +26,3 @@ content:
     - 'Regex matches IDs with multi-digit segments and optional slugs: ^([A-Z](?:\.\d+)*)(?:\..+)?\.yml$'
     - 'getArtifactIdFromPath returns only the ID (without slug)'
     - 'Non-matching files are ignored safely'
-

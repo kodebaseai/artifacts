@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T09:57:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.3.1
+            resolved: false
 content:
   summary: >-
     Ensure milestone dependencies are limited to milestones within the same initiative (A.X ↔ A.*),

@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-27T20:48:44Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.1.4
+            resolved: false
 content:
   summary: >-
     Create unit tests for schemas and provide golden fixtures for valid and invalid

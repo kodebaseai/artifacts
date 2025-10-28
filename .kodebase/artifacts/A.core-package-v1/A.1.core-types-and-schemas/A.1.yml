@@ -13,6 +13,10 @@ metadata:
       timestamp: "2025-10-27T20:48:44Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Define v1 constants, triggers, and artifact/event schemas; ensure strict

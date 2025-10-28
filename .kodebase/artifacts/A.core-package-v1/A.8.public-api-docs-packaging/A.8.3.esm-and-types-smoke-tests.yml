@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T10:40:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.8.2
+            resolved: false
 content:
   summary: >-
     Add smoke tests to ensure ESM consumers can import curated exports and that
@@ -21,4 +29,3 @@ content:
     - 'Minimal consumer project can import from @kodebase/core without bundler hacks'
     - 'd.ts files contain the public API types; no missing/any typings'
     - 'CI runs smoke tests as part of the core build pipeline'
-

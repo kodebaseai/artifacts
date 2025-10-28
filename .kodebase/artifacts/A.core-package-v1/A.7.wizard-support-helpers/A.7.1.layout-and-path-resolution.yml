@@ -13,6 +13,10 @@ metadata:
       timestamp: "2025-10-28T10:26:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Implement helpers to ensure the `.kodebase/artifacts` layout exists and to resolve
@@ -21,4 +25,3 @@ content:
     - Layout helper creates `.kodebase/artifacts` if missing and is idempotent
     - Path resolver returns dirPath and filePath for initiative, milestone, and issue ids
     - Slug support included in file names without altering the id
-

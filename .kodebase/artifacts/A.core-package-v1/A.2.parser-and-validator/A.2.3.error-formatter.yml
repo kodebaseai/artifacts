@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-27T20:48:44Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.2.2
+            resolved: false
 content:
   summary: >-
     Format Zod errors into concise, actionable messages that include field paths
@@ -21,4 +29,3 @@ content:
     - Error messages include field path, reason, and suggestion where possible
     - Handles multiple errors and aggregates them cleanly
     - Unit tests cover representative schema failures
-

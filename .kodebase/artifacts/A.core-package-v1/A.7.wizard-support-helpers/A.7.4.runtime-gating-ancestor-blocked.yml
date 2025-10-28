@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-10-28T10:29:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.7.3
+            resolved: false
 content:
   summary: >-
     Provide a read-only helper to check the parent chain at runtime and determine
@@ -21,4 +29,3 @@ content:
     - Returns a boolean and reason string for gating decisions
     - Looks up parents via id prefix and current event state
     - No writes to artifacts; safe for CLI `--check-parent`
-
