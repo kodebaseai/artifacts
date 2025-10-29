@@ -200,7 +200,7 @@ describe("Relationships & Metadata Schemas", () => {
   });
 });
 
-describe("Artifact Content Schemas (A.1.4)", () => {
+describe("Artifact Content Schemas", () => {
   it("validates Issue content with list acceptance criteria (>=1)", async () => {
     const { IssueContentSchema } = await import("./schemas.js");
     expect(
@@ -232,5 +232,72 @@ describe("Artifact Content Schemas (A.1.4)", () => {
         success_criteria: ["Consumers adopt core types without friction"],
       }).success,
     ).toBe(true);
+  });
+});
+
+describe("Completion and Notes Schemas", () => {
+  it("validates notes as string or array and normalizes", async () => {
+    const { NotesSchema, normalizeNotes } = await import("./schemas.js");
+    expect(NotesSchema.safeParse("A short note").success).toBe(true);
+    expect(NotesSchema.safeParse(["one", "two"]).success).toBe(true);
+    expect(NotesSchema.safeParse([]).success).toBe(false);
+    expect(NotesSchema.safeParse([""]).success).toBe(false);
+
+    expect(normalizeNotes("single")).toEqual(["single"]);
+    expect(normalizeNotes(["a", "b"]).join(",")).toBe("a,b");
+  });
+
+  it("validates implementation_notes with optional kebab-case tags and optional sections", async () => {
+    const { ImplementationNotesSchema } = await import("./schemas.js");
+    const valid = {
+      result: "Added schemas and tests",
+      tags: ["core", "zod", "schemas"],
+      challenges: [
+        { challenge: "timestamp regex edge-case", solution: "tighten pattern" },
+      ],
+      insights: ["prefer unions for flexible YAML shapes"],
+    };
+    expect(ImplementationNotesSchema.safeParse(valid).success).toBe(true);
+
+    // invalid tag format
+    const badTags = { result: "Done", tags: ["Not-Kebab", "ok"] } as unknown;
+    expect(ImplementationNotesSchema.safeParse(badTags).success).toBe(false);
+  });
+
+  it("validates delivery_summary for milestones", async () => {
+    const { DeliverySummarySchema } = await import("./schemas.js");
+    const good = {
+      outcome: "Auth flows completed",
+      delivered: ["signup", "login"],
+      deviations: ["deferred social login"],
+      next: "enable MFA rollout",
+      risks: ["rate limit headroom"],
+    };
+    expect(DeliverySummarySchema.safeParse(good).success).toBe(true);
+
+    const bad = {
+      outcome: "x",
+      delivered: [],
+      next: "y",
+    };
+    expect(DeliverySummarySchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("validates impact_summary for initiatives", async () => {
+    const { ImpactSummarySchema } = await import("./schemas.js");
+    const good = {
+      outcome: "Reduced onboarding time",
+      benefits: ["-22% setup time", "+10% conversion"],
+      evidence: ["dashboard#123", "report Q4"],
+      next: "expand to enterprise tier",
+    };
+    expect(ImpactSummarySchema.safeParse(good).success).toBe(true);
+
+    const bad = {
+      outcome: "x",
+      benefits: [],
+      next: "y",
+    } as unknown;
+    expect(ImpactSummarySchema.safeParse(bad).success).toBe(false);
   });
 });

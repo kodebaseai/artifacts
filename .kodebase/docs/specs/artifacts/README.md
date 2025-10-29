@@ -31,7 +31,7 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
   - `validateSiblingIds(ids, contextId)` → `{ ok, offending? }`
   - Intended for artifact loaders or tooling that know the current `contextId`.
   - Example usage:
-    
+
     ```ts
     import { validateSiblingIds } from "@kodebase/core";
     const ok = validateSiblingIds(["A.2", "A.3"], "A.1"); // true
@@ -49,7 +49,7 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
   - Optional: `pr_branch` (string), `pr_head_sha` (string)
 - Do not store the PR URL; it can be derived as `https://github.com/<owner>/<repo>/pull/<pr_number>`.
 - Example:
-  
+
   - event: in_review
     timestamp: 2025-10-28T20:15:00Z
     actor: Miguel Carvalho (m@kodebase.ai)
@@ -108,40 +108,55 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
 - Keep lifecycle events and completion content separate. Do not place summaries inside events.
 - Use concise, labeled fields at the root of the artifact for scanability and light parsing.
 
-- Issues → `implementation_notes`
-  - Goal: developer handoff and future reuse.
-  - Shape:
-    - `result`: one line of what shipped
-    - `challenges`: optional list of `{ challenge, solution }`
-    - `insights`: optional list of short lessons/gotchas
-    - `tags`: optional list of keywords/links (domains, tech, files, PRs)
-  - Example:
-    
-    implementation_notes:
-      result: "Actor/Event schemas added; strict UTC timestamps"
-      challenges:
-        - challenge: "Avoid unsafe casts in tests"
-          solution: "Use unknown with zod.safeParse"
-      insights:
-        - "Limit agent types to system|cascade to reduce surface area"
-      tags: [core, validation, zod, timestamps, schemas.ts, PR-16]
+### Issues → `implementation_notes`
+- Goal: developer handoff and future reuse.
+- Shape:
+  - `result: string` (required) — one line of what shipped
+  - `tags?: string[]` (optional, kebab-case tokens; domains/tech/files/PRs)
+  - `challenges?: { challenge: string; solution: string }[]`
+  - `insights?: string[]` (non-obvious lessons/gotchas)
+- Example:
 
-- Milestones/Initiatives → `impact_summary`
-  - Goal: stakeholder-facing progress and value.
-  - Shape:
-    - `Outcome`: one line business/roadmap impact
-    - `Benefits`: short list (2–4 items)
-    - `Scope`: list of touched areas with a short change note each
-    - `Next`: one line on what this enables next
-  - Example:
-    
-    impact_summary:
-      Outcome: "Core v1 types stabilized for downstream packages"
-      Benefits: ["consistent validation", "faster onboarding", "fewer regressions"]
-      Scope:
-        - packages/core: "constants + schemas + tests"
-        - ci: "added core tests to pipeline"
-      Next: "relationships + metadata schemas (A.1.3)"
+  implementation_notes:
+    result: "Actor/Event schemas added; strict UTC timestamps"
+    challenges:
+      - challenge: "Avoid unsafe casts in tests"
+        solution: "Use unknown with zod.safeParse"
+    insights:
+      - "Limit agent types to system|cascade to reduce surface area"
+    tags: [core, validation, zod, timestamps, schemas-ts, pr-16]
+
+### Milestones → `delivery_summary`
+- Goal: PM readout at completion — what was delivered, what changed, and what’s next.
+- Shape:
+  - `outcome: string` (required) — one line of what this phase delivered
+  - `delivered: string[]` (min 1) — concrete deliverables validated
+  - `deviations?: string[]` — scope/schedule/quality changes
+  - `next: string` (required) — what this enables immediately
+  - `risks?: string[]` — carry-over risks or follow-ups
+- Example:
+
+  delivery_summary:
+    outcome: "Auth phase shipped"
+    delivered: [signup, login, password-reset]
+    deviations: ["deferred social login to A.2"]
+    next: "enable MFA rollout"
+    risks: ["rate-limit headroom"]
+
+### Initiatives → `impact_summary`
+- Goal: executive signal — value landed and what it enables next.
+- Shape:
+  - `outcome: string` (required) — business/strategic impact
+  - `benefits: string[]` (min 1) — high-level value
+  - `evidence?: string[]` — short metrics/links (may be added post-delivery)
+  - `next: string` (required) — roadmap enablement
+- Example:
+
+  impact_summary:
+    outcome: "Reduced onboarding time for new teams"
+    benefits: ["setup time -22%", "+10% conversion"]
+    evidence: ["dashboard#123", "Q4-metrics-report"]
+    next: "expand to enterprise tier"
 
 Notes
 - Keep entries brief; avoid prose paragraphs. Link to PRs for details.

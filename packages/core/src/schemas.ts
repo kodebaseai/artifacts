@@ -167,3 +167,70 @@ export const InitiativeContentSchema = z.object({
   out_of_scope: CriteriaListSchema,
   success_criteria: CriteriaListSchema,
 });
+
+// ============================================================================
+// Completion and Notes Schemas (A.1.6)
+// Root-level fields: notes (shared), implementation_notes (Issues), impact_summary (Milestones/Initiatives)
+// ============================================================================
+
+// Shared simple notes: allow a single string or a list of short notes
+export const NotesSchema = z.union([
+  z.string().trim().min(1),
+  z.array(z.string().trim().min(1)).min(1),
+]);
+
+// Issue → implementation_notes
+export const ImplementationNotesSchema = z.object({
+  result: z.string().trim().min(1),
+  tags: z
+    .array(
+      z
+        .string()
+        .trim()
+        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+          message: "tags must be kebab-case",
+        })
+        .min(1),
+    )
+    .min(1)
+    .optional(),
+  challenges: z
+    .array(
+      z.object({
+        challenge: z.string().trim().min(1),
+        solution: z.string().trim().min(1),
+      }),
+    )
+    .optional(),
+  insights: z.array(z.string().trim().min(1)).optional(),
+});
+
+export const DeliverySummarySchema = z.object({
+  outcome: z.string().trim().min(1),
+  delivered: z.array(z.string().trim().min(1)).min(1),
+  deviations: z.array(z.string().trim().min(1)).optional(),
+  next: z.string().trim().min(1),
+  risks: z.array(z.string().trim().min(1)).optional(),
+});
+
+export const ImpactSummarySchema = z.object({
+  outcome: z.string().trim().min(1),
+  benefits: z.array(z.string().trim().min(1)).min(1),
+  evidence: z.array(z.string().trim().min(1)).optional(),
+  next: z.string().trim().min(1),
+});
+
+export type TNotes = z.infer<typeof NotesSchema>;
+export type TImplementationNotes = z.infer<typeof ImplementationNotesSchema>;
+export type TImpactSummary = z.infer<typeof ImpactSummarySchema>;
+export type TDeliverySummary = z.infer<typeof DeliverySummarySchema>;
+
+// --------------------------------------------------------------------------
+// Minimal helpers
+// --------------------------------------------------------------------------
+
+export function normalizeNotes(notes: TNotes): string[] {
+  return Array.isArray(notes) ? notes : [notes];
+}
+
+// (No impact areas normalization needed when using CriteriaListSchema)
