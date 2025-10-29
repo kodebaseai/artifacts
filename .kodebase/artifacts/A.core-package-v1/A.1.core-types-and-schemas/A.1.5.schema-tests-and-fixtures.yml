@@ -20,12 +20,18 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.1.4
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-29T18:10:40Z"
           - artifact_id: A.1.6
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-29T19:27:00Z"
+    - event: ready
+      timestamp: "2025-10-29T19:27:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
-    Create unit tests for schemas and provide golden fixtures for valid and invalid
+    Consolodite the Artifact global schema. Create unit tests for schemas and provide golden fixtures for valid and invalid
     artifacts across initiative, milestone, and issue types.
   acceptance_criteria:
     - Tests verify required fields, optional sections, and error messages
