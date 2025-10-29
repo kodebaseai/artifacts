@@ -137,3 +137,33 @@ export const ArtifactMetadataSchema = z.object({
 });
 
 export type TArtifactMetadata = z.infer<typeof ArtifactMetadataSchema>;
+
+// ============================================================================
+// Artifact Content Schemas (A.1.4)
+// ============================================================================
+
+// Generic criteria list (for acceptance criteria, deliverables)
+export const CriteriaListSchema = z
+  .array(z.string().trim().min(1))
+  .min(1, { message: "At least one item is required" });
+
+// Issue content
+export const IssueContentSchema = z.object({
+  summary: z.string().min(1),
+  acceptance_criteria: CriteriaListSchema,
+});
+
+// Milestone content
+export const MilestoneContentSchema = z.object({
+  summary: z.string().min(1),
+  deliverables: CriteriaListSchema,
+  validation: CriteriaListSchema.optional(),
+});
+
+// Initiative content
+export const InitiativeContentSchema = z.object({
+  vision: z.string().min(1),
+  in_scope: CriteriaListSchema,
+  out_of_scope: CriteriaListSchema,
+  success_criteria: CriteriaListSchema,
+});

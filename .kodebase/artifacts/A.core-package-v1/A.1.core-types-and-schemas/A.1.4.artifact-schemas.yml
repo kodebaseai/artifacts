@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-29T15:29:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-29T15:31:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-29T16:53:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement Zod schemas for initiative, milestone, and issue artifacts with
@@ -35,3 +43,9 @@ content:
     - Milestone: summary, deliverables, validation; optional completion_summary/notes
     - Issue: summary, acceptance_criteria; optional development_process/completion_analysis/review_details/notes
     - Acceptance criteria supports mixed/nested structures
+implementation_notes:
+  result: "Added content schemas: Initiative (vision, in_scope, out_of_scope, success_criteria), Milestone (summary, deliverables, validation[]), Issue (summary, acceptance_criteria[])"
+  insights:
+    - "Use a shared CriteriaListSchema for acceptance_criteria, deliverables, and success_criteria (array of trimmed non-empty strings)"
+    - "Initiative scope is split into in_scope and out_of_scope lists for clarity and downstream tooling"
+  tags: [core, schemas, content, acceptance-criteria, deliverables, success-criteria, scope]

@@ -199,3 +199,38 @@ describe("Relationships & Metadata Schemas", () => {
     expect(bad.success).toBe(false);
   });
 });
+
+describe("Artifact Content Schemas (A.1.4)", () => {
+  it("validates Issue content with list acceptance criteria (>=1)", async () => {
+    const { IssueContentSchema } = await import("./schemas.js");
+    expect(
+      IssueContentSchema.safeParse({
+        summary: "Add input validation",
+        acceptance_criteria: ["Reject empty title", "Use UTC timestamps"],
+      }).success,
+    ).toBe(true);
+  });
+
+  it("validates Milestone content with deliverables list and optional validation", async () => {
+    const { MilestoneContentSchema } = await import("./schemas.js");
+    expect(
+      MilestoneContentSchema.safeParse({
+        summary: "Core types stabilized",
+        deliverables: ["constants", "schemas", "tests"],
+        validation: ["All core tests passing"],
+      }).success,
+    ).toBe(true);
+  });
+
+  it("validates Initiative content with in/out lists and success criteria", async () => {
+    const { InitiativeContentSchema } = await import("./schemas.js");
+    expect(
+      InitiativeContentSchema.safeParse({
+        vision: "Stable core primitives for v1",
+        in_scope: ["events", "schemas", "docs"],
+        out_of_scope: ["cli", "automation"],
+        success_criteria: ["Consumers adopt core types without friction"],
+      }).success,
+    ).toBe(true);
+  });
+});

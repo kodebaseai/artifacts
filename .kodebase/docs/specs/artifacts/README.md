@@ -147,6 +147,25 @@ Notes
 - Keep entries brief; avoid prose paragraphs. Link to PRs for details.
 - These fields live at the root of the artifact YAML, not inside `events` or `content`.
 
+## Content Schemas
+- Issue content
+  - `summary: string`
+  - `acceptance_criteria: string[]` (array of trimmed, non-empty items; min 1)
+- Milestone content
+  - `summary: string`
+  - `deliverables: string[]` (array; min 1)
+  - `validation?: string[]` (optional array of checkable items)
+- Initiative content
+  - `vision: string`
+  - `in_scope: string[]` (array; min 1)
+  - `out_of_scope: string[]` (array; min 1)
+  - `success_criteria: string[]` (array; min 1)
+
+Authoring guidance
+- Keep each list item short and testable; prefer imperative phrasing.
+- Scope should be split into `in_scope` and `out_of_scope` lists rather than prose.
+- Root-level fields `notes`, `implementation_notes` (Issues), and `impact_summary` (Milestones/Initiatives) are separate from content.
+
 ## References
 - Event system overview: .kodebase/docs/specs/event-system-architecture/overview.md
 - CLI contract: .kodebase/docs/specs/event-system-architecture/the-cli-overhaul.md

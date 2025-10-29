@@ -47,7 +47,6 @@ content:
     - Relationships default to empty arrays; only sibling IDs allowed by validator
     - Artifact metadata requires all core fields and at least one event (draft)
     - Unit tests cover valid and invalid structures
-
 implementation_notes:
   result: "Added RelationshipsSchema, ArtifactIdSchema (multi-letter initiatives), ArtifactMetadataSchema; sibling-type validator"
   challenges:

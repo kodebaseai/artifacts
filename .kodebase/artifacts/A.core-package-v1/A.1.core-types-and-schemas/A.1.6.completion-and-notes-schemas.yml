@@ -1,0 +1,33 @@
+metadata:
+  title: Add schemas for notes, implementation_notes, and impact_summary
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [A.1.5]
+    blocked_by: [A.1.4]
+  events:
+    - event: draft
+      timestamp: "2025-10-29T15:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-29T15:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-29T15:57:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+content:
+  summary: >-
+    Introduce root-level schemas for stakeholder and developer completion fields
+    across artifacts: impact_summary (Milestones/Initiatives), implementation_notes (Issues),
+    and a shared notes field. Align shapes with artifacts spec for concise, high-signal content.
+  acceptance_criteria:
+    - Define Zod schemas for root-level fields: impact_summary (M/I), implementation_notes (Issues), and notes
+    - Keep content schemas unchanged; fields live at the artifact root, not inside content or events
+    - Provide minimal helpers/types for consumers to detect presence and shape
+    - Add unit tests covering valid/invalid examples
