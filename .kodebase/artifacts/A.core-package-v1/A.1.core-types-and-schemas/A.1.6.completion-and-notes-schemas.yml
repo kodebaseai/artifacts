@@ -13,14 +13,19 @@ metadata:
       timestamp: "2025-10-29T15:55:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
-    - event: ready
+    - event: blocked
       timestamp: "2025-10-29T15:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
-      trigger: dependencies_met
-    - event: in_progress
-      timestamp: "2025-10-29T15:57:00Z"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.1.3
+            resolved: true
+            resolved_at: "2025-10-29T18:10:40Z"
+    - event: ready
+      timestamp: "2025-10-29T18:10:40Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
-      trigger: branch_created
+      trigger: dependencies_met
 content:
   summary: >-
     Introduce root-level schemas for stakeholder and developer completion fields

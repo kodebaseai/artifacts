@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-10-29T16:53:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-29T18:10:40Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement Zod schemas for initiative, milestone, and issue artifacts with
