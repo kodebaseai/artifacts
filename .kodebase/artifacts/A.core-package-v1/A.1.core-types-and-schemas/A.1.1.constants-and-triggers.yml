@@ -39,3 +39,9 @@ content:
     - Constants export includes states, priorities, estimation sizes, artifact types
     - Triggers include dependencies_met, has_dependencies, branch_created, pr_ready, pr_merged, dependency_completed, children_started, children_completed, parent_completed, parent_archived, manual_cancel
     - Types inferred from constants are available for downstream schemas
+implementation_notes:
+  result: "Add v1 constants/types: states, priorities, estimation sizes, artifact types"
+  insights:
+    - "Expose arrays alongside enums for validation (ARTIFACT_EVENTS, EVENT_TRIGGERS)"
+    - "Added missing children_started, children_completed to triggers list"
+  tags: [core, constants, triggers, validation, priorities, estimation, artifact-types]

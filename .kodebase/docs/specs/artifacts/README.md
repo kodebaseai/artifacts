@@ -26,6 +26,22 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
 - First event is always `draft`. `draft` must never land on `main` — PRs must contain `ready` or `blocked` before merge.
 - Triggers commonly used: `artifact_created`, `dependencies_met`, `has_dependencies`, `branch_created`, `pr_ready`, `pr_merged`, `dependency_completed`, `children_started`, `children_completed`, `parent_completed`, `parent_archived`, `manual_cancel`.
 
+### In‑Review Event Metadata
+- For `in_review` events, capture the Pull Request number in metadata.
+  - Required: `pr_number` (integer)
+  - Optional: `pr_branch` (string), `pr_head_sha` (string)
+- Do not store the PR URL; it can be derived as `https://github.com/<owner>/<repo>/pull/<pr_number>`.
+- Example:
+  
+  - event: in_review
+    timestamp: 2025-10-28T20:15:00Z
+    actor: Miguel Carvalho (m@kodebase.ai)
+    trigger: pr_ready
+    metadata:
+      pr_number: 16
+      # pr_branch: A.1.2
+      # pr_head_sha: 7b30b2e8ef6746d8e1a565d170d3c8f14624ece4
+
 ## Estimation and Priority Rubric
 - Priority
   - critical: blocks MVP release
@@ -70,6 +86,49 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
 ## Schema Version
 - Use `schema_version: "0.0.1"` for the initial schema.
 - Version will bump via changesets when core schema changes.
+
+## Completion Fields
+- Keep lifecycle events and completion content separate. Do not place summaries inside events.
+- Use concise, labeled fields at the root of the artifact for scanability and light parsing.
+
+- Issues → `implementation_notes`
+  - Goal: developer handoff and future reuse.
+  - Shape:
+    - `result`: one line of what shipped
+    - `challenges`: optional list of `{ challenge, solution }`
+    - `insights`: optional list of short lessons/gotchas
+    - `tags`: optional list of keywords/links (domains, tech, files, PRs)
+  - Example:
+    
+    implementation_notes:
+      result: "Actor/Event schemas added; strict UTC timestamps"
+      challenges:
+        - challenge: "Avoid unsafe casts in tests"
+          solution: "Use unknown with zod.safeParse"
+      insights:
+        - "Limit agent types to system|cascade to reduce surface area"
+      tags: [core, validation, zod, timestamps, schemas.ts, PR-16]
+
+- Milestones/Initiatives → `impact_summary`
+  - Goal: stakeholder-facing progress and value.
+  - Shape:
+    - `Outcome`: one line business/roadmap impact
+    - `Benefits`: short list (2–4 items)
+    - `Scope`: list of touched areas with a short change note each
+    - `Next`: one line on what this enables next
+  - Example:
+    
+    impact_summary:
+      Outcome: "Core v1 types stabilized for downstream packages"
+      Benefits: ["consistent validation", "faster onboarding", "fewer regressions"]
+      Scope:
+        - packages/core: "constants + schemas + tests"
+        - ci: "added core tests to pipeline"
+      Next: "relationships + metadata schemas (A.1.3)"
+
+Notes
+- Keep entries brief; avoid prose paragraphs. Link to PRs for details.
+- These fields live at the root of the artifact YAML, not inside `events` or `content`.
 
 ## References
 - Event system overview: .kodebase/docs/specs/event-system-architecture/overview.md

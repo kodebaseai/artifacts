@@ -34,6 +34,8 @@ metadata:
       timestamp: "2025-10-28T20:09:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+      metadata:
+        pr_number: 16
     - event: completed
       timestamp: "2025-10-28T20:16:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
@@ -46,3 +48,12 @@ content:
     - Actor schema validates "Name (email)" and agent.TYPE.SESSION@tenant.kodebase.ai
     - Event schema enforces event, timestamp, actor, trigger; metadata optional
     - Zod validation produces actionable error messages
+implementation_notes:
+  result: "Added ActorSchema and EventSchema with strict UTC timestamps and constants-backed validation"
+  challenges:
+    - challenge: "Avoid unsafe casts in tests when omitting fields"
+      solution: "Use unknown with zod.safeParse and aggregate issue messages"
+  insights:
+    - "Simplified agent actors to agent.system|agent.cascade with optional @tenant"
+    - "Prefer arrays of allowed values (constants) for schema error messages"
+  tags: [core, validation, zod, schemas, actor, event, timestamps]
