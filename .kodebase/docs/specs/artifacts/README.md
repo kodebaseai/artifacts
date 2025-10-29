@@ -5,9 +5,9 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
 
 ## Layout and IDs
 - ID format
-  - Initiative: `A`
-  - Milestone: `A.1`
-  - Issue: `A.1.1`
+  - Initiative: `A..Z`, `AA..ZZ`, `AAA..` (base‑26 letters only)
+  - Milestone: `<initiative>.<n>` (e.g., `A.1`, `AA.3`)
+  - Issue: `<initiative>.<n>.<m>` (e.g., `A.1.2`, `AA.3.5`)
 - Filesystem layout
   - `.kodebase/artifacts/A.<initiative-slug>/A.yml`
   - `.kodebase/artifacts/A.<initiative-slug>/A.1.<milestone-slug>/A.1.yml`
@@ -20,6 +20,23 @@ Audience: Contributors authoring Initiative, Milestone, and Issue artifacts
   - `blocked_by: [A.1.1]`
 - Empty lists use `[]`.
 - Do not quote IDs unless necessary — `A.1.2` is safe unquoted.
+
+### Relationship Rules
+- Only reference siblings of the same type and initiative.
+  - Milestones may only reference other milestones under the same initiative (e.g., `A.1` can reference `A.2`, not `A.1.3`).
+  - Issues may only reference other issues under the same initiative (e.g., `AA.3.1` may reference `AA.2.4`, not `AA.2`).
+  - Initiatives may only reference initiatives.
+- Multi‑letter initiative prefixes must match exactly (e.g., `AA.*` is distinct from `A.*`).
+- Validation helper (from `@kodebase/core`):
+  - `validateSiblingIds(ids, contextId)` → `{ ok, offending? }`
+  - Intended for artifact loaders or tooling that know the current `contextId`.
+  - Example usage:
+    
+    ```ts
+    import { validateSiblingIds } from "@kodebase/core";
+    const ok = validateSiblingIds(["A.2", "A.3"], "A.1"); // true
+    const bad = validateSiblingIds(["A.2.1"], "A.1"); // false (mixed type)
+    ```
 
 ## Event Basics
 - Event record fields: `event`, `timestamp` (ISO‑8601 UTC), `actor`, `trigger`, optional `metadata`.

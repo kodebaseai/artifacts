@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-28T20:16:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-29T14:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-29T15:25:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement relationships (blocks, blocked_by) and artifact metadata (title,
@@ -35,3 +43,15 @@ content:
     - Relationships default to empty arrays; only sibling IDs allowed by validator
     - Artifact metadata requires all core fields and at least one event (draft)
     - Unit tests cover valid and invalid structures
+
+implementation_notes:
+  result: "Added RelationshipsSchema, ArtifactIdSchema (multi-letter initiatives), ArtifactMetadataSchema; sibling-type validator"
+  challenges:
+    - challenge: "Schema alone cannot know current artifact ID to enforce sibling rule"
+      solution: "Expose validateSiblingIds(contextId) helper for caller-side checks"
+    - challenge: "Differentiate initiative prefixes (A vs AA)"
+      solution: "Parse base-26 style prefix with /^[A-Z]+/ and compare exactly"
+  insights:
+    - "Siblings must share the same initiative and artifact type (milestone↔milestone, issue↔issue)"
+    - "Validate priority and estimation against constants (PRIORITIES, ESTIMATION_SIZES) for actionable errors"
+  tags: [core, validation, relationships, metadata, schemas, ids, multi-letter-initiatives, sibling-type, helper-validateSiblingIds]

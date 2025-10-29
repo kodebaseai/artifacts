@@ -119,3 +119,83 @@ describe("EventSchema", () => {
     }
   });
 });
+
+describe("Relationships & Metadata Schemas", () => {
+  it("validates relationships defaults and sibling-type rules via helper", async () => {
+    const { RelationshipsSchema } = await import("./schemas.js");
+    const ok = RelationshipsSchema.parse({});
+    expect(ok.blocks).toEqual([]);
+    expect(ok.blocked_by).toEqual([]);
+    const rel = RelationshipsSchema.parse({
+      blocks: ["A.2", "A.3"], // milestones
+      blocked_by: ["A.4"],
+    });
+    expect(rel.blocks.length).toBe(2);
+    const { validateSiblingIds } = await import("./schemas.js");
+    // Context: milestone A.1 can only reference other milestones under A
+    expect(validateSiblingIds(rel.blocks, "A.1").ok).toBe(true);
+    // Mixed type should fail: add an issue into milestone context
+    expect(validateSiblingIds(["A.1.2"], "A.1").ok).toBe(false);
+  });
+
+  it("rejects invalid artifact ID formats in relationships", async () => {
+    const { RelationshipsSchema } = await import("./schemas.js");
+    const bad = RelationshipsSchema.safeParse({ blocks: ["A1"] }); // missing dot
+    expect(bad.success).toBe(false);
+  });
+
+  it("sibling validator enforces same initiative and same type", async () => {
+    const { validateSiblingIds } = await import("./schemas.js");
+    // OK: all milestones under initiative A
+    expect(validateSiblingIds(["A.2", "A.3"], "A.1").ok).toBe(true);
+    // OK: multi-letter initiative AA
+    expect(validateSiblingIds(["AA.2", "AA.3"], "AA.1").ok).toBe(true);
+    // Fail: different initiative
+    expect(validateSiblingIds(["B.1"], "A.9").ok).toBe(false);
+    // Fail: mixed types
+    expect(validateSiblingIds(["A.2.3"], "A.1").ok).toBe(false);
+    // Fail: mismatched multi-letter prefix
+    expect(validateSiblingIds(["A.2"], "AA.1").ok).toBe(false);
+  });
+
+  it("artifact metadata requires title, actors, and first event draft", async () => {
+    const { ArtifactMetadataSchema } = await import("./schemas.js");
+    const good = ArtifactMetadataSchema.safeParse({
+      title: "Test",
+      priority: "high",
+      estimation: "S",
+      created_by: "Jane Doe (jane@example.com)",
+      assignee: "Jane Doe (jane@example.com)",
+      schema_version: "0.0.1",
+      relationships: { blocks: [], blocked_by: [] },
+      events: [
+        {
+          event: CArtifactEvent.DRAFT,
+          timestamp: "2025-10-28T19:37:00Z",
+          actor: "Jane Doe (jane@example.com)",
+          trigger: CEventTrigger.ARTIFACT_CREATED,
+        },
+      ],
+    });
+    expect(good.success).toBe(true);
+
+    const bad = ArtifactMetadataSchema.safeParse({
+      title: "Bad",
+      priority: "high",
+      estimation: "S",
+      created_by: "Jane Doe (jane@example.com)",
+      assignee: "Jane Doe (jane@example.com)",
+      schema_version: "0.0.1",
+      relationships: { blocks: [], blocked_by: [] },
+      events: [
+        {
+          event: CArtifactEvent.READY,
+          timestamp: "2025-10-28T19:37:00Z",
+          actor: "Jane Doe (jane@example.com)",
+          trigger: CEventTrigger.DEPENDENCIES_MET,
+        },
+      ],
+    });
+    expect(bad.success).toBe(false);
+  });
+});
