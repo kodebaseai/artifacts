@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-30T23:12:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-30T23:28:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement enforcement that dependencies only exist among siblings at the same level

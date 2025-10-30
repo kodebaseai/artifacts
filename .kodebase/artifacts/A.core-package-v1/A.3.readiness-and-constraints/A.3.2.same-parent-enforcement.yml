@@ -21,6 +21,11 @@ metadata:
         blocking_dependencies:
           - artifact_id: A.3.1
             resolved: false
+            resolved_at: "2025-10-30T23:28:00Z"
+    - event: ready
+      timestamp: "2025-10-30T23:28:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Ensure milestone dependencies are limited to milestones within the same initiative (A.X ↔ A.*),
