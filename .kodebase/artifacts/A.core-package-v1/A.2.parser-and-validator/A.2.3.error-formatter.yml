@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-30T17:55:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-30T18:54:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-30T21:35:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Format Zod errors into concise, actionable messages that include field paths
@@ -34,3 +42,19 @@ content:
     - Error messages include field path, reason, and suggestion where possible
     - Handles multiple errors and aggregates them cleanly
     - Unit tests cover representative schema failures
+implementation_notes:
+  result: >-
+    Hardened `packages/core/src/validator/error-formatter.ts` and added a 29-test
+    suite that hits every Zod issue branch, including numeric min/max, union,
+    custom, and symbol-backed values so formatter suggestions stay actionable.
+    Swapped deprecated `ZodIssue` for `z.core.$ZodIssue` and kept the formatter
+    exported via `packages/core/src/index.ts`.
+  challenges:
+    - challenge: Zod v4’s core types expose issues as symbols/falsey tuples and emit new codes (e.g., `invalid_format`, `invalid_value`, `not_multiple_of`).
+      solution: Introduced `normaliseToStrings` helper and tailored per-code logic to surface clear hints without unsafe casts.
+    - challenge: Coverage was only ~59% statements with many untested branches.
+      solution: Crafted edge-case tests for all formatter fallbacks (no enum options, empty `keys`, numeric ranges, undefined input, union errors) until coverage reached 100% statements/lines and >80% branches.
+  insights:
+    - Formatting now has deterministic, user-friendly messages even for Zod’s newer issue codes, reducing UX churn in CLI and tooling.
+    - The edge-case test harness doubles as documentation; future schema tweaks can copy scenarios to keep messages consistent.
+  tags: [core, error-formatter, zod, validation, hints, coverage]

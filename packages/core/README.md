@@ -17,6 +17,8 @@ Kodebase artifact workflow.
 - `src/validator/artifact-validator.ts` &mdash; type detection and validation
   utilities that throw actionable errors for initiatives, milestones, and
   issues.
+- `src/validator/error-formatter.ts` &mdash; turns raw Zod issues into
+  human-friendly messages with field hints and suggestions.
 - `src/schemas/schemas.fixtures.ts` &mdash; golden fixtures used by the test
   suite for end-to-end validation.
 
