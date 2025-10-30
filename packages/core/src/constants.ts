@@ -51,7 +51,6 @@ export const CEstimationSize = {
   M: "M",
   L: "L",
   XL: "XL",
-  XXL: "XXL",
 } as const;
 export type TEstimationSize =
   (typeof CEstimationSize)[keyof typeof CEstimationSize];
@@ -70,3 +69,27 @@ export const EVENT_TRIGGERS = Object.values(CEventTrigger);
 export const PRIORITIES = Object.values(CPriority);
 export const ESTIMATION_SIZES = Object.values(CEstimationSize);
 export const ARTIFACT_TYPES = Object.values(CArtifact);
+
+// Human actor: "Full Name (email@domain.tld)"
+export const HUMAN_ACTOR_REGEX =
+  /^[^()]+\s\([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\)$/i;
+
+// Simplified AI agent actors (v1):
+// - agent.system
+// - agent.cascade
+// Optional tenant suffix: agent.<type>@<tenant>
+export const AGENT_TYPES = ["system", "cascade"] as const;
+export const SIMPLE_AGENT_REGEX = new RegExp(
+  `^agent\\.(?:${AGENT_TYPES.join("|")})(?:@[a-z0-9-]+)?$`,
+  "i",
+);
+
+// Artifact ID patterns
+// Initiative IDs support base-26 style sequences: A..Z, AA..ZZ, AAA...
+export const INITIATIVE_ID_REGEX = /^[A-Z]+$/;
+export const MILESTONE_ID_REGEX = /^[A-Z]+\.\d+$/;
+export const ISSUE_ID_REGEX = /^[A-Z]+\.\d+\.\d+$/;
+
+// Strict ISO-8601 UTC timestamp (no milliseconds), e.g., 2025-10-28T19:37:00Z
+export const ISO_UTC_REGEX =
+  /^(\d{4})-(\d{2})-(\d{2})T([01]\d|2[0-3]):([0-5]\d):([0-5]\d)Z$/;

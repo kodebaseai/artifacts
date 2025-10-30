@@ -29,6 +29,14 @@ metadata:
       timestamp: "2025-10-29T19:27:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-29T19:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-30T14:07:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Consolodite the Artifact global schema. Create unit tests for schemas and provide golden fixtures for valid and invalid
@@ -37,3 +45,14 @@ content:
     - Tests verify required fields, optional sections, and error messages
     - Golden fixtures live alongside tests and cover typical structures and edge cases
     - CI executes schema tests as part of the core package pipeline
+implementation_notes:
+  result: >-
+    Added granular registry schema test suites and compose-level integration checks backed by shared fixtures to lock core
+    behavior and defaults.
+  challenges:
+    - challenge: Initiative vision field appeared to trim during tests
+      solution: Updated assertions to respect the schema's literal string behavior while still asserting scope trimming.
+  insights:
+    - Registry field schemas (metadata, shared, issue, milestone, initiative) now have direct unit coverage.
+    - Compose tests confirm defaults like priority, estimation, and schema_version flow through artifact schemas.
+  tags: [core, schema-tests, zod-registry, fixtures, artifacts]
