@@ -1,5 +1,18 @@
 # Kodebase: Git as Universal Knowledge Layer
 
+## The YC Pitch (1-Liner)
+
+**Kodebase turns every Git repo into a self-aware knowledge brain — so AI agents code like senior devs, and new hires onboard in minutes.**
+
+## Your YC App (Draft — 1 Paragraph)
+
+> We’re building Kodebase, the memory layer for AI engineers.
+> Every day, developers waste hours re-explaining their stack to AI. We fix that with a Git-native, schema-validated knowledge system that turns any repo into a self-aware project brain.
+> AI agents read .kodebase/artifacts, write PRs, and update docs — all with full context.
+> We’ve shipped 150 AI-written PRs across 4 models. Solo devs use it free. Teams pay $29/user to scale AI dev capacity.
+> We’re at $0 MRR — but with 10 early adopters lined up.
+Help us get to $5K MRR and 100 AI-powered repos by Demo Day.
+
 ## The Problem: Scattered Knowledge, Lost Context
 
 Current development workflows suffer from fundamental knowledge fragmentation:

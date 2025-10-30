@@ -14,6 +14,9 @@ Kodebase artifact workflow.
   schemas built on top of the registries.
 - `src/parser/artifact-parser.ts` &mdash; YAML helpers that turn artifact
   documents into typed objects with human-friendly validation errors.
+- `src/validator/artifact-validator.ts` &mdash; type detection and validation
+  utilities that throw actionable errors for initiatives, milestones, and
+  issues.
 - `src/schemas/schemas.fixtures.ts` &mdash; golden fixtures used by the test
   suite for end-to-end validation.
 
@@ -33,6 +36,8 @@ remains fully exercised.
   are persisted or published.
 - Parsing `.yml` artifacts into typed data structures that downstream tools can
   consume safely.
+- Auto-detecting artifact types and validating them with readable error
+  messages.
 - Importing canonical constants for UI dropdowns or automation triggers.
 - Generating UI metadata by reading the registry entries registered with `z`
   and the local `artifactRegistry`.

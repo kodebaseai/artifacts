@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-30T15:21:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-30T15:24:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-30T17:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Provide a validator that auto-detects artifact type from structure,
@@ -35,3 +43,19 @@ content:
     - getArtifactType detects types by content reliably
     - validateX methods enforce schemas and throw formatted errors
     - Works standalone and when composed with the parser
+implementation_notes:
+  result: >-
+    Added `packages/core/src/validator/artifact-validator.ts` exposing type detection,
+    per-artifact validate helpers, and an `ArtifactValidationError`, all exported through
+    `@kodebase/core` with docs touches in README.
+  challenges:
+    - challenge: Type detection needed a deterministic fallback when multiple schemas failed similarly.
+      solution: Sort schema results by issue count and bail out when the top two ties to avoid random picks.
+    - challenge: Mocking schema failures for detection ties broke type expectations in tests.
+      solution: Cast mocked Zod results to the precise safeParse return type and restore spies cleanly.
+    - challenge: Parser interop tests surfaced YAML failure branches that weren’t covered.
+      solution: Exercised strings that parse to non-objects and leveraged parser errors to highlight friendly messaging.
+  insights:
+    - Validator and parser now share the same error surface, making downstream error handling consistent.
+    - Coverage-driven development on validator branches keeps edge cases (like ambiguous types) locked down for future changes.
+  tags: [core, validator, zod, parser, validation]
