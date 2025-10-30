@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-30T14:21:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: children_completed
+    - event: completed
+      timestamp: "2025-10-30T14:35:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Define v1 constants, triggers, and artifact/event schemas; ensure strict
