@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-30T22:14:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-30T23:12:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement enforcement that dependencies only exist among siblings at the same level
@@ -27,3 +35,17 @@ content:
     - Initiative deps restricted to initiatives only
     - Milestone deps restricted to milestones under the same initiative
     - Issue deps restricted to issues under the same milestone
+  implementation_notes:
+    result: "Validator now enforces sibling-only dependencies with explicit artifactId-aware checks"
+    tags:
+      - core
+      - validation
+      - dependencies
+    challenges:
+      - challenge: "Relationships lacked artifact context, making sibling checks impossible"
+        solution: "Introduced artifactId option and sibling-check helper keyed off parsed ID parts"
+      - challenge: "Coverage missed branch paths for invalid IDs and mismatched parents"
+        solution: "Expanded validator test suite with invalid YAML and cross-level relationship cases"
+    insights:
+      - "Artifact validators must receive the artifact ID whenever relationships exist"
+      - "Sibling validation should short-circuit on first invalid reference to keep errors targeted"

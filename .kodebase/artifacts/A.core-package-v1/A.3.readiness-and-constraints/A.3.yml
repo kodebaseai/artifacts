@@ -26,6 +26,10 @@ metadata:
       timestamp: "2025-10-30T22:12:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_merged
+    - event: in_progress
+      timestamp: "2025-10-30T22:14:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: children_started
 content:
   summary: >-
     Implement readiness validation per type and enforce sibling-only

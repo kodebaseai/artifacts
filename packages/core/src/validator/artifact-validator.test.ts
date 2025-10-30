@@ -15,6 +15,7 @@ import {
   validateArtifact,
   validateInitiative,
   validateIssue,
+  validateMilestone,
 } from "./artifact-validator.js";
 
 const baseMetadata = {
@@ -122,6 +123,37 @@ describe("getArtifactType", () => {
       },
     );
   });
+
+  it("rejects invalid YAML during type detection", () => {
+    expectValidationError(
+      () => getArtifactType("metadata: [unclosed"),
+      (error) => {
+        expect(error.kind).toBe("yaml");
+        expect(error.message).toMatch(/invalid yaml/i);
+      },
+    );
+  });
+
+  it("infers the closest matching artifact type when schemas fail", () => {
+    const metadata = {
+      ...baseMetadata,
+      relationships: {
+        blocks: [...baseMetadata.relationships.blocks],
+        blocked_by: [...baseMetadata.relationships.blocked_by],
+      },
+      events: [...baseMetadata.events],
+    };
+    const partial = {
+      metadata,
+      content: {
+        summary: "Partial issue content",
+        acceptance_criteria: [],
+        deliverables: [""],
+        validation: [],
+      },
+    };
+    expect(getArtifactType(partial)).toBe(CArtifact.ISSUE);
+  });
 });
 
 describe("validate specific artifact types", () => {
@@ -182,9 +214,250 @@ content:
       },
     );
   });
+
+  it("rejects YAML strings that fail to parse", () => {
+    expectValidationError(
+      () => validateIssue("metadata: [unclosed"),
+      (error) => {
+        expect(error.kind).toBe("yaml");
+        expect(error.message).toMatch(/invalid yaml/i);
+      },
+    );
+  });
+});
+
+describe("sibling relationship validation", () => {
+  it("requires artifactId when relationships are present", () => {
+    const issueWithDeps = {
+      ...issue,
+      metadata: {
+        ...issue.metadata,
+        relationships: { blocks: [], blocked_by: ["A.1.2"] },
+      },
+    };
+
+    expectValidationError(
+      () => validateIssue(issueWithDeps),
+      (error) => {
+        expect(error.kind).toBe("input");
+        expect(error.message).toMatch(/Artifact ID is required/i);
+      },
+    );
+  });
+
+  it("rejects initiative dependencies that are not initiatives", () => {
+    const initiativeWithMilestone = {
+      ...initiative,
+      metadata: {
+        ...initiative.metadata,
+        relationships: { blocks: ["A.1"], blocked_by: [] },
+      },
+    };
+
+    expectValidationError(
+      () => validateInitiative(initiativeWithMilestone, { artifactId: "A" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues).toEqual([
+          {
+            path: "metadata.relationships.blocks[0]",
+            message:
+              "Initiatives may only relate to other initiative IDs (e.g. A, B).",
+          },
+        ]);
+      },
+    );
+  });
+
+  it("rejects dependencies with unknown identifiers", () => {
+    const initiativeWithUnknown = {
+      ...initiative,
+      metadata: {
+        ...initiative.metadata,
+        relationships: { blocks: ["???.1"], blocked_by: [] },
+      },
+    };
+
+    expectValidationError(
+      () => validateInitiative(initiativeWithUnknown, { artifactId: "A" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues).toEqual([
+          {
+            path: "metadata.relationships.blocks[0]",
+            message: "Invalid artifact ID format",
+          },
+        ]);
+      },
+    );
+  });
+
+  it("rejects milestone dependencies referencing another initiative", () => {
+    const milestoneWithDeps = {
+      ...milestone,
+      metadata: {
+        ...milestone.metadata,
+        relationships: { blocks: [], blocked_by: ["B.2"] },
+      },
+    };
+
+    expectValidationError(
+      () => validateMilestone(milestoneWithDeps, { artifactId: "A.1" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues).toEqual([
+          {
+            path: "metadata.relationships.blocked_by[0]",
+            message: "'B.2' belongs to initiative B; expected initiative A.",
+          },
+        ]);
+      },
+    );
+  });
+
+  it("rejects milestone dependencies referencing non-milestone identifiers", () => {
+    const milestoneWithIssue = {
+      ...milestone,
+      metadata: {
+        ...milestone.metadata,
+        relationships: { blocks: ["A.1.2"], blocked_by: [] },
+      },
+    };
+
+    expectValidationError(
+      () => validateMilestone(milestoneWithIssue, { artifactId: "A.1" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues).toEqual([
+          {
+            path: "metadata.relationships.blocks[0]",
+            message:
+              "Milestones may only relate to other milestone IDs (e.g. A.1).",
+          },
+        ]);
+      },
+    );
+  });
+
+  it("rejects issue dependencies referencing a non-issue identifier", () => {
+    const issueWithMilestoneRef = {
+      ...issue,
+      metadata: {
+        ...issue.metadata,
+        relationships: { blocks: ["A.1"], blocked_by: [] },
+      },
+    };
+
+    expectValidationError(
+      () => validateIssue(issueWithMilestoneRef, { artifactId: "A.1.1" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues).toEqual([
+          {
+            path: "metadata.relationships.blocks[0]",
+            message:
+              "Issues may only relate to other issue IDs (e.g. A.1.1, A.1.2).",
+          },
+        ]);
+      },
+    );
+  });
+
+  it("rejects issue dependencies outside the current milestone", () => {
+    const issueWithForeignSibling = {
+      ...issue,
+      metadata: {
+        ...issue.metadata,
+        relationships: { blocks: [], blocked_by: ["A.2.4"] },
+      },
+    };
+
+    expectValidationError(
+      () => validateIssue(issueWithForeignSibling, { artifactId: "A.1.3" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues).toEqual([
+          {
+            path: "metadata.relationships.blocked_by[0]",
+            message:
+              "'A.2.4' belongs to milestone A.2; expected milestone A.1.",
+          },
+        ]);
+      },
+    );
+  });
+
+  it("rejects issue dependencies outside the current initiative", () => {
+    const issueWithForeignInitiative = {
+      ...issue,
+      metadata: {
+        ...issue.metadata,
+        relationships: { blocks: [], blocked_by: ["B.1.2"] },
+      },
+    };
+
+    expectValidationError(
+      () => validateIssue(issueWithForeignInitiative, { artifactId: "A.1.3" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues).toEqual([
+          {
+            path: "metadata.relationships.blocked_by[0]",
+            message: "'B.1.2' belongs to initiative B; expected initiative A.",
+          },
+        ]);
+      },
+    );
+  });
+
+  it("accepts sibling issue dependencies within the same milestone", () => {
+    const issueWithSiblings = {
+      ...issue,
+      metadata: {
+        ...issue.metadata,
+        relationships: { blocks: ["A.1.2"], blocked_by: ["A.1.3"] },
+      },
+    };
+
+    const validated = validateIssue(issueWithSiblings, {
+      artifactId: "A.1.1",
+    });
+    expect(validated.metadata.relationships).toEqual({
+      blocks: ["A.1.2"],
+      blocked_by: ["A.1.3"],
+    });
+  });
 });
 
 describe("validateArtifact", () => {
+  it("throws when artifactId format cannot be parsed", () => {
+    expectValidationError(
+      () => validateIssue(issue, { artifactId: "invalid" }),
+      (error) => {
+        expect(error.kind).toBe("input");
+        expect(error.message).toMatch(/not a recognised artifact identifier/i);
+      },
+    );
+  });
+
+  it("throws when artifactId does not match the artifact type", () => {
+    expectValidationError(
+      () => validateMilestone(milestone, { artifactId: "A" }),
+      (error) => {
+        expect(error.kind).toBe("input");
+        expect(error.message).toMatch(/does not match expected milestone/i);
+      },
+    );
+  });
+
+  it("allows empty relationships when artifactId is supplied", () => {
+    const validated = validateIssue(issue, { artifactId: "A.1.1" });
+    expect(validated.metadata.relationships).toEqual({
+      blocks: [],
+      blocked_by: [],
+    });
+  });
+
   it("auto-detects type and returns the typed payload", () => {
     const result = validateArtifact(issue);
     expect(result.type).toBe(CArtifact.ISSUE);
@@ -197,6 +470,26 @@ describe("validateArtifact", () => {
   it("exposes helpers through the ArtifactValidator namespace", () => {
     const validated = ArtifactValidator.validateIssue(issue);
     expect(validated.content.acceptance_criteria).toHaveLength(2);
+  });
+
+  it("enforces relationship rules when artifactId is provided", () => {
+    const invalidIssue = {
+      ...issue,
+      metadata: {
+        ...issue.metadata,
+        relationships: { blocks: ["A.2.1"], blocked_by: [] },
+      },
+    };
+
+    expectValidationError(
+      () => validateArtifact(invalidIssue, undefined, { artifactId: "A.1.1" }),
+      (error) => {
+        expect(error.kind).toBe("schema");
+        expect(error.issues?.[0]?.path).toBe(
+          "metadata.relationships.blocks[0]",
+        );
+      },
+    );
   });
 
   it("uses the supplied expected type", () => {
