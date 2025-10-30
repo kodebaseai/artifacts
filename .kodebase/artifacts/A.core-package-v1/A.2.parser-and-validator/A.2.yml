@@ -26,6 +26,10 @@ metadata:
       timestamp: "2025-10-30T14:35:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-30T14:37:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: children_started
 content:
   summary: >-
     Implement YAML → typed parsing and artifact validation with actionable

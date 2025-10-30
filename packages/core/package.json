@@ -22,6 +22,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "yaml": "^2.6.0",
     "zod": "^4.1.12"
   },
   "devDependencies": {
