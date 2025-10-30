@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.2.1
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-30T15:21:00Z"
+    - event: ready
+      timestamp: "2025-10-30T15:21:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Provide a validator that auto-detects artifact type from structure,

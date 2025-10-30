@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-30T15:12:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-30T15:21:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Build a robust parser that reads YAML content and validates it against the
@@ -34,3 +38,18 @@ content:
     - parseYaml rejects empty/invalid YAML with clear messages
     - parseInitiative/Milestone/Issue validate against schemas and return typed objects
     - Zod errors are converted into readable messages (no raw Zod trees)
+implementation_notes:
+  result: >-
+    Introduced `packages/core/src/parser/artifact-parser.ts` with typed helpers that
+    parse YAML and validate initiatives, milestones, and issues, plus a Vitest suite
+    that exercises every error branch and README/package updates documenting the new
+    surface.
+  challenges:
+    - challenge: Mocking the `yaml` parser for failure scenarios caused TypeScript overload and constructor typing errors during `check-types`.
+      solution: Wrapped the proxy in a typed helper that preserves the original overload signatures and used real `ErrorCode` literals.
+    - challenge: Coverage initially missed symbol-path formatting and non-Error throws.
+      solution: Added dedicated tests for anonymous symbols and non-Error failures to keep the formatter output readable.
+  insights:
+    - Parser results return normalized paths like `content.items[0]`, keeping Zod errors actionable without exposing the raw issue tree.
+    - Exercising yaml failure branches required mocking via `vi.mock` with a global hook so repeated tests restore the original implementation safely.
+  tags: [core, parser, yaml, zod, validation]
