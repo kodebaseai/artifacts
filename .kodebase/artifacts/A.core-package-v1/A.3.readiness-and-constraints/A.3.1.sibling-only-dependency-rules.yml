@@ -41,10 +41,7 @@ content:
     - Issue deps restricted to issues under the same milestone
   implementation_notes:
     result: "Validator now enforces sibling-only dependencies with explicit artifactId-aware checks"
-    tags:
-      - core
-      - validation
-      - dependencies
+    tags: [core, validation, dependencies]
     challenges:
       - challenge: "Relationships lacked artifact context, making sibling checks impossible"
         solution: "Introduced artifactId option and sibling-check helper keyed off parsed ID parts"
