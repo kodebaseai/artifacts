@@ -20,9 +20,15 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.2.2
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-30T18:03:00Z"
           - artifact_id: A.2.3
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-30T21:37:00Z"
+    - event: ready
+      timestamp: "2025-10-30T21:37:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Provide unit tests for parser and validator (success and failure cases) and
