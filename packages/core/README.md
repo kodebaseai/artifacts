@@ -12,15 +12,12 @@ Kodebase artifact workflow.
   helpers, and artifact-specific content.
 - `src/schemas/schemas.ts` &mdash; composed Initiative, Milestone, and Issue
   schemas built on top of the registries.
-- `src/parser/artifact-parser.ts` &mdash; YAML helpers that turn artifact
-  documents into typed objects with human-friendly validation errors.
-- `src/validator/artifact-validator.ts` &mdash; type detection and validation
-  utilities that throw actionable errors for initiatives, milestones, and
-  issues.
-- `src/validator/error-formatter.ts` &mdash; turns raw Zod issues into
-  human-friendly messages with field hints and suggestions.
-- `src/schemas/schemas.fixtures.ts` &mdash; golden fixtures used by the test
-  suite for end-to-end validation.
+- `src/parser` &mdash; parser implementation plus unit and fixture tests that
+  validate real-world YAML inputs against golden outputs.
+- `src/validator` &mdash; validation orchestration, error formatting, and the
+  associated fixture-backed tests.
+- `src/test-utils` &mdash; shared helpers (for example, fixture loaders) used
+  across the parser and validator suites.
 
 ## Running the tests
 

@@ -1,0 +1,10 @@
+{
+  "kind": "schema",
+  "message": "Issue artifact validation failed (1 issue)",
+  "issues": [
+    {
+      "path": "content.acceptance_criteria",
+      "message": "At least one item is required"
+    }
+  ]
+}

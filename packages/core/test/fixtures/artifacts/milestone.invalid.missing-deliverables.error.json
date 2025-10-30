@@ -1,0 +1,10 @@
+{
+  "kind": "schema",
+  "message": "Milestone artifact validation failed (1 issue)",
+  "issues": [
+    {
+      "path": "content.deliverables",
+      "message": "At least one item is required"
+    }
+  ]
+}

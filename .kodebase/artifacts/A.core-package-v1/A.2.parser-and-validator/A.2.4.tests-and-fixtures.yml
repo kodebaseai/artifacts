@@ -29,6 +29,14 @@ metadata:
       timestamp: "2025-10-30T21:37:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-30T21:42:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-30T21:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Provide unit tests for parser and validator (success and failure cases) and
@@ -37,3 +45,18 @@ content:
     - Tests for valid initiative/milestone/issue fixtures pass with types inferred
     - Invalid fixtures produce expected error messages and paths
     - All tests wired into the repo test pipeline
+implementation_notes:
+  result: >-
+    Added shared fixture helpers plus parser/validator fixture tests that load
+    YAML goldens and assert parsed data and error payloads match stored JSON
+    expectations. Documented parser, validator, and fixture directories with
+    READMEs.
+  challenges:
+    - challenge: Needed a single loader for YAML/JSON fixtures usable from both parser and validator suites.
+      solution: Introduced `src/test-utils/load-fixture.ts` to centralise fixture access.
+    - challenge: Ensuring fixture tests assert exact object equality without duplicating large inline structures.
+      solution: Store parsed expectations as JSON snapshots and compare them directly in the fixture tests.
+  insights:
+    - Fixture-driven tests make it easy to spot regressions when parser or validator output changes, enabling quick review of golden diffs.
+    - README docs now point contributors toward the fixture workflow, reducing onboarding friction.
+  tags: [core, fixtures, parser, validator, testing]

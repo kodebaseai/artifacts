@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "baseUrl": ".",
+    "types": ["node"],
     "paths": {
       "@kodebase/core": ["./src"]
     }

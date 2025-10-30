@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@kodebase/typescript-config": "workspace:*",
-    "@vitest/coverage-istanbul": "^3.0.7"
+    "@vitest/coverage-istanbul": "^3.0.7",
+    "@types/node": "^22.5.1"
   }
 }
