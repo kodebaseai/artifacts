@@ -37,6 +37,10 @@ metadata:
       timestamp: "2025-10-30T14:07:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-30T14:09:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Consolodite the Artifact global schema. Create unit tests for schemas and provide golden fixtures for valid and invalid
