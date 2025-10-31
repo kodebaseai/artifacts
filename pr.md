@@ -1,37 +1,28 @@
 ## 🎯 Description
 
-Implements A.4.3 — Event builder requires explicit trigger and adds guardrails.
+Implements the A.5 cascade engine features:
 
-- `createEvent` now requires an explicit `trigger` (no fallback) and validates
-  the event↔trigger pairing using `EVENT_TRIGGER_BY_EVENT` + `assertEventTrigger`.
-- Convenience creators added for common flows (draft, ready, blocked,
-  in_progress, in_review, completed, cancelled, archived).
-- `createBlockedEvent` normalizes `metadata.blocking_dependencies` and validates
-  ISO `resolved_at` when provided.
-- Tests cover required-trigger behavior, helper outputs, and mapping guard.
+- `CascadeEngine.shouldCascadeToParent` evaluates child states and recommends parent transitions with deterministic reasons.
+- `CascadeEngine.generateCascadeEvent` produces canonical cascade events with system actor, explicit triggers, and trigger metadata.
 
 ## 📋 Changes
 
-- core(state): add `EVENT_TRIGGER_BY_EVENT` and `assertEventTrigger`
-- core(state): implement `createEvent` with explicit trigger requirement
-- core(state): add helpers `createDraftEvent|createReadyEvent|createBlockedEvent|
-  createInProgressEvent|createInReviewEvent|createCompletedEvent|createCancelledEvent|createArchivedEvent`
-- core(tests): unit tests for builder + trigger mapping + metadata normalization
-- core(docs): mention builder in `packages/core/README.md`
+- core(cascade): add `generateCascadeEvent` with trigger mapping and structured metadata (+ system cascade actor).
+- core(cascade): update `shouldCascadeToParent` tests and new coverage for the event factory.
+- core(state): allow `dependency_completed` as a valid trigger for ready events.
+- artifacts: assign A.5.2 to the current agent.
 
 ## 🧪 Testing
 
-- [x] All tests pass (`pnpm --filter @kodebase/core test -- --run`)
-- [ ] Manual testing completed
-- [x] No breaking changes
+- [x] `pnpm --filter @kodebase/core test -- --run`
 
 ## 📦 Package Changes
 
-- [ ] `@kodebase/cli` - Changes to CLI package
-- [x] `@kodebase/core` - Changes to Core package
-- [ ] `@kodebase/ui` - Changes to UI package
-- [ ] `docs` - Changes to documentation site
-- [ ] `web` - Changes to web application
+- [x] `@kodebase/core`
+- [ ] `@kodebase/cli`
+- [ ] `@kodebase/ui`
+- [ ] `docs`
+- [ ] `web`
 
 ## 🔄 Changesets
 
@@ -40,29 +31,17 @@ Implements A.4.3 — Event builder requires explicit trigger and adds guardrails
 - [ ] I have added a changeset for my changes (`pnpm changeset add`)
 - [ ] I have committed the changeset file
 
-## 📸 Screenshots
+## 🔗 Related Artifacts
 
-<!-- If applicable, add screenshots to help explain your changes -->
-
-## 🔗 Related Issues
-
-- Artifact: `.kodebase/artifacts/A.core-package-v1/A.4.state-machine-and-events/A.4.3.event-builder-requires-trigger-and-helpers.yml`
+- `.kodebase/artifacts/A.core-package-v1/A.5.cascade-engine-upward-only/A.5.1.should-cascade-to-parent.yml`
+- `.kodebase/artifacts/A.core-package-v1/A.5.cascade-engine-upward-only/A.5.2.generate-cascade-event.yml`
 
 ## ✅ Checklist
 
-- [ ] My code follows the project's style guidelines
-- [ ] I have performed a self-review of my code
+- [x] My code follows the project's style guidelines
+- [x] I have performed a self-review of my code
 - [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+- [x] My changes generate no new warnings
+- [x] I have added tests that prove my feature works
+- [x] New and existing unit tests pass locally with my changes
 - [ ] Any dependent changes have been merged and published
-
-## 🚀 Deployment Notes
-
-<!-- Any special deployment considerations -->
-
-## 📝 Additional Notes
-
-<!-- Any additional information that reviewers should know -->

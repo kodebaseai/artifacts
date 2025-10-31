@@ -1,0 +1,33 @@
+metadata:
+  title: Prevent cancelling parents with completed children
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.5.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-31T19:18:16Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-31T19:18:16Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.5.2
+            resolved: false
+content:
+  summary: >-
+    Block parent cancellation whenever any child artifact is already completed,
+    returning a clear explanation and alternative remediation guidance instead of
+    emitting a cascading cancelled event.
+  acceptance_criteria:
+    - "Cancellation flow inspects child states and rejects parent cancel when any child is completed"
+    - "Returned error includes child IDs and guidance to archive or manually adjust remaining work"
+    - "Automation leaves parent state unchanged on rejection"
+    - "Unit tests cover single and multi-child scenarios, including allowed cancel when no completed children exist"

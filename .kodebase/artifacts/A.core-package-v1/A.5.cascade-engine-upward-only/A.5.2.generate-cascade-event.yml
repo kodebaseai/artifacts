@@ -3,7 +3,7 @@ metadata:
   priority: high
   estimation: S
   created_by: "Miguel Carvalho (m@kodebase.ai)"
-  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Codex (agent.codex.session20251031T1738Z@kodebase.kodebase.ai)"
   schema_version: "0.0.1"
   relationships:
     blocks: [A.5.3, A.5.4, A.5.5]
@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-28T18:09:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T18:51:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-28T19:27:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Provide a factory to build parent-facing cascade events with consistent metadata,
@@ -35,3 +43,16 @@ content:
     - Generates an Event record with required fields (event, timestamp, actor, trigger, metadata)
     - Metadata includes cascade_type and minimal trigger context (event, actor, timestamp)
     - Explicit triggers only; no implicit/manual fallback
+implementation_notes:
+  result: "Added `CascadeEngine.generateCascadeEvent` with the system cascade actor, explicit trigger mapping, and trigger-context metadata; exported alongside cascade utilities."
+  tags: [core, cascade, events]
+  challenges:
+    - challenge: "Selecting deterministic triggers for each parent-facing cascade state"
+      solution: "Introduced a dedicated trigger map tying ready/in_progress/in_review/archived cascades to dependency_completed, children_started, children_completed, and parent_archived respectively."
+    - challenge: "Ensuring metadata alignment across automation and tests"
+      solution: "Reused the event builder to populate cascade_type and trigger_* fields, and validated outputs with Vitest fixtures."
+    - challenge: "Guarding against unsupported cascade states"
+      solution: "generateCascadeEvent now throws with a helpful message when an unmapped state is requested, keeping callers honest."
+  insights:
+    - "Centralizing cascade event creation around the event builder keeps triggers and timestamps consistent with the rest of the system."
+    - "Explicit trigger context in metadata makes downstream reporting straightforward without re-parsing child events."
