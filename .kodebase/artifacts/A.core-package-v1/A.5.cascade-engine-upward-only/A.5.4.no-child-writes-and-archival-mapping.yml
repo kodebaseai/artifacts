@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.5.2
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-28T19:28:00Z"
+    - event: ready
+      timestamp: "2025-10-28T19:28:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Align cascade implementation with rule "no persistent downward propagation" — the
