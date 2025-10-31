@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-31T13:19:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T13:25:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-31T13:40:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Enforce chronological ordering of events per artifact, ensuring the first event
@@ -34,3 +42,18 @@ content:
     - First event must be `draft`, otherwise validation fails with a specific error code
     - Events must be in chronological (non-decreasing) order; out-of-order sequences are rejected
     - Error messages include the offending timestamps to aid debugging
+implementation_notes:
+  result: >-
+    Added `validateEventOrder` with strict first-event draft enforcement and non-decreasing timestamp checks. Introduced
+    `EventOrderError` with codes (EMPTY_EVENTS, FIRST_EVENT_MUST_BE_DRAFT, EVENTS_OUT_OF_ORDER). Tests verify all cases.
+  tags: [core, state-machine, events, validation]
+  challenges:
+    - challenge: "Ensuring consumers receive actionable, programmatic error info"
+      solution: "Added an error class with explicit codes and timestamp details for out-of-order violations."
+    - challenge: "Allowing equal timestamps while rejecting regressions"
+      solution: "Used non-decreasing time comparison (>= allowed), matching spec and legacy behavior."
+    - challenge: "Avoid schema duplication for invalid timestamps"
+      solution: "Validator skips order checks when timestamps are invalid; schema validation already handles formats."
+  insights:
+    - "Separating order validation from transition validation keeps concerns clear and errors focused."
+    - "Surfacing the exact timestamps and index speeds up debugging for event authors and automations."
