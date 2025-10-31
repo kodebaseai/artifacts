@@ -338,8 +338,16 @@ content:
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues).toEqual([
-          { path: "(root)", message: "Root validation failed" },
-          { path: "content.items[0]", message: "Item invalid" },
+          {
+            code: ZodIssueCode.custom,
+            path: "(root)",
+            message: "Root validation failed",
+          },
+          {
+            code: ZodIssueCode.custom,
+            path: "content.items[0]",
+            message: "Item invalid",
+          },
         ]);
       }
     } finally {
@@ -365,6 +373,7 @@ content:
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues?.[0]).toEqual({
+          code: ZodIssueCode.custom,
           path: "custom",
           message: "Symbolic issue",
         });
@@ -392,6 +401,7 @@ content:
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues?.[0]).toEqual({
+          code: ZodIssueCode.custom,
           path: "[symbol]",
           message: "Anonymous symbol issue",
         });

@@ -92,6 +92,13 @@ type IssueIdParts = {
 
 type ArtifactIdParts = InitiativeIdParts | MilestoneIdParts | IssueIdParts;
 
+const RelationshipIssueCode = {
+  INVALID_ID: "RELATIONSHIP_INVALID_ID",
+  WRONG_TYPE: "RELATIONSHIP_WRONG_TYPE",
+  DIFFERENT_INITIATIVE: "RELATIONSHIP_DIFFERENT_INITIATIVE",
+  DIFFERENT_MILESTONE: "RELATIONSHIP_DIFFERENT_MILESTONE",
+} as const;
+
 function parseArtifactIdParts(id: string): ArtifactIdParts | null {
   if (ISSUE_ID_REGEX.test(id)) {
     const [initiative, milestoneNumber, issueNumber] = id.split(".") as [
@@ -138,65 +145,93 @@ function collectRelationshipIssues(
   const issues: ArtifactParseIssue[] = [];
 
   const checkSibling = (relationshipId: string, path: string) => {
+    const pushIssue = (
+      code: (typeof RelationshipIssueCode)[keyof typeof RelationshipIssueCode],
+      message: string,
+    ) => {
+      issues.push({ code, path, message });
+    };
+
     const candidate = parseArtifactIdParts(relationshipId);
-    if (!candidate) {
-      issues.push({ path, message: "Invalid artifact ID format" });
-      return;
-    }
 
     switch (current.type) {
       case CArtifact.INITIATIVE: {
-        if (candidate.type !== CArtifact.INITIATIVE) {
-          issues.push({
-            path,
-            message:
-              "Initiatives may only relate to other initiative IDs (e.g. A, B).",
-          });
+        if (!candidate) {
+          pushIssue(
+            RelationshipIssueCode.INVALID_ID,
+            `'${relationshipId}' is not a valid artifact ID. Initiatives only depend on initiative IDs like 'A' or 'B'.`,
+          );
+          return;
         }
-        break;
+        if (candidate.type !== CArtifact.INITIATIVE) {
+          pushIssue(
+            RelationshipIssueCode.WRONG_TYPE,
+            `'${relationshipId}' must reference another initiative ID (for example 'A' or 'B').`,
+          );
+        }
+        return;
       }
 
       case CArtifact.MILESTONE: {
+        const example = `${current.initiative}.1`;
+        const expectedPrefix = `${current.initiative}.`;
+
+        if (!candidate) {
+          pushIssue(
+            RelationshipIssueCode.INVALID_ID,
+            `'${relationshipId}' is not a valid artifact ID. Use a milestone ID like '${example}' that starts with '${expectedPrefix}'.`,
+          );
+          return;
+        }
         if (candidate.type !== CArtifact.MILESTONE) {
-          issues.push({
-            path,
-            message:
-              "Milestones may only relate to other milestone IDs (e.g. A.1).",
-          });
-          break;
+          pushIssue(
+            RelationshipIssueCode.WRONG_TYPE,
+            `'${relationshipId}' must reference a milestone ID like '${example}'.`,
+          );
+          return;
         }
-        if (candidate.initiative !== current.initiative) {
-          issues.push({
-            path,
-            message: `'${relationshipId}' belongs to initiative ${candidate.initiative}; expected initiative ${current.initiative}.`,
-          });
+        if (!relationshipId.startsWith(expectedPrefix)) {
+          pushIssue(
+            RelationshipIssueCode.DIFFERENT_INITIATIVE,
+            `'${relationshipId}' must start with '${expectedPrefix}' to stay within initiative ${current.initiative}.`,
+          );
         }
-        break;
+        return;
       }
 
       case CArtifact.ISSUE: {
+        const initiativePrefix = `${current.initiative}.`;
+        const milestonePrefix = `${current.initiative}.${current.milestoneNumber}.`;
+        const example = `${milestonePrefix}1`;
+
+        if (!candidate) {
+          pushIssue(
+            RelationshipIssueCode.INVALID_ID,
+            `'${relationshipId}' is not a valid artifact ID. Use an issue ID like '${example}' that starts with '${milestonePrefix}'.`,
+          );
+          return;
+        }
         if (candidate.type !== CArtifact.ISSUE) {
-          issues.push({
-            path,
-            message:
-              "Issues may only relate to other issue IDs (e.g. A.1.1, A.1.2).",
-          });
-          break;
+          pushIssue(
+            RelationshipIssueCode.WRONG_TYPE,
+            `'${relationshipId}' must reference an issue ID like '${example}'.`,
+          );
+          return;
         }
-        if (candidate.initiative !== current.initiative) {
-          issues.push({
-            path,
-            message: `'${relationshipId}' belongs to initiative ${candidate.initiative}; expected initiative ${current.initiative}.`,
-          });
-          break;
+        if (!relationshipId.startsWith(initiativePrefix)) {
+          pushIssue(
+            RelationshipIssueCode.DIFFERENT_INITIATIVE,
+            `'${relationshipId}' must start with '${initiativePrefix}' to stay within initiative ${current.initiative}.`,
+          );
+          return;
         }
-        if (candidate.milestoneNumber !== current.milestoneNumber) {
-          issues.push({
-            path,
-            message: `'${relationshipId}' belongs to milestone ${candidate.initiative}.${candidate.milestoneNumber}; expected milestone ${current.initiative}.${current.milestoneNumber}.`,
-          });
+        if (!relationshipId.startsWith(milestonePrefix)) {
+          pushIssue(
+            RelationshipIssueCode.DIFFERENT_MILESTONE,
+            `'${relationshipId}' must start with '${milestonePrefix}' to stay within milestone ${current.initiative}.${current.milestoneNumber}.`,
+          );
         }
-        break;
+        return;
       }
     }
   };

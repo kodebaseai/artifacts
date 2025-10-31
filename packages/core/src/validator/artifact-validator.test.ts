@@ -260,9 +260,10 @@ describe("sibling relationship validation", () => {
         expect(error.kind).toBe("schema");
         expect(error.issues).toEqual([
           {
+            code: "RELATIONSHIP_WRONG_TYPE",
             path: "metadata.relationships.blocks[0]",
             message:
-              "Initiatives may only relate to other initiative IDs (e.g. A, B).",
+              "'A.1' must reference another initiative ID (for example 'A' or 'B').",
           },
         ]);
       },
@@ -284,6 +285,7 @@ describe("sibling relationship validation", () => {
         expect(error.kind).toBe("schema");
         expect(error.issues).toEqual([
           {
+            code: "custom",
             path: "metadata.relationships.blocks[0]",
             message: "Invalid artifact ID format",
           },
@@ -307,8 +309,9 @@ describe("sibling relationship validation", () => {
         expect(error.kind).toBe("schema");
         expect(error.issues).toEqual([
           {
+            code: "RELATIONSHIP_DIFFERENT_INITIATIVE",
             path: "metadata.relationships.blocked_by[0]",
-            message: "'B.2' belongs to initiative B; expected initiative A.",
+            message: "'B.2' must start with 'A.' to stay within initiative A.",
           },
         ]);
       },
@@ -330,9 +333,9 @@ describe("sibling relationship validation", () => {
         expect(error.kind).toBe("schema");
         expect(error.issues).toEqual([
           {
+            code: "RELATIONSHIP_WRONG_TYPE",
             path: "metadata.relationships.blocks[0]",
-            message:
-              "Milestones may only relate to other milestone IDs (e.g. A.1).",
+            message: "'A.1.2' must reference a milestone ID like 'A.1'.",
           },
         ]);
       },
@@ -354,9 +357,9 @@ describe("sibling relationship validation", () => {
         expect(error.kind).toBe("schema");
         expect(error.issues).toEqual([
           {
+            code: "RELATIONSHIP_WRONG_TYPE",
             path: "metadata.relationships.blocks[0]",
-            message:
-              "Issues may only relate to other issue IDs (e.g. A.1.1, A.1.2).",
+            message: "'A.1' must reference an issue ID like 'A.1.1'.",
           },
         ]);
       },
@@ -378,9 +381,10 @@ describe("sibling relationship validation", () => {
         expect(error.kind).toBe("schema");
         expect(error.issues).toEqual([
           {
+            code: "RELATIONSHIP_DIFFERENT_MILESTONE",
             path: "metadata.relationships.blocked_by[0]",
             message:
-              "'A.2.4' belongs to milestone A.2; expected milestone A.1.",
+              "'A.2.4' must start with 'A.1.' to stay within milestone A.1.",
           },
         ]);
       },
@@ -402,8 +406,10 @@ describe("sibling relationship validation", () => {
         expect(error.kind).toBe("schema");
         expect(error.issues).toEqual([
           {
+            code: "RELATIONSHIP_DIFFERENT_INITIATIVE",
             path: "metadata.relationships.blocked_by[0]",
-            message: "'B.1.2' belongs to initiative B; expected initiative A.",
+            message:
+              "'B.1.2' must start with 'A.' to stay within initiative A.",
           },
         ]);
       },

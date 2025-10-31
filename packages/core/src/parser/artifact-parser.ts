@@ -13,6 +13,7 @@ import {
 export type ArtifactParseIssue = {
   path: string;
   message: string;
+  code?: string;
 };
 
 export type ArtifactParseErrorKind = "yaml" | "schema" | "input";
@@ -121,6 +122,7 @@ function formatSchemaError(
   const issues = error.issues.map((issue) => ({
     path: formatZodIssuePath(issue.path),
     message: issue.message,
+    code: issue.code,
   }));
   const plural = issues.length === 1 ? "issue" : "issues";
   return {
