@@ -26,6 +26,15 @@ metadata:
       timestamp: "2025-10-31T13:45:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T13:49:56Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    # removed duplicate in_progress to keep chronological order
+    - event: in_review
+      timestamp: "2025-10-31T14:10:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Enforce that EventBuilder requires an explicit `trigger` (no fallback) and
@@ -34,3 +43,22 @@ content:
     - Builder throws error when `trigger` is missing
     - Helpers generate valid events with the correct triggers and ISO timestamps
     - Unit tests cover required-trigger behavior and helper outputs
+implementation_notes:
+  result: >-
+    Implemented `createEvent` with explicit trigger enforcement and added a
+    strict event↔trigger compatibility guard via `EVENT_TRIGGER_BY_EVENT` and
+    `assertEventTrigger`. Added convenience creators (`createDraftEvent`,
+    `createReadyEvent`, `createBlockedEvent`, `createInProgressEvent`,
+    `createInReviewEvent`, `createCompletedEvent`, `createCancelledEvent`,
+    `createArchivedEvent`). `createBlockedEvent` normalizes
+    `metadata.blocking_dependencies` and validates ISO `resolved_at`. All
+    builders emit ISO UTC seconds timestamps and use `CEventTrigger` constants.
+  tags: [core, state-machine, events, builder]
+  challenges:
+    - challenge: "Preventing silent trigger mismatches while keeping triggers explicit"
+      solution: "Added `EVENT_TRIGGER_BY_EVENT` + `assertEventTrigger(event, trigger)` and call it inside `createEvent`."
+    - challenge: "Consistent trigger usage across tests and helpers"
+      solution: "Refactored tests to assert against `CEventTrigger` constants and removed `any` casts in metadata checks."
+  insights:
+    - "One constructor + explicit guard keeps API surface small without sacrificing safety."
+    - "Typed helper metadata (e.g., for blocked) reduces caller mistakes and aids validation."

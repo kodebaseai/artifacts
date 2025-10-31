@@ -17,7 +17,9 @@ Kodebase artifact workflow.
 - `src/validator` &mdash; validation orchestration, error formatting, and the
   associated fixture-backed tests.
 - `src/state` &mdash; state machine utilities (`canTransition`, `getValidTransitions`,
-  and `StateTransitionError`) for artifact lifecycle transitions.
+  and `StateTransitionError`) for artifact lifecycle transitions. Includes the
+  event builder (`createEvent`, `createDraftEvent`, `createReadyEvent`) which
+  requires an explicit `trigger` and emits ISO UTC timestamps.
 - `src/test-utils` &mdash; shared helpers (for example, fixture loaders) used
   across the parser and validator suites.
 
