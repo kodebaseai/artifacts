@@ -1,8 +1,22 @@
 # @kodebase/core
 
+[![npm version](https://img.shields.io/npm/v/@kodebase/core.svg?style=flat-square)](https://www.npmjs.com/package/@kodebase/core)
+[![npm downloads](https://img.shields.io/npm/dm/@kodebase/core.svg?style=flat-square)](https://www.npmjs.com/package/@kodebase/core)
+[![CI status](https://img.shields.io/github/actions/workflow/status/kodebaseai/kodebase/ci.yml?branch=main&style=flat-square)](https://github.com/kodebaseai/kodebase/actions)
+
 Core validation primitives for the Kodebase monorepo. This package exposes the
 canonical constants, registries, schemas, and helpers that power every other
 Kodebase artifact workflow.
+
+## Installation
+
+```bash
+pnpm add @kodebase/core
+# or
+npm install @kodebase/core
+# or
+yarn add @kodebase/core
+```
 
 ## What lives here?
 
@@ -22,6 +36,50 @@ Kodebase artifact workflow.
   requires an explicit `trigger` and emits ISO UTC timestamps.
 - `src/test-utils` &mdash; shared helpers (for example, fixture loaders) used
   across the parser and validator suites.
+
+## Quick start
+
+```ts
+import {
+  CArtifact,
+  CArtifactEvent,
+  createDraftEvent,
+  validateArtifact,
+  canTransition,
+  assertTransition,
+} from "@kodebase/core";
+
+// Parse + validate an artifact payload (YAML or object)
+const { data } = validateArtifact(
+  `metadata:
+    title: Demo
+    priority: high
+    estimation: S
+    created_by: "Ada Lovelace (ada@example.com)"
+    assignee: "Grace Hopper (grace@example.com)"
+    schema_version: "0.0.1"
+    relationships:
+      blocks: []
+      blocked_by: []
+    events:
+      - event: draft
+        timestamp: "2025-10-31T14:37:00Z"
+        actor: "Ada Lovelace (ada@example.com)"
+        trigger: artifact_created
+content:
+  summary: Demo issue
+  acceptance_criteria: ["It works"]
+`
+);
+
+// Generate new lifecycle events with audited triggers
+const draft = createDraftEvent("Ada Lovelace (ada@example.com)");
+
+// Guard transitions across initiatives/milestones/issues
+if (canTransition(CArtifact.ISSUE, draft.event, CArtifactEvent.READY)) {
+  assertTransition(CArtifact.ISSUE, draft.event, CArtifactEvent.READY);
+}
+```
 
 ## Running the tests
 
