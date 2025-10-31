@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-31T13:15:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-31T13:19:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Define legal state transitions per artifact type (initiative, milestone, issue)
