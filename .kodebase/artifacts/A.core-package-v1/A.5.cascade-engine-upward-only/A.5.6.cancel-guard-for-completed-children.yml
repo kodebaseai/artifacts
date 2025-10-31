@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-28T19:28:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T20:46:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-28T20:51:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Block parent cancellation whenever any child artifact is already completed,
@@ -36,3 +44,14 @@ content:
     - "Returned error includes child IDs and guidance to archive or manually adjust remaining work"
     - "Automation leaves parent state unchanged on rejection"
     - "Unit tests cover single and multi-child scenarios, including allowed cancel when no completed children exist"
+implementation_notes:
+  result: "Added `evaluateParentCancellation` to the cascade engine, blocking parent cancellation when completed children exist with actionable guidance."
+  tags: [core, cascade, cancellation]
+  challenges:
+    - challenge: "Surfacing meaningful context without mutating child artifacts"
+      solution: "Accept optional child IDs and build read-only decisions that list offending children while leaving inputs untouched."
+    - challenge: "Keeping behaviour deterministic for automation consumers"
+      solution: "Centralised child state checks through existing helpers to guarantee consistent results."
+  insights:
+    - "Refusing cancellation once work has shipped nudges operators toward archival flows instead of destructive rollbacks."
+    - "Guardrails live alongside cascade evaluations, ensuring upstream automation can reuse shared helpers."
