@@ -20,7 +20,8 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.6.2
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-31T21:53:00Z"
           - artifact_id: A.6.3
             resolved: false
 content:
