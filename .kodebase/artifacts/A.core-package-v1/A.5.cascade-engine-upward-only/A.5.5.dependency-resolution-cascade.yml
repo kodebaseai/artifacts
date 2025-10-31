@@ -26,6 +26,10 @@ metadata:
       timestamp: "2025-10-28T19:28:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T20:07:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
 content:
   summary: >-
     Add automation for the dependency resolution flow: when a blocking sibling
