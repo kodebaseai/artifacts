@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-10-31T11:59:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-31T12:06:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Ensure that for every relationship pair, `A.blocks` contains `B` iff `B.blocked_by`
