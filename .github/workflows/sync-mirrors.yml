@@ -60,6 +60,7 @@ jobs:
         if: hashFiles('packages/core/**') != ''
         env:
           MIRROR_GITHUB_TOKEN: ${{ secrets.KB_CORE_MIRROR_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.KB_CORE_MIRROR_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           git config --global user.name "github-actions[bot]"
@@ -68,15 +69,20 @@ jobs:
             echo "MIRROR_GITHUB_TOKEN is not set. Add KB_CORE_MIRROR_GITHUB_TOKEN as a repo secret." >&2
             exit 1
           fi
-          git clone "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/kodebaseai/core.git" core-mirror
+          # Authenticate gh CLI and configure git to use it for auth
+          echo "${MIRROR_GITHUB_TOKEN}" | gh auth login --with-token
+          gh auth status
+          gh auth setup-git
+          # Clone the mirror repo (empty repo supported)
+          git clone "https://github.com/kodebaseai/core.git" core-mirror
           rsync -av --delete packages/core/ core-mirror/ --exclude node_modules
           cd core-mirror
-          # Ensure remote uses PAT for the mirror repo explicitly
-          git remote set-url origin "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/kodebaseai/core.git"
+          # Ensure remote is the mirror repo; gh's credential helper will inject the token
+          git remote set-url origin "https://github.com/kodebaseai/core.git"
           git remote -v
           git add .
           git commit -m "Sync Core package from ${{ github.repository }}@${{ github.sha }}" || echo "No changes to commit"
-          # Force using tokenized URL to avoid falling back to GITHUB_TOKEN
-          git push "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/kodebaseai/core.git" HEAD:main
+          # Push using gh-configured git credentials
+          git push origin HEAD:main
 
       # Mirror job does not version or publish; releases are handled in release.yml
