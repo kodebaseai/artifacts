@@ -21,6 +21,11 @@ metadata:
         blocking_dependencies:
           - artifact_id: A.3.3
             resolved: false
+            resolved_at: "2025-10-31T10:57:00Z"
+    - event: ready
+      timestamp: "2025-10-31T10:57:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Reject cross-level dependencies (e.g., issue → initiative, milestone → initiative),
