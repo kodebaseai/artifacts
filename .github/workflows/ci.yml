@@ -15,6 +15,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  ensure-milestone-changeset:
+    name: Ensure Changeset for Milestone Branch
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' && startsWith(github.head_ref, 'complete/') }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          fetch-depth: 0
+
+      - name: Verify changeset present
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch origin "$BASE_REF" --depth=1
+          if ! git diff --name-only "origin/$BASE_REF...HEAD" \
+            | grep -E '^\.changeset/.*\.md$' \
+            | grep -v '^\.changeset/README\.md$' >/dev/null
+          then
+            echo "::error::Milestone branches (complete/*) must include at least one changeset file."
+            exit 1
+          fi
+
   lint-and-format:
     name: Lint and Format
     runs-on: ubuntu-latest

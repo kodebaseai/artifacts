@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.3
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-31T12:53:00Z"
+    - event: ready
+      timestamp: "2025-10-31T12:53:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Define valid transitions per artifact type and chronological constraints;
