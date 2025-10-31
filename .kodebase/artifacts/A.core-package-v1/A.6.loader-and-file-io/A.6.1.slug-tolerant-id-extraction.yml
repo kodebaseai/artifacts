@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-31T21:30:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-31T21:32:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement a slug-tolerant filename parser to extract artifact IDs from filenames
