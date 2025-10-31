@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-31T21:32:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T21:33:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-31T21:50:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement recursive discovery of artifact files under `.kodebase/artifacts/`,
@@ -36,3 +44,14 @@ content:
     - "loadArtifactsByType returns only IDs of the requested type using ID length heuristics (1, 2, 3+ segments)"
     - "Discovery ignores non-artifact files and hidden files"
     - "Performance is O(siblings) per check; large trees discovered via recursion"
+implementation_notes:
+  result: "Added recursive artifact discovery and type filters with tests covering hidden files, slugged names, and ID segment heuristics."
+  tags: [core, loader, discovery]
+  challenges:
+    - challenge: "Efficient recursion without pulling in a tree-walking dependency"
+      solution: "Implemented a lightweight async walker using Node's `fs.promises.readdir` with `Dirent` metadata."
+    - challenge: "Filtering by artifact type without parsing YAML first"
+      solution: "Reused slug-tolerant ID extraction and counted segments (1/2/3) to classify initiatives, milestones, and issues."
+  insights:
+    - "A pure path-based pass keeps discovery fast and lets higher layers decide when to parse artifacts."
+    - "Ignoring hidden entries and non-matching files up front mirrors methodology expectations for the artifacts tree."
