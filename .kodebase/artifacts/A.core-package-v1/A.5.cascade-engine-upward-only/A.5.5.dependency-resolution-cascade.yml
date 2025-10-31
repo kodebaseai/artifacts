@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-28T19:28:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T20:07:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-28T20:45:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Add automation for the dependency resolution flow: when a blocking sibling
@@ -36,3 +44,14 @@ content:
     - "When all blocking dependencies resolve, a new ready event is added for the dependent artifact"
     - "No duplicate or out-of-order events are produced; existing metadata remains untouched beyond the resolved flags"
     - "Unit tests cover single and multiple dependency scenarios, including already-resolved entries"
+implementation_notes:
+  result: "Cascade engine exposes `resolveDependencyCompletion`, updating blocking metadata and emitting ready events when all blockers clear without mutating the input artifact."
+  tags: [core, cascade, dependencies]
+  challenges:
+    - challenge: "Avoiding mutation while updating dependency metadata"
+      solution: "Work on a cloned artifact snapshot so callers retain their original state."
+    - challenge: "Choosing the right trigger when promoting dependents"
+      solution: "Reuse the event builder with the existing `dependency_completed` trigger to keep audit consistency."
+  insights:
+    - "Dependency resolution sits alongside cascade recommendations, but remains a pure data update without writing to siblings."
+    - "Tracking fully resolved dependency IDs in event metadata gives downstream automation clear context."
