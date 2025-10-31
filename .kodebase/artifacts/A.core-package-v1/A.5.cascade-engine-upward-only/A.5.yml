@@ -30,6 +30,14 @@ metadata:
       timestamp: "2025-10-31T17:38:38Z"
       actor: "Codex (agent.codex.session20251031T1738Z@kodebase.kodebase.ai)"
       trigger: children_started
+    - event: in_review
+      timestamp: "2025-10-31T21:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-31T21:01:17Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Provide upward-only cascade recommendations: parent progresses when first
@@ -41,3 +49,17 @@ content:
   validation:
     - Deterministic outputs for given child states and parent state
     - Coverage for edge cases (cancelled children excluded from counts)
+delivery_summary:
+  outcome: >-
+    Upward-only cascade logic now covers parent progression, cascade event
+    generation, dependency resolution, and cancellation guardrails without
+    mutating child artifacts.
+  delivered:
+    - "`CascadeEngine.shouldCascadeToParent` handling issue→milestone→initiative cascades with deterministic reasoning and regression tests."
+    - "`CascadeEngine.generateCascadeEvent` with explicit trigger mapping (progress, completion, archival) and rich metadata for traceable cascades."
+    - "`resolveDependencyCompletion` helper updating `blocking_dependencies` metadata and emitting dependency-completed ready events when appropriate."
+    - "`evaluateParentCancellation` guard preventing parents from cancelling once work has shipped, plus coverage for allowed scenarios."
+    - "Documentation refresh for cascade/state/schemas modules and a changeset for `@kodebase/core`."
+  next: >-
+    Surface these helpers in the CLI so dependency resolution, cascade
+    recommendations, and cancellation guardrails execute during real workflows.
