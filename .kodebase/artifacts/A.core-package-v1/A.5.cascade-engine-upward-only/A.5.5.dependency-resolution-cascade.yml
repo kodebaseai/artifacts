@@ -1,0 +1,33 @@
+metadata:
+  title: Implement dependency resolution cascade updates
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [A.5.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-28T10:15:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-28T14:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.5.2
+            resolved: false
+content:
+  summary: >-
+    Add automation for the dependency resolution flow: when a blocking sibling
+    completes, mark the dependent's blocking_dependencies entry as resolved with
+    a timestamp and emit a ready event once all blockers clear.
+  acceptance_criteria:
+    - "Blocking dependency completion flips corresponding metadata entries to { resolved: true, resolved_at: <timestamp> }"
+    - "When all blocking dependencies resolve, a new ready event is added for the dependent artifact"
+    - "No duplicate or out-of-order events are produced; existing metadata remains untouched beyond the resolved flags"
+    - "Unit tests cover single and multiple dependency scenarios, including already-resolved entries"

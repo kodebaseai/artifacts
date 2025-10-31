@@ -6,7 +6,7 @@ metadata:
   assignee: "Miguel Carvalho (m@kodebase.ai)"
   schema_version: "0.0.1"
   relationships:
-    blocks: [A.5.3, A.5.4]
+    blocks: [A.5.3, A.5.4, A.5.5]
     blocked_by: [A.5.1]
   events:
     - event: draft
