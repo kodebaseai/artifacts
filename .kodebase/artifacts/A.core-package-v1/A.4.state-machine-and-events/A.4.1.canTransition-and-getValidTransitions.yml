@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T12:58:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-31T13:15:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Define legal state transitions per artifact type (initiative, milestone, issue)
@@ -26,3 +34,18 @@ content:
     - canTransition returns true only for legal transitions; false otherwise
     - getValidTransitions returns an ordered, de-duplicated list of next states
     - Clear errors/messages are available for illegal transitions in validators
+implementation_notes:
+  result: "State machine utilities implemented per artifact type with ordered transitions, exported via @kodebase/core, and covered by tests."
+  tags: [core, state-machine, transitions, validation]
+  challenges:
+    - challenge: "Guaranteeing full coverage of states across all artifact types"
+      solution: "Centralized transition map and a test asserting the map keys equal ARTIFACT_EVENTS for each type."
+    - challenge: "Returning ordered, de-duplicated next states"
+      solution: "Iterate with a Set guard to preserve insertion order while removing duplicates."
+    - challenge: "Providing actionable errors for illegal transitions"
+      solution: "Introduced assertTransition and a StateTransitionError that includes validTransitions and a descriptive message; added tests to verify content."
+    - challenge: "Ensuring discoverability in downstream tooling"
+      solution: "Exported APIs from src/index.ts and updated the core README; added a changeset for release notes."
+  insights:
+    - "Transition maps should remain type-specific but structurally uniform to simplify validation and UI logic."
+    - "Tests that assert coverage against canonical constants prevent drift when states evolve."

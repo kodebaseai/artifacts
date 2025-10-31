@@ -16,6 +16,8 @@ Kodebase artifact workflow.
   validate real-world YAML inputs against golden outputs.
 - `src/validator` &mdash; validation orchestration, error formatting, and the
   associated fixture-backed tests.
+- `src/state` &mdash; state machine utilities (`canTransition`, `getValidTransitions`,
+  and `StateTransitionError`) for artifact lifecycle transitions.
 - `src/test-utils` &mdash; shared helpers (for example, fixture loaders) used
   across the parser and validator suites.
 
