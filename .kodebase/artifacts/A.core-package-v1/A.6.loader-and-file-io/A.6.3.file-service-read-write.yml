@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-31T22:03:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-31T22:10:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement YAML read/write operations with stable serialization options to minimize

@@ -24,6 +24,11 @@ metadata:
             resolved_at: "2025-10-31T21:53:00Z"
           - artifact_id: A.6.3
             resolved: false
+            resolved_at: "2025-10-31T22:10:00Z"
+    - event: ready
+      timestamp: "2025-10-31T22:10:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Add unit and integration tests with golden fixtures for discovery, type filters,
