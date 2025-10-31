@@ -47,14 +47,14 @@ content:
     - Validator checks ID prefixes to assert same-parent relationships
     - Violations produce specific error codes and actionable messages
     - Unit tests cover valid and invalid same-parent scenarios
-  implementation_notes:
-    result: "Relationship validator now enforces same-parent constraints with prefix-aware error codes and actionable messaging."
-    tags: [core, validation, dependencies]
-    challenges:
-      - challenge: "Existing fixtures and tests assumed generic relationship errors, causing noisy regressions when messages became more specific."
-        solution: "Updated fixtures and expectations to capture the new structured codes/messages emitted by the validator."
-      - challenge: "Maintaining compatibility with Zod v4 after `ZodIssueCode` deprecation while still surfacing issue codes."
-        solution: "Stored Zod's string-based codes directly on parse issues, avoiding deprecated enums without losing metadata."
-    insights:
-      - "Prefix comparisons keep same-parent checks simple and deterministic while delivering user-friendly hints."
-      - "Embedding error codes on parser issues makes validator outputs more programmable for downstream tooling."
+implementation_notes:
+  result: "Relationship validator now enforces same-parent constraints with prefix-aware error codes and actionable messaging."
+  tags: [core, validation, dependencies]
+  challenges:
+    - challenge: "Existing fixtures and tests assumed generic relationship errors, causing noisy regressions when messages became more specific."
+      solution: "Updated fixtures and expectations to capture the new structured codes/messages emitted by the validator."
+    - challenge: "Maintaining compatibility with Zod v4 after `ZodIssueCode` deprecation while still surfacing issue codes."
+      solution: "Stored Zod's string-based codes directly on parse issues, avoiding deprecated enums without losing metadata."
+  insights:
+    - "Prefix comparisons keep same-parent checks simple and deterministic while delivering user-friendly hints."
+    - "Embedding error codes on parser issues makes validator outputs more programmable for downstream tooling."

@@ -47,14 +47,14 @@ content:
     - 'Reciprocity check: for each A→B in blocks, B must list A in blocked_by (and vice versa)'
     - 'Violations reported once per pair with actionable messages; no duplicate noise'
     - 'Validator runs after same-parent/sibling filters to avoid cascade errors'
-  implementation_notes:
-    result: "Relationship consistency validator ensures existence and reciprocity with single-issue reporting."
-    tags: [core, validation, dependencies]
-    challenges:
-      - challenge: "Avoiding duplicate error messages when both sides of a relationship were inconsistent."
-        solution: "Tracked reported pairs with an order-independent key so reciprocity errors surface once per relationship."
-      - challenge: "Needing parser-derived artifacts while forcing malformed relationships in tests."
-        solution: "Used parser spies to inject tailored relationship data, keeping validator tests isolated from parsing logic."
-    insights:
-      - "Consistency checks work best after same-parent filters, so the validator now focuses purely on existence and reciprocity."
-      - "Fixture-style maps make it straightforward to model missing targets versus mismatched pairs without adding YAML fixtures."
+implementation_notes:
+  result: "Relationship consistency validator ensures existence and reciprocity with single-issue reporting."
+  tags: [core, validation, dependencies]
+  challenges:
+    - challenge: "Avoiding duplicate error messages when both sides of a relationship were inconsistent."
+      solution: "Tracked reported pairs with an order-independent key so reciprocity errors surface once per relationship."
+    - challenge: "Needing parser-derived artifacts while forcing malformed relationships in tests."
+      solution: "Used parser spies to inject tailored relationship data, keeping validator tests isolated from parsing logic."
+  insights:
+    - "Consistency checks work best after same-parent filters, so the validator now focuses purely on existence and reciprocity."
+    - "Fixture-style maps make it straightforward to model missing targets versus mismatched pairs without adding YAML fixtures."

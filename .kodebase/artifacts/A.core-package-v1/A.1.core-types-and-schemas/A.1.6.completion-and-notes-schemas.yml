@@ -48,3 +48,22 @@ content:
     - Keep content schemas unchanged; fields live at the artifact root, not inside content or events
     - Provide minimal helpers/types for consumers to detect presence and shape
     - Add unit tests covering valid/invalid examples
+  implementation_notes:
+    result: >-
+      Added root-level completion and commentary fields across artifacts with registry metadata and tests: Implementation
+      Notes for Issues, shared Notes for all types, Impact Summary for Initiatives, and Delivery Summary for Milestones.
+      Integrated into composed schemas without changing content shapes; exported types enable downstream detection.
+    tags: [core, schemas, zod-registry, completion-fields, notes]
+    challenges:
+      - challenge: "Clarifying completion fields per type without bloating content schemas"
+        solution: "Kept fields at the artifact root with concise shapes; used Delivery Summary for milestones and Impact Summary for initiatives."
+      - challenge: "Ensuring discoverability and consistent UI metadata across new fields"
+        solution: "Registered each subfield in dedicated registries with titles, descriptions, and examples for UI generation."
+      - challenge: "Validating presence/shape while keeping fields optional and backwards-compatible"
+        solution: "Added compose-level tests and parser cases; optional schemas with strong element constraints (trimmed strings, non-empty arrays)."
+      - challenge: "Providing actionable validation messages for common mistakes"
+        solution: "Extended error formatter path hints (e.g., implementation_notes.result) and added fixture-backed tests."
+    insights:
+      - "Root-level completion/notes fields keep content focused while capturing stakeholder and developer outcomes."
+      - "Registry-first design enables documentation and UI forms with minimal bespoke code."
+      - "Optional fields prevent breaking changes; tests guard structure and messaging as the model evolves."

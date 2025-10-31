@@ -46,14 +46,14 @@ content:
     - Validator emits specific error codes for cross-level references
     - Fixture set includes valid sibling-only cases and invalid cross-level cases
     - Integration tests assert rejections with clear messages and fields
-  implementation_notes:
-    result: "Cross-level dependency detection added to the core validator with fixture-backed tests."
-    tags: [core, validation, dependencies]
-    challenges:
-      - challenge: "Needed to reuse parser outputs while injecting malformed relationships for targeted assertions."
-        solution: "Used spies to replace parser results inside tests, ensuring the validator exercised invalid ID branches without duplicating parser logic."
-      - challenge: "Validator reported only generic messages for unparseable IDs by default."
-        solution: "Updated relationship checks to surface explicit RELATIONSHIP_INVALID_ID codes and hints before jumping to type-specific validation."
-    insights:
-      - "Fixture graphs let dependency tests stay readable while exercising multi-node scenarios like sibling-only vs. cross-level."
-      - "Mocking parser helpers keeps validation tests focused on relationship rules and reduces maintenance overhead."
+implementation_notes:
+  result: "Cross-level dependency detection added to the core validator with fixture-backed tests."
+  tags: [core, validation, dependencies]
+  challenges:
+    - challenge: "Needed to reuse parser outputs while injecting malformed relationships for targeted assertions."
+      solution: "Used spies to replace parser results inside tests, ensuring the validator exercised invalid ID branches without duplicating parser logic."
+    - challenge: "Validator reported only generic messages for unparseable IDs by default."
+      solution: "Updated relationship checks to surface explicit RELATIONSHIP_INVALID_ID codes and hints before jumping to type-specific validation."
+  insights:
+    - "Fixture graphs let dependency tests stay readable while exercising multi-node scenarios like sibling-only vs. cross-level."
+    - "Mocking parser helpers keeps validation tests focused on relationship rules and reduces maintenance overhead."

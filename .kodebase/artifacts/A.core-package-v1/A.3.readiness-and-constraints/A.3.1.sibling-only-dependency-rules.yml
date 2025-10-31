@@ -39,14 +39,14 @@ content:
     - Initiative deps restricted to initiatives only
     - Milestone deps restricted to milestones under the same initiative
     - Issue deps restricted to issues under the same milestone
-  implementation_notes:
-    result: "Validator now enforces sibling-only dependencies with explicit artifactId-aware checks"
-    tags: [core, validation, dependencies]
-    challenges:
-      - challenge: "Relationships lacked artifact context, making sibling checks impossible"
-        solution: "Introduced artifactId option and sibling-check helper keyed off parsed ID parts"
-      - challenge: "Coverage missed branch paths for invalid IDs and mismatched parents"
-        solution: "Expanded validator test suite with invalid YAML and cross-level relationship cases"
-    insights:
-      - "Artifact validators must receive the artifact ID whenever relationships exist"
-      - "Sibling validation should short-circuit on first invalid reference to keep errors targeted"
+implementation_notes:
+  result: "Validator now enforces sibling-only dependencies with explicit artifactId-aware checks"
+  tags: [core, validation, dependencies]
+  challenges:
+    - challenge: "Relationships lacked artifact context, making sibling checks impossible"
+      solution: "Introduced artifactId option and sibling-check helper keyed off parsed ID parts"
+    - challenge: "Coverage missed branch paths for invalid IDs and mismatched parents"
+      solution: "Expanded validator test suite with invalid YAML and cross-level relationship cases"
+  insights:
+    - "Artifact validators must receive the artifact ID whenever relationships exist"
+    - "Sibling validation should short-circuit on first invalid reference to keep errors targeted"
