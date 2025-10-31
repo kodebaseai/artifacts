@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-28T19:28:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T19:47:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-28T20:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Align cascade implementation with rule "no persistent downward propagation" — the
@@ -35,3 +43,14 @@ content:
     - No code path writes events to child artifacts during cascades
     - Clear mapping of triggers used for parent transitions and for archival recommendations
     - Tests assert absence of child writes and correct trigger usage
+implementation_notes:
+  result: "Cascade engine now separates parent archival triggers (completion vs. cancellation) without mutating child artifacts, backed by targeted unit tests."
+  tags: [core, cascade, triggers]
+  challenges:
+    - challenge: "Differentiating archival triggers while reusing the event builder"
+      solution: "Added `resolveCascadeTrigger` with a dedicated map for archival cascade types, keeping the canonical builder path intact."
+    - challenge: "Ensuring child histories remain untouched during cascade evaluation"
+      solution: "Introduced an immutability test that snapshots child events before running the cascade logic."
+  insights:
+    - "Treating archival cascades as metadata-only recommendations preserves the no-downward-write invariant."
+    - "Explicit cascade_type values document the parent flow, simplifying future CLI integrations."
