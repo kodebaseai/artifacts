@@ -6,6 +6,7 @@ import {
   type ArtifactWithRelationships,
   detectCircularDependencies,
   detectCrossLevelDependencies,
+  validateRelationshipConsistency,
 } from "./dependency-validator.js";
 
 const baseMetadata: TArtifactMetadata = {
@@ -26,12 +27,14 @@ const baseMetadata: TArtifactMetadata = {
   ],
 };
 
-const makeArtifact = (blockedBy: string[] = []): ArtifactWithRelationships => ({
+const makeArtifact = (
+  relationships: Partial<{ blocks: string[]; blocked_by: string[] }> = {},
+): ArtifactWithRelationships => ({
   metadata: {
     ...baseMetadata,
     relationships: {
-      blocks: [],
-      blocked_by: blockedBy,
+      blocks: relationships.blocks ?? [],
+      blocked_by: relationships.blocked_by ?? [],
     },
   },
 });
@@ -47,9 +50,9 @@ function loadArtifactMap(
 describe("detectCircularDependencies", () => {
   it("finds a simple cycle", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1", makeArtifact(["A.2"])],
-      ["A.2", makeArtifact(["A.3"])],
-      ["A.3", makeArtifact(["A.1"])],
+      ["A.1", makeArtifact({ blocked_by: ["A.2"] })],
+      ["A.2", makeArtifact({ blocked_by: ["A.3"] })],
+      ["A.3", makeArtifact({ blocked_by: ["A.1"] })],
     ]);
 
     const issues = detectCircularDependencies(artifacts);
@@ -65,10 +68,10 @@ describe("detectCircularDependencies", () => {
 
   it("returns empty when the graph has no cycles", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1", makeArtifact(["A.2"])],
-      ["A.2", makeArtifact(["A.3"])],
+      ["A.1", makeArtifact({ blocked_by: ["A.2"] })],
+      ["A.2", makeArtifact({ blocked_by: ["A.3"] })],
       ["A.3", makeArtifact()],
-      ["A.4", makeArtifact(["A.2"])],
+      ["A.4", makeArtifact({ blocked_by: ["A.2"] })],
     ]);
 
     const issues = detectCircularDependencies(artifacts);
@@ -77,7 +80,7 @@ describe("detectCircularDependencies", () => {
 
   it("ignores dependencies that reference unknown artifacts", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1", makeArtifact(["Z.9"])],
+      ["A.1", makeArtifact({ blocked_by: ["Z.9"] })],
     ]);
 
     const issues = detectCircularDependencies(artifacts);
@@ -106,7 +109,7 @@ describe("detectCircularDependencies", () => {
 
   it("handles inconsistent map state when a dependency disappears mid-traversal", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1", makeArtifact(["A.2"])],
+      ["A.1", makeArtifact({ blocked_by: ["A.2"] })],
     ]);
 
     const originalHas = Map.prototype.has;
@@ -132,7 +135,7 @@ describe("detectCircularDependencies", () => {
 
   it("reports self-dependencies as cycles", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1", makeArtifact(["A.1"])],
+      ["A.1", makeArtifact({ blocked_by: ["A.1"] })],
     ]);
 
     const issues = detectCircularDependencies(artifacts);
@@ -143,11 +146,11 @@ describe("detectCircularDependencies", () => {
 
   it("detects multiple disjoint cycles", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1", makeArtifact(["A.2"])],
-      ["A.2", makeArtifact(["A.1"])],
-      ["B.1", makeArtifact(["B.2"])],
-      ["B.2", makeArtifact(["B.3"])],
-      ["B.3", makeArtifact(["B.1"])],
+      ["A.1", makeArtifact({ blocked_by: ["A.2"] })],
+      ["A.2", makeArtifact({ blocked_by: ["A.1"] })],
+      ["B.1", makeArtifact({ blocked_by: ["B.2"] })],
+      ["B.2", makeArtifact({ blocked_by: ["B.3"] })],
+      ["B.3", makeArtifact({ blocked_by: ["B.1"] })],
       ["C.1", makeArtifact()],
     ]);
 
@@ -188,8 +191,8 @@ describe("detectCrossLevelDependencies", () => {
 
   it("skips artifacts with unrecognised IDs", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["custom", makeArtifact(["A.1"])],
-      ["A.1", makeArtifact([])],
+      ["custom", makeArtifact({ blocked_by: ["A.1"] })],
+      ["A.1", makeArtifact()],
     ]);
     const issues = detectCrossLevelDependencies(artifacts);
     expect(issues).toEqual([]);
@@ -197,7 +200,7 @@ describe("detectCrossLevelDependencies", () => {
 
   it("skips dependencies that are not present in the graph", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1.1", makeArtifact(["A.9.9"])],
+      ["A.1.1", makeArtifact({ blocked_by: ["A.9.9"] })],
     ]);
     const issues = detectCrossLevelDependencies(artifacts);
     expect(issues).toEqual([]);
@@ -205,8 +208,8 @@ describe("detectCrossLevelDependencies", () => {
 
   it("ignores dependencies with unparseable IDs even when artifacts exist", () => {
     const artifacts = new Map<string, ArtifactWithRelationships>([
-      ["A.1.1", makeArtifact(["custom-dependency"])],
-      ["custom-dependency", makeArtifact([])],
+      ["A.1.1", makeArtifact({ blocked_by: ["custom-dependency"] })],
+      ["custom-dependency", makeArtifact()],
     ]);
     const issues = detectCrossLevelDependencies(artifacts);
     expect(issues).toEqual([]);
@@ -230,5 +233,66 @@ describe("detectCrossLevelDependencies", () => {
 
     const issues = detectCrossLevelDependencies(artifacts);
     expect(issues).toEqual([]);
+  });
+});
+
+describe("validateRelationshipConsistency", () => {
+  it("returns empty for reciprocal relationships", () => {
+    const artifacts = new Map<string, ArtifactWithRelationships>([
+      ["A.1", makeArtifact({ blocks: ["A.1.1"], blocked_by: [] })],
+      ["A.1.1", makeArtifact({ blocks: [], blocked_by: ["A.1"] })],
+    ]);
+
+    const issues = validateRelationshipConsistency(artifacts);
+    expect(issues).toEqual([]);
+  });
+
+  it("flags references to missing artifacts", () => {
+    const artifacts = new Map<string, ArtifactWithRelationships>([
+      ["A.1", makeArtifact({ blocks: ["A.9"], blocked_by: [] })],
+    ]);
+
+    const issues = validateRelationshipConsistency(artifacts);
+    expect(issues).toEqual([
+      {
+        code: "RELATIONSHIP_UNKNOWN_ARTIFACT",
+        path: "metadata.relationships.blocks[0]",
+        message: "'A.9' referenced by A.1 was not found.",
+      },
+    ]);
+  });
+
+  it("reports missing reciprocal blocked_by entries once", () => {
+    const artifacts = new Map<string, ArtifactWithRelationships>([
+      ["A.1", makeArtifact({ blocks: ["A.1.1"], blocked_by: [] })],
+      ["A.1.1", makeArtifact({ blocked_by: [] })],
+    ]);
+
+    const issues = validateRelationshipConsistency(artifacts);
+    expect(issues).toEqual([
+      {
+        code: "RELATIONSHIP_INCONSISTENT_PAIR",
+        path: "metadata.relationships.blocks[0]",
+        message:
+          "'A.1' lists 'A.1.1' in blocks but the reciprocal blocked_by entry is missing.",
+      },
+    ]);
+  });
+
+  it("reports missing reciprocal blocks entries once", () => {
+    const artifacts = new Map<string, ArtifactWithRelationships>([
+      ["A.1", makeArtifact({ blocks: [] })],
+      ["A.1.1", makeArtifact({ blocked_by: ["A.1"] })],
+    ]);
+
+    const issues = validateRelationshipConsistency(artifacts);
+    expect(issues).toEqual([
+      {
+        code: "RELATIONSHIP_INCONSISTENT_PAIR",
+        path: "metadata.relationships.blocked_by[0]",
+        message:
+          "'A.1.1' lists 'A.1' in blocked_by but the reciprocal blocks entry is missing.",
+      },
+    ]);
   });
 });

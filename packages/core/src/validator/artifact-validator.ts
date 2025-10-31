@@ -26,6 +26,7 @@ import {
 import {
   detectCircularDependencies,
   detectCrossLevelDependencies,
+  validateRelationshipConsistency,
 } from "./dependency-validator.js";
 
 export type ArtifactValidationIssue = ArtifactParseIssue;
@@ -477,4 +478,5 @@ export const ArtifactValidator = {
   ArtifactValidationError,
   detectCircularDependencies,
   detectCrossLevelDependencies,
+  validateRelationshipConsistency,
 } as const;

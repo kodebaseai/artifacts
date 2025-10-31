@@ -34,6 +34,12 @@ export type CrossLevelDependencyIssue = {
   message: string;
 };
 
+export type RelationshipConsistencyIssue = {
+  code: "RELATIONSHIP_UNKNOWN_ARTIFACT" | "RELATIONSHIP_INCONSISTENT_PAIR";
+  path: string;
+  message: string;
+};
+
 function inferArtifactType(id: string): TArtifactType | null {
   if (ISSUE_ID_REGEX.test(id)) {
     return CArtifact.ISSUE;
@@ -174,6 +180,92 @@ export function detectCrossLevelDependencies(
         message: `Cross-level dependency detected: ${sourceLabel} cannot depend on ${dependencyLabel}.`,
       });
     }
+  }
+
+  return issues;
+}
+
+function getRelationships(artifact: ArtifactWithRelationships): {
+  blocks: readonly string[];
+  blocked_by: readonly string[];
+} {
+  const relationships = artifact.metadata.relationships;
+  if (!relationships) {
+    return { blocks: [], blocked_by: [] };
+  }
+  return relationships;
+}
+
+export function validateRelationshipConsistency(
+  artifacts: ReadonlyMap<string, ArtifactWithRelationships>,
+): RelationshipConsistencyIssue[] {
+  const issues: RelationshipConsistencyIssue[] = [];
+  const reportedPairs = new Set<string>();
+
+  const markInconsistent = (
+    sourceId: string,
+    targetId: string,
+    path: string,
+    message: string,
+  ) => {
+    const key = [sourceId, targetId].sort().join("::");
+    if (reportedPairs.has(key)) {
+      return;
+    }
+    reportedPairs.add(key);
+    issues.push({
+      code: "RELATIONSHIP_INCONSISTENT_PAIR",
+      path,
+      message,
+    });
+  };
+
+  for (const [id, artifact] of artifacts) {
+    const relationships = getRelationships(artifact);
+
+    relationships.blocks.forEach((targetId, index) => {
+      const path = `metadata.relationships.blocks[${index}]`;
+      const target = artifacts.get(targetId);
+      if (!target) {
+        issues.push({
+          code: "RELATIONSHIP_UNKNOWN_ARTIFACT",
+          path,
+          message: `'${targetId}' referenced by ${id} was not found.`,
+        });
+        return;
+      }
+      const targetRelationships = getRelationships(target);
+      if (!targetRelationships.blocked_by.includes(id)) {
+        markInconsistent(
+          id,
+          targetId,
+          path,
+          `'${id}' lists '${targetId}' in blocks but the reciprocal blocked_by entry is missing.`,
+        );
+      }
+    });
+
+    relationships.blocked_by.forEach((sourceId, index) => {
+      const path = `metadata.relationships.blocked_by[${index}]`;
+      const source = artifacts.get(sourceId);
+      if (!source) {
+        issues.push({
+          code: "RELATIONSHIP_UNKNOWN_ARTIFACT",
+          path,
+          message: `'${sourceId}' referenced by ${id} was not found.`,
+        });
+        return;
+      }
+      const sourceRelationships = getRelationships(source);
+      if (!sourceRelationships.blocks.includes(id)) {
+        markInconsistent(
+          sourceId,
+          id,
+          path,
+          `'${id}' lists '${sourceId}' in blocked_by but the reciprocal blocks entry is missing.`,
+        );
+      }
+    });
   }
 
   return issues;
