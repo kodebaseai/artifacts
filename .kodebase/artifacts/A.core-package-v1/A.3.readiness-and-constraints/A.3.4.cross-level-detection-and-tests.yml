@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-10-31T11:37:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-31T11:40:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Reject cross-level dependencies (e.g., issue → initiative, milestone → initiative),
