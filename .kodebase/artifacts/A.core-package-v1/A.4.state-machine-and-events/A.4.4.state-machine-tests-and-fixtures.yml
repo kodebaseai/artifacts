@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-31T14:12:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T14:15:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-31T14:40:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Add unit tests and golden fixtures for state transitions, chronology validation,
@@ -34,3 +42,22 @@ content:
     - Valid and invalid transition sequences covered per artifact type
     - Chronology validation tests include edge cases (equal timestamps, out-of-order)
     - Builder helper tests confirm triggers and timestamps; CI runs green
+implementation_notes:
+  result: >-
+    Added comprehensive tests for lifecycle transitions and event chronology across
+    artifact types. Introduced fixture-backed chronology tests (valid lifecycle,
+    equal-timestamp allowance, and out-of-order rejection) and extended builder
+    coverage for archived causes. Included new YAML fixtures and a changeset; all
+    core tests pass locally.
+  tags: [core, state-machine, events, fixtures, tests, chronology]
+  challenges:
+    - challenge: "Type mismatch in fixture-backed event-order tests (parser returns generic strings)"
+      solution: "Narrowed to readonly TEventRecord[] in tests to satisfy the validator's types while keeping production types strict."
+    - challenge: "Capturing equal timestamps as valid while rejecting regressions"
+      solution: "Added a milestone fixture with equal timestamps and an initiative fixture with out-of-order timestamps; validated via validateEventOrder."
+    - challenge: "Ensuring transition sequences reflect per-type rules"
+      solution: "Iterated recommended flows per artifact type and asserted both canTransition and assertTransition for legal paths."
+  insights:
+    - "Fixture-backed tests minimize drift and encode real-world expectations."
+    - "Combining chronology checks with trigger-enforced builder events provides end-to-end safety."
+    - "Sequence tests act as fast guardrails when transition maps evolve."

@@ -98,4 +98,82 @@ describe("state-machine", () => {
       );
     }
   });
+
+  it("allows valid transition sequences per artifact type", () => {
+    const flows: Array<{
+      type: TArtifactType;
+      sequence: TArtifactEvent[];
+    }> = [
+      {
+        type: CArtifact.ISSUE,
+        sequence: [
+          CArtifactEvent.DRAFT,
+          CArtifactEvent.READY,
+          CArtifactEvent.IN_PROGRESS,
+          CArtifactEvent.IN_REVIEW,
+          CArtifactEvent.COMPLETED,
+        ],
+      },
+      {
+        type: CArtifact.MILESTONE,
+        sequence: [
+          CArtifactEvent.DRAFT,
+          CArtifactEvent.READY,
+          CArtifactEvent.IN_PROGRESS,
+          CArtifactEvent.IN_REVIEW,
+          CArtifactEvent.COMPLETED,
+        ],
+      },
+      {
+        type: CArtifact.INITIATIVE,
+        sequence: [
+          CArtifactEvent.DRAFT,
+          CArtifactEvent.READY,
+          CArtifactEvent.IN_PROGRESS,
+          CArtifactEvent.IN_REVIEW,
+          CArtifactEvent.COMPLETED,
+        ],
+      },
+    ];
+
+    for (const { type, sequence } of flows) {
+      for (let i = 1; i < sequence.length; i++) {
+        const from = sequence[i - 1] as TArtifactEvent;
+        const to = sequence[i] as TArtifactEvent;
+        expect(canTransition(type, from, to), `${type}: ${from}→${to}`).toBe(
+          true,
+        );
+        expect(() => assertTransition(type, from, to)).not.toThrow();
+      }
+    }
+  });
+
+  it("rejects illegal transitions for each artifact type", () => {
+    // Issue: cancelled -> ready is illegal
+    expect(
+      canTransition(
+        CArtifact.ISSUE,
+        CArtifactEvent.CANCELLED,
+        CArtifactEvent.READY,
+      ),
+    ).toBe(false);
+
+    // Milestone: draft -> in_review is illegal
+    expect(
+      canTransition(
+        CArtifact.MILESTONE,
+        CArtifactEvent.DRAFT,
+        CArtifactEvent.IN_REVIEW,
+      ),
+    ).toBe(false);
+
+    // Initiative: archived -> any is illegal
+    expect(
+      canTransition(
+        CArtifact.INITIATIVE,
+        CArtifactEvent.ARCHIVED,
+        CArtifactEvent.DRAFT,
+      ),
+    ).toBe(false);
+  });
 });

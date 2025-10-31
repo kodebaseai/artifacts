@@ -142,10 +142,15 @@ describe("event-builder", () => {
   });
 
   it("createArchivedEvent accepts only parent_completed/parent_archived causes", () => {
-    const ev = createArchivedEvent(actor, CEventTrigger.PARENT_COMPLETED);
-    expect(ev.event).toBe(CArtifactEvent.ARCHIVED);
-    expect(ev.trigger).toBe(CEventTrigger.PARENT_COMPLETED);
-    expect(isIsoUtcSeconds(ev.timestamp)).toBe(true);
+    const ev1 = createArchivedEvent(actor, CEventTrigger.PARENT_COMPLETED);
+    expect(ev1.event).toBe(CArtifactEvent.ARCHIVED);
+    expect(ev1.trigger).toBe(CEventTrigger.PARENT_COMPLETED);
+    expect(isIsoUtcSeconds(ev1.timestamp)).toBe(true);
+
+    const ev2 = createArchivedEvent(actor, CEventTrigger.PARENT_ARCHIVED);
+    expect(ev2.event).toBe(CArtifactEvent.ARCHIVED);
+    expect(ev2.trigger).toBe(CEventTrigger.PARENT_ARCHIVED);
+    expect(isIsoUtcSeconds(ev2.timestamp)).toBe(true);
 
     // @ts-expect-error runtime validation should throw on invalid cause
     expect(() => createArchivedEvent(actor, "pr_ready")).toThrow(
