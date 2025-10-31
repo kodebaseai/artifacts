@@ -26,6 +26,10 @@ metadata:
       timestamp: "2025-10-31T15:00:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T17:38:38Z"
+      actor: "Codex (agent.codex.session20251031T1738Z@kodebase.kodebase.ai)"
+      trigger: children_started
 content:
   summary: >-
     Provide upward-only cascade recommendations: parent progresses when first

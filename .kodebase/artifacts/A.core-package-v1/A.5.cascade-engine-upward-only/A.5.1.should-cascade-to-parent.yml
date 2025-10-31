@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T17:37:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-28T18:07:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Determine when a parent should progress based on child states: move parent to
@@ -27,3 +35,16 @@ content:
     - "Returns { shouldCascade: true, newState: in_review } when all active children are completed"
     - "Returns { shouldCascade: false, reason } otherwise; cancelled children do not affect counts"
     - "Deterministic outputs for identical child state inputs"
+implementation_notes:
+  result: "Implemented `CascadeEngine.shouldCascadeToParent` inside @kodebase/core with deterministic recommendations and exported it for consumers."
+  tags: [core, cascade, automation]
+  challenges:
+    - challenge: "Deriving the current child state safely from raw event logs"
+      solution: "Introduced an `isArtifactEvent` type guard so the helper only returns canonical states validated against `ARTIFACT_EVENTS`."
+    - challenge: "Avoiding false positives from cancelled or archived children"
+      solution: "Explicitly filtered those terminal states before evaluating progress/completion logic."
+    - challenge: "Surfacing actionable reasons alongside cascade decisions"
+      solution: "Returned structured results with descriptive reason strings (e.g., remaining active children count) to aid reporting."
+  insights:
+    - "Treating cascades as pure, deterministic functions keeps automation predictable and testable."
+    - "Reason strings make it easier for higher-level tooling to explain why a cascade did or did not trigger."
