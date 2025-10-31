@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.5.1
-            resolved: false
+            resolved: true
+            resolved_at: "2025-10-28T18:09:00Z"
+    - event: ready
+      timestamp: "2025-10-28T18:09:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Provide a factory to build parent-facing cascade events with consistent metadata,

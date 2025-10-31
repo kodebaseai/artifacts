@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-10-28T18:07:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-28T18:09:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merge
 content:
   summary: >-
     Determine when a parent should progress based on child states: move parent to
