@@ -8,6 +8,9 @@ on:
       - '.changeset/**'
   workflow_dispatch:
 
+permissions:
+  contents: read  # Least privilege for the source repo
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -16,7 +19,6 @@ jobs:
   sync-mirrors:
     name: Sync Public Mirrors
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
         node-version: ['24']
@@ -24,6 +26,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          fetch-depth: 2
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: ./.github/actions/setup-pnpm
@@ -32,52 +37,71 @@ jobs:
 
       - name: Lint
         run: pnpm lint
-        env:
-          CI: true
+        env: { CI: true }
 
+      # Ensure this is a non-mutating check (e.g. prettier --check)
       - name: Format check
         run: pnpm format
-        env:
-          CI: true
+        env: { CI: true }
 
       - name: Type check
         run: pnpm check-types
-        env:
-          CI: true
+        env: { CI: true }
 
       - name: Run tests
         run: pnpm test -- --coverage
-        env:
-          CI: true
+        env: { CI: true }
 
       - name: Build packages
         run: pnpm build
-        env:
-          CI: true
+        env: { CI: true }
+
+      # Detect changes specifically in packages/core/**
+      - name: Detect changes in packages/core
+        id: changed-core
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "push" ]; then
+            base="${{ github.event.before }}"
+            head="${{ github.sha }}"
+          else
+            # For workflow_dispatch (no 'before'), compare to previous commit
+            base="$(git rev-parse HEAD~1 || true)"
+            head="$(git rev-parse HEAD)"
+          fi
+          if [ -n "$base" ] && git diff --quiet "$base" "$head" -- packages/core; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Sync Core Package
-        id: sync-core
-        if: hashFiles('packages/core/**') != ''
+        if: steps.changed-core.outputs.changed == 'true'
         env:
           MIRROR_GITHUB_TOKEN: ${{ secrets.MIRROR_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           if [ -z "${MIRROR_GITHUB_TOKEN:-}" ]; then
             echo "MIRROR_GITHUB_TOKEN is not set. Add it as a repo secret." >&2
             exit 1
           fi
 
-          # Persist credentials so git always uses the PAT
-          git config --global credential.helper store
-          printf "https://x-access-token:%s@github.com\n" "${MIRROR_GITHUB_TOKEN}" > ~/.git-credentials
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git clone "https://github.com/kodebaseai/core.git" core-mirror
-          rsync -av --delete packages/core/ core-mirror/ --exclude node_modules
+
+          # Sync package contents into repo root but keep repo metadata and CI files
+          rsync -av --delete \
+            --exclude "node_modules" \
+            --exclude ".git" \
+            --exclude ".github" \
+            packages/core/ core-mirror/
+
           cd core-mirror
-          git remote -v
-          git add .
-          git commit -m "Sync Core package from ${{ github.repository }}@${{ github.sha }}" || echo "No changes to commit"
-          git push origin HEAD:main
+          git status --porcelain
+          git add -A
+          git commit -m "Sync Core package from ${{ github.repository }}@${{ github.sha }}" || { echo "No changes to commit"; exit 0; }
+
+          # Push using the token without storing credentials
+          git push "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/kodebaseai/core.git" HEAD:main
