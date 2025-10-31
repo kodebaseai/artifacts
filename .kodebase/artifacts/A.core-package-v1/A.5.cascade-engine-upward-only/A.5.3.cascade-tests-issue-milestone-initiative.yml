@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-28T19:28:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T19:29:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-28T19:41:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Create focused tests for upward cascade recommendations: Issue→Milestone and
@@ -34,3 +42,14 @@ content:
     - Parent moves to in_progress on first child start; remains if additional children start
     - Parent moves to in_review when all active children complete; cancelled children ignored
     - Deterministic recommendations and stable outputs across runs
+implementation_notes:
+  result: "Extended cascade engine tests to cover issue→milestone and milestone→initiative scenarios, verifying in_progress and in_review recommendations plus non-cascading cases."
+  tags: [core, cascade, testing]
+  challenges:
+    - challenge: "Representing milestone state transitions without full artifact fixtures"
+      solution: "Used synthetic child histories with ordered event sequences that mirror issue and milestone lifecycles."
+    - challenge: "Validating no-op behavior when multiple children are active"
+      solution: "Added a regression test asserting the parent remains in_progress with explanatory reason messaging."
+  insights:
+    - "Layered tests ensure cascade heuristics behave consistently across hierarchy levels while keeping fixtures lightweight."
+    - "Explicit reason assertions guard against regressions in diagnostic messaging consumed by higher-level automation."
