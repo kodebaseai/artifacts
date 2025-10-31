@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-10-31T00:13:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T10:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-31T10:52:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Detect circular dependencies across artifacts by traversing the blocked_by graph
@@ -34,3 +42,17 @@ content:
     - DFS-based or equivalent detection reports cycles with an ordered artifact path
     - No false positives on DAG structures; handles disconnected graphs
     - Clear error code and message for cycles; unit tests included
+  implementation_notes:
+    result: "Added graph-based cycle detection that reports ordered dependency loops with deterministic messaging."
+    tags: [core, validation, dependencies]
+    challenges:
+      - challenge: "Needed to avoid false positives when artifacts reference siblings that were not included in the validation map."
+        solution: "Filtered dependencies to the known artifact set before traversal so external references are ignored without aborting the search."
+      - challenge: "Ensuring reusable API surface for downstream tooling while keeping parity with legacy readiness behaviour."
+        solution: "Exposed detectCircularDependencies independently and through ArtifactValidator to mirror previous ergonomics."
+      - challenge: "Coverage gaps left the missing-node and unknown-dependency branches unverified."
+        solution: "Augmented unit tests to simulate absent artifacts and stale map state so defensive guards stay covered."
+    insights:
+      - "Providing both the raw cycle list and formatted message keeps consumer UX simple without sacrificing machine readability."
+      - "Sharing traversal state via visited/inStack mirrors classic DFS and guarantees we only surface unique cycles."
+      - "Unit tests that exercise error-path branches help prevent regressions when the validator integrates into readiness flows."

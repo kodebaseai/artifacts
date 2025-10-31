@@ -86,11 +86,17 @@ Structured commit message format that includes type, scope, and description. Ess
 
 ## D
 
+### DAG (Directed Acyclic Graph)
+A directed graph with no cycles. Within Kodebase, a DAG describes a set of artifact `blocked_by` relationships where dependencies never loop back to an earlier artifact. Cycle detection must confirm it stays silent when the dependency graph is a DAG.
+
 ### Definition of a Issue → Milestone → Initiative
 The core methodology:
 - Issue: A single, atomic unit of work with metadata and events
 - Milestone: A group of related issues with synthesized outcomes
 - Initiative: A sequence of milestones with strategic context
+
+### DFS-Based Detection
+Depth-first search traversal used to uncover cycles in the dependency graph. The algorithm follows one `blocked_by` chain as far as possible; if it encounters an artifact already on the current stack, it reports the ordered loop of IDs for debugging.
 
 ### Digital Brutalism
 A design philosophy emphasizing honest, structural, grid-based layouts that reveal raw "materials" of the interface.
@@ -272,4 +278,3 @@ A multi-tenant isolation unit containing one or more repositories, team members,
 
 ### YAGNI (You Ain't Gonna Need It)
 Constitutional principle stating that features not in the current issue's requirements should not be built. Prevents over-engineering and scope creep.
-

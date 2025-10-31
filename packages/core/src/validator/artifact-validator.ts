@@ -23,6 +23,7 @@ import {
   type TIssue,
   type TMilestone,
 } from "../schemas/schemas.js";
+import { detectCircularDependencies } from "./dependency-validator.js";
 
 export type ArtifactValidationIssue = ArtifactParseIssue;
 export type ArtifactValidationErrorKind = ArtifactParseError["kind"];
@@ -471,4 +472,5 @@ export const ArtifactValidator = {
   validateIssue,
   validateArtifact,
   ArtifactValidationError,
+  detectCircularDependencies,
 } as const;
