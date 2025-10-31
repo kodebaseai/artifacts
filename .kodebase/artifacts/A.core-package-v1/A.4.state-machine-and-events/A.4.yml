@@ -30,6 +30,10 @@ metadata:
       timestamp: "2025-10-31T12:58:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: children_started
+    - event: in_review
+      timestamp: "2025-10-31T14:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Define valid transitions per artifact type and chronological constraints;
@@ -42,3 +46,16 @@ content:
     - Invalid transitions are rejected with informative errors
     - Sequences violating chronology fail validation
     - Builder refuses events without a trigger; unit tests cover edge cases
+delivery_summary:
+  outcome: >-
+    State machine utilities, event chronology validation, and trigger-enforced
+    event builder are implemented with comprehensive unit tests and golden fixtures.
+  delivered:
+    - Transition maps per artifact type with `canTransition`, `getValidTransitions`, and `assertTransition` exported from core.
+    - Chronology validator `validateEventOrder` plus `EventOrderError` codes (EMPTY_EVENTS, FIRST_EVENT_MUST_BE_DRAFT, EVENTS_OUT_OF_ORDER).
+    - EventBuilder requiring explicit `trigger` with `EVENT_TRIGGER_BY_EVENT` guard and helpers (draft/ready/blocked/in_progress/in_review/completed/cancelled/archived).
+    - Fixture-backed tests covering valid lifecycle, equal timestamps (allowed), and out-of-order rejection.
+    - YAML fixtures for lifecycle scenarios and an accompanying changeset for release notes.
+  next: >-
+    Expose transition and order checks inside higher-level workflows (CLI/IDE);
+    expand fixtures as additional artifact rules emerge in A.5.
