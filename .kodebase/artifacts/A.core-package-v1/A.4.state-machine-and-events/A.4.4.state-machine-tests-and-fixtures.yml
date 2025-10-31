@@ -21,6 +21,11 @@ metadata:
         blocking_dependencies:
           - artifact_id: A.4.3
             resolved: false
+            resolved_at: "2025-10-31T14:12:00Z"
+    - event: ready
+      timestamp: "2025-10-31T14:12:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Add unit tests and golden fixtures for state transitions, chronology validation,

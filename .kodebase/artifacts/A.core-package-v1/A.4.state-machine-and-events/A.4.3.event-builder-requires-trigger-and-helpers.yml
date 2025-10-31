@@ -30,11 +30,14 @@ metadata:
       timestamp: "2025-10-31T13:49:56Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: branch_created
-    # removed duplicate in_progress to keep chronological order
     - event: in_review
       timestamp: "2025-10-31T14:10:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-31T14:12:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Enforce that EventBuilder requires an explicit `trigger` (no fallback) and
