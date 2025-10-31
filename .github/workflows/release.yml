@@ -53,6 +53,18 @@ jobs:
       - name: Build packages
         run: pnpm build
 
+      - name: Configure npm auth
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NPM_TOKEN:-}" ]; then
+            echo "NPM_TOKEN is not set; configure repo secret NPM_TOKEN" >&2
+            exit 1
+          fi
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          npm whoami || true
+
       - name: Version and Publish (Changesets)
         id: changesets
         uses: changesets/action@v1
