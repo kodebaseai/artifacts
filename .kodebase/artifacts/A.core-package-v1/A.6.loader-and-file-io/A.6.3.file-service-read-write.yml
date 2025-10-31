@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T21:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-31T22:03:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement YAML read/write operations with stable serialization options to minimize
@@ -26,3 +34,13 @@ content:
     - "writeArtifact serializes with stable ordering and plain scalars where possible (e.g., lineWidth=0)"
     - "Round-trip read→write does not introduce spurious formatting changes"
     - "Error handling wraps fs errors with path context"
+implementation_notes:
+  result: "Added `readArtifact`/`writeArtifact` helpers that wrap fs errors and use stable YAML serialization; tests mock read/write scenarios."
+  tags: [core, loader, file-service]
+  challenges:
+    - challenge: "Preserving predictable formatting across automation writes"
+      solution: "Configured YAML stringify with `lineWidth: 0` to avoid auto wrapping."
+    - challenge: "Providing actionable errors without leaking internals"
+      solution: "Catch fs exceptions and rethrow with the artifact path included in the message."
+  insights:
+    - "Pure read/write helpers make it easy to plug into CLI pipelines without repeating fs boilerplate."
