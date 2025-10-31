@@ -17,6 +17,7 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     permissions:
       contents: write
+      pull-requests: read
       id-token: write
     strategy:
       matrix:
@@ -69,6 +70,7 @@ jobs:
           version: pnpm changeset version
           commit: "chore: release packages"
           title: "chore: release packages"
+          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

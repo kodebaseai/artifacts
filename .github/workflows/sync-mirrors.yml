@@ -67,6 +67,9 @@ jobs:
           git clone "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/kodebaseai/core.git" core-mirror
           rsync -av --delete packages/core/ core-mirror/ --exclude node_modules
           cd core-mirror
+          # Ensure remote uses PAT for the mirror repo explicitly
+          git remote set-url origin "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/kodebaseai/core.git"
+          git remote -v
           git add .
           git commit -m "Sync Core package from ${{ github.repository }}@${{ github.sha }}" || echo "No changes to commit"
           git push origin HEAD:main
