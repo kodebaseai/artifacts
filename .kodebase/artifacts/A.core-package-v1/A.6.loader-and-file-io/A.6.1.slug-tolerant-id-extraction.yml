@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T21:13:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-31T21:30:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement a slug-tolerant filename parser to extract artifact IDs from filenames
@@ -26,3 +34,14 @@ content:
     - 'Regex matches IDs with multi-digit segments and optional slugs: ^([A-Z](?:\.\d+)*)(?:\..+)?\.yml$'
     - 'getArtifactIdFromPath returns only the ID (without slug)'
     - 'Non-matching files are ignored safely'
+implementation_notes:
+  result: "Introduced `ARTIFACT_FILENAME_REGEX` and `getArtifactIdFromPath` with tests covering slug-tolerant and invalid filenames."
+  tags: [core, loader, regex]
+  challenges:
+    - challenge: "Permit multi-letter IDs and descriptive slugs without accepting malformed filenames"
+      solution: "Regex requires a leading `[A-Z]+` segment and slug parts that start with alphanumeric characters, blocking double dots or leading hyphens."
+    - challenge: "Keep ID extraction side-effect free for upcoming loaders"
+      solution: "`getArtifactIdFromPath` simply returns the canonical ID or `null`, delegating discovery to higher-level utilities."
+  insights:
+    - "Slug support makes artifacts more readable while retaining deterministic ID parsing."
+    - "Negative regex tests help prevent regressions as naming rules evolve."
