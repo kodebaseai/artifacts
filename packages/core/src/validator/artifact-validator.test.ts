@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ZodError, ZodIssueCode } from "zod";
 
 import { CArtifact, type TArtifactType } from "../constants.js";
-import { parseIssue } from "../parser/artifact-parser.js";
+import * as ArtifactParser from "../parser/artifact-parser.js";
 import {
   InitiativeSchema,
   IssueSchema,
@@ -279,19 +279,28 @@ describe("sibling relationship validation", () => {
       },
     };
 
-    expectValidationError(
-      () => validateInitiative(initiativeWithUnknown, { artifactId: "A" }),
-      (error) => {
-        expect(error.kind).toBe("schema");
-        expect(error.issues).toEqual([
-          {
-            code: "custom",
-            path: "metadata.relationships.blocks[0]",
-            message: "Invalid artifact ID format",
-          },
-        ]);
-      },
-    );
+    const parseSpy = vi
+      .spyOn(ArtifactParser, "parseInitiative")
+      .mockReturnValue({ success: true, data: initiativeWithUnknown });
+
+    try {
+      expectValidationError(
+        () => validateInitiative({}, { artifactId: "A" }),
+        (error) => {
+          expect(error.kind).toBe("schema");
+          expect(error.issues).toEqual([
+            {
+              code: "RELATIONSHIP_INVALID_ID",
+              path: "metadata.relationships.blocks[0]",
+              message:
+                "'???.1' is not a valid artifact ID. Initiatives only depend on initiative IDs like 'A' or 'B'.",
+            },
+          ]);
+        },
+      );
+    } finally {
+      parseSpy.mockRestore();
+    }
   });
 
   it("rejects milestone dependencies referencing another initiative", () => {
@@ -342,6 +351,39 @@ describe("sibling relationship validation", () => {
     );
   });
 
+  it("rejects milestone dependencies with malformed identifiers", () => {
+    const milestoneWithMalformed = {
+      ...milestone,
+      metadata: {
+        ...milestone.metadata,
+        relationships: { blocks: ["A-one"], blocked_by: [] },
+      },
+    };
+
+    const parseSpy = vi
+      .spyOn(ArtifactParser, "parseMilestone")
+      .mockReturnValue({ success: true, data: milestoneWithMalformed });
+
+    try {
+      expectValidationError(
+        () => validateMilestone({}, { artifactId: "A.1" }),
+        (error) => {
+          expect(error.kind).toBe("schema");
+          expect(error.issues).toEqual([
+            {
+              code: "RELATIONSHIP_INVALID_ID",
+              path: "metadata.relationships.blocks[0]",
+              message:
+                "'A-one' is not a valid artifact ID. Use a milestone ID like 'A.1' that starts with 'A.'.",
+            },
+          ]);
+        },
+      );
+    } finally {
+      parseSpy.mockRestore();
+    }
+  });
+
   it("rejects issue dependencies referencing a non-issue identifier", () => {
     const issueWithMilestoneRef = {
       ...issue,
@@ -364,6 +406,39 @@ describe("sibling relationship validation", () => {
         ]);
       },
     );
+  });
+
+  it("rejects issue dependencies with malformed identifiers", () => {
+    const issueWithMalformed = {
+      ...issue,
+      metadata: {
+        ...issue.metadata,
+        relationships: { blocks: [], blocked_by: ["A.1.one"] },
+      },
+    };
+
+    const parseSpy = vi
+      .spyOn(ArtifactParser, "parseIssue")
+      .mockReturnValue({ success: true, data: issueWithMalformed });
+
+    try {
+      expectValidationError(
+        () => validateIssue({}, { artifactId: "A.1.4" }),
+        (error) => {
+          expect(error.kind).toBe("schema");
+          expect(error.issues).toEqual([
+            {
+              code: "RELATIONSHIP_INVALID_ID",
+              path: "metadata.relationships.blocked_by[0]",
+              message:
+                "'A.1.one' is not a valid artifact ID. Use an issue ID like 'A.1.1' that starts with 'A.1.'.",
+            },
+          ]);
+        },
+      );
+    } finally {
+      parseSpy.mockRestore();
+    }
   });
 
   it("rejects issue dependencies outside the current milestone", () => {
@@ -531,7 +606,7 @@ describe("validateArtifact", () => {
   });
 
   it("works with parsed artifacts from ArtifactParser", () => {
-    const parsed = parseIssue(issue);
+    const parsed = ArtifactParser.parseIssue(issue);
     if (!parsed.success) {
       throw new Error("Expected parsed issue to succeed");
     }

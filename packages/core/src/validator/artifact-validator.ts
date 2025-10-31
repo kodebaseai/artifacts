@@ -23,7 +23,10 @@ import {
   type TIssue,
   type TMilestone,
 } from "../schemas/schemas.js";
-import { detectCircularDependencies } from "./dependency-validator.js";
+import {
+  detectCircularDependencies,
+  detectCrossLevelDependencies,
+} from "./dependency-validator.js";
 
 export type ArtifactValidationIssue = ArtifactParseIssue;
 export type ArtifactValidationErrorKind = ArtifactParseError["kind"];
@@ -153,10 +156,9 @@ function collectRelationshipIssues(
       issues.push({ code, path, message });
     };
 
-    const candidate = parseArtifactIdParts(relationshipId);
-
     switch (current.type) {
       case CArtifact.INITIATIVE: {
+        const candidate = parseArtifactIdParts(relationshipId);
         if (!candidate) {
           pushIssue(
             RelationshipIssueCode.INVALID_ID,
@@ -177,6 +179,7 @@ function collectRelationshipIssues(
         const example = `${current.initiative}.1`;
         const expectedPrefix = `${current.initiative}.`;
 
+        const candidate = parseArtifactIdParts(relationshipId);
         if (!candidate) {
           pushIssue(
             RelationshipIssueCode.INVALID_ID,
@@ -205,6 +208,7 @@ function collectRelationshipIssues(
         const milestonePrefix = `${current.initiative}.${current.milestoneNumber}.`;
         const example = `${milestonePrefix}1`;
 
+        const candidate = parseArtifactIdParts(relationshipId);
         if (!candidate) {
           pushIssue(
             RelationshipIssueCode.INVALID_ID,
@@ -395,8 +399,7 @@ export function getArtifactType(input: unknown): TArtifactType {
     )
     .sort((a, b) => a.issues - b.issues);
 
-  const best = sorted[0];
-  const second = sorted[1];
+  const [best, second] = sorted;
 
   if (!best) {
     throw new ArtifactValidationError(
@@ -473,4 +476,5 @@ export const ArtifactValidator = {
   validateArtifact,
   ArtifactValidationError,
   detectCircularDependencies,
+  detectCrossLevelDependencies,
 } as const;

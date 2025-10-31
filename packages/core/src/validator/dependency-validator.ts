@@ -1,4 +1,11 @@
-import type { TInitiative, TMilestone, TIssue } from "../schemas/schemas.js";
+import {
+  CArtifact,
+  INITIATIVE_ID_REGEX,
+  ISSUE_ID_REGEX,
+  MILESTONE_ID_REGEX,
+  type TArtifactType,
+} from "../constants.js";
+import type { TInitiative, TIssue, TMilestone } from "../schemas/schemas.js";
 
 export type ArtifactWithRelationships = Pick<
   TInitiative | TMilestone | TIssue,
@@ -17,6 +24,38 @@ export type CircularDependencyIssue = {
   cycle: string[];
   message: string;
 };
+
+export type CrossLevelDependencyIssue = {
+  code: "CROSS_LEVEL_DEPENDENCY";
+  sourceId: string;
+  sourceType: TArtifactType;
+  dependencyId: string;
+  dependencyType: TArtifactType;
+  message: string;
+};
+
+function inferArtifactType(id: string): TArtifactType | null {
+  if (ISSUE_ID_REGEX.test(id)) {
+    return CArtifact.ISSUE;
+  }
+  if (MILESTONE_ID_REGEX.test(id)) {
+    return CArtifact.MILESTONE;
+  }
+  if (INITIATIVE_ID_REGEX.test(id)) {
+    return CArtifact.INITIATIVE;
+  }
+  return null;
+}
+
+const LABEL_BY_TYPE: Record<TArtifactType, string> = {
+  [CArtifact.INITIATIVE]: "initiative",
+  [CArtifact.MILESTONE]: "milestone",
+  [CArtifact.ISSUE]: "issue",
+};
+
+function formatArtifactLabel(type: TArtifactType, id: string): string {
+  return `${LABEL_BY_TYPE[type]} ${id}`;
+}
 
 /**
  * Detect circular dependencies in the blocked_by relationship graph.
@@ -48,10 +87,7 @@ export function detectCircularDependencies(
 
     if (node.inStack) {
       const cycleStart = path.indexOf(nodeId);
-      const cyclePath =
-        cycleStart >= 0
-          ? path.slice(cycleStart).concat(nodeId)
-          : path.concat(nodeId);
+      const cyclePath = path.slice(Math.max(0, cycleStart)).concat(nodeId);
       return cyclePath;
     }
 
@@ -91,6 +127,51 @@ export function detectCircularDependencies(
         code: "CIRCULAR_DEPENDENCY",
         cycle,
         message: `Circular dependency detected: ${formatted}`,
+      });
+    }
+  }
+
+  return issues;
+}
+
+export function detectCrossLevelDependencies(
+  artifacts: ReadonlyMap<string, ArtifactWithRelationships>,
+): CrossLevelDependencyIssue[] {
+  const issues: CrossLevelDependencyIssue[] = [];
+
+  for (const [id, artifact] of artifacts) {
+    const sourceType = inferArtifactType(id);
+    if (!sourceType) {
+      continue;
+    }
+
+    const dependencies = artifact.metadata.relationships?.blocked_by ?? [];
+
+    for (const dependencyId of dependencies) {
+      const dependencyArtifact = artifacts.get(dependencyId);
+      if (!dependencyArtifact) {
+        continue;
+      }
+
+      const dependencyType = inferArtifactType(dependencyId);
+      if (!dependencyType) {
+        continue;
+      }
+
+      if (sourceType === dependencyType) {
+        continue;
+      }
+
+      const sourceLabel = formatArtifactLabel(sourceType, id);
+      const dependencyLabel = formatArtifactLabel(dependencyType, dependencyId);
+
+      issues.push({
+        code: "CROSS_LEVEL_DEPENDENCY",
+        sourceId: id,
+        sourceType,
+        dependencyId,
+        dependencyType,
+        message: `Cross-level dependency detected: ${sourceLabel} cannot depend on ${dependencyLabel}.`,
       });
     }
   }

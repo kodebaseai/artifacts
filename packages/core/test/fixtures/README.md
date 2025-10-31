@@ -13,6 +13,9 @@ artifacts/
   initiative.valid.json          # Parsed output snapshot
   issue.invalid.missing-...yaml  # Invalid example
   issue.invalid...error.json     # Expected error payload
+dependencies/
+  valid-siblings.json            # Graph of sibling-only dependencies
+  invalid-cross-level.json       # Graph illustrating cross-level violations
 ```
 
 ### Updating fixtures
