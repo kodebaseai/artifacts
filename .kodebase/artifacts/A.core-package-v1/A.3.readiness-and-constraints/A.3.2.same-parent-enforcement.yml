@@ -20,7 +20,7 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.3.1
-            resolved: false
+            resolved: true
             resolved_at: "2025-10-30T23:28:00Z"
     - event: ready
       timestamp: "2025-10-30T23:28:00Z"
