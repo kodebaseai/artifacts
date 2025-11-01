@@ -20,7 +20,11 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.8.2
-            resolved: false
+            resolved: true
+    - event: ready
+      timestamp: "2025-11-01T22:38:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Add smoke tests to ensure ESM consumers can import curated exports and that

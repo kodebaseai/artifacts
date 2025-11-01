@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-11-01T22:36:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-01T22:38:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Update the core package README and crosslink spec sections so that docs reflect
