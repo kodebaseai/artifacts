@@ -29,6 +29,14 @@ metadata:
       timestamp: "2025-10-31T22:10:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-31T22:12:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-01T11:34:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Add unit and integration tests with golden fixtures for discovery, type filters,
@@ -38,3 +46,16 @@ content:
     - "Type filters return expected sets on fixtures"
     - "Round-trip read/write assertions pass; no spurious diffs"
     - "Edge cases: hidden folders/files ignored; malformed YAML yields clear errors"
+implementation_notes:
+  result: "Created integration test suite with golden fixture tree covering discovery, type filters, read/write stability, and error handling; all tests pass with 100% coverage."
+  tags: [core, loader, testing, fixtures]
+  challenges:
+    - challenge: "Ensuring fixture tree covers all edge cases without becoming unwieldy"
+      solution: "Built minimal but complete tree: two initiatives (A, B), two milestones (A.1, B.1), three issues with slugs, plus hidden folder/file entries for edge case validation."
+    - challenge: "Verifying read/write stability without spurious formatting diffs"
+      solution: "Test performs double-write and compares raw file contents; ensures YAML serialization options produce deterministic output."
+    - challenge: "Validating hidden file/folder exclusion without brittle assumptions"
+      solution: "Assert exact expected paths returned by loader; presence of `.hidden/` folder and `.archived.yml` file in fixtures proves they're correctly ignored."
+  insights:
+    - "Integration tests with golden fixtures provide end-to-end confidence that discovery, filtering, and I/O work together correctly across the full loader stack."
+    - "Testing round-trip stability (read→write→write) catches subtle formatting issues that unit tests on individual functions would miss."
