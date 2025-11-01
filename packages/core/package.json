@@ -1,6 +1,6 @@
 {
   "name": "@kodebase/core",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Core TypeScript utilities for Kodebase v1",
   "license": "MIT",
   "publishConfig": {
