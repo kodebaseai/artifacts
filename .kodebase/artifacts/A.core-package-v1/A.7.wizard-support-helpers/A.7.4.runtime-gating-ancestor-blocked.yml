@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-11-01T19:32:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T19:38:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-01T20:20:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Provide a read-only helper to check the parent chain at runtime and determine
@@ -34,3 +42,11 @@ content:
     - Returns a boolean and reason string for gating decisions
     - Looks up parents via id prefix and current event state
     - No writes to artifacts; safe for CLI `--check-parent`
+implementation_notes:
+  result: "Added `isAncestorBlockedOrCancelled` function with parent chain traversal and state checking; 14 comprehensive tests passing with 100% coverage, ready for CLI integration."
+  tags: [core, wizard, gating, runtime-validation, parent-blocking]
+  challenges:
+    - challenge: "Defensive behavior when parent artifacts missing"
+      solution: "Return `isBlocked: false` to allow operations on orphaned artifacts rather than permanently blocking them. This prevents corner cases where manual intervention would be required."
+  insights:
+    - "The simplified sibling-only blocking model makes parent gating trivial: just walk up ID segments and check state. No relationship parsing needed."

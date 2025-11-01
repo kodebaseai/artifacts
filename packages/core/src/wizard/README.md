@@ -16,5 +16,11 @@ UI-agnostic helpers for bootstrapping artifacts and managing the `.kodebase/arti
   and full schema validation. Composes with `allocateNextId` and `resolveArtifactPaths` for
   complete wizard workflow.
 
+- `artifact-gating.ts` – `isAncestorBlockedOrCancelled` checks if any parent artifact in the
+  ancestor chain is currently blocked or cancelled. Returns a boolean flag and reason string
+  for runtime gating decisions. Used by CLI commands (e.g., `kodebase work --check-parent`)
+  to enforce the implicit rule that parent state gates child operations. Read-only helper
+  that complements sibling blocking (handled by cascade engine).
+
 These utilities power the `kodebase add` command wizard and can be used by IDE extensions
 or other tooling that needs to create artifacts programmatically.
