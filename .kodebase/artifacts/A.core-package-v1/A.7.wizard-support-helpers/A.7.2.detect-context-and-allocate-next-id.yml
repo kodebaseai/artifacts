@@ -20,12 +20,20 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.7.1
-            resolved: false
+            resolved: true
             resolved_at: "2025-11-01T17:31:00Z"
     - event: ready
       timestamp: "2025-11-01T17:31:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T17:34:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-01T18:04:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement context detection for a working directory or target path and allocation
@@ -34,3 +42,17 @@ content:
     - "Context detection returns one of: initiative, milestone, issue"
     - Allocation scans siblings and returns the next numeric segment in order
     - Works for multi-digit numeric segments and sparse ranges
+implementation_notes:
+  result: "Added `detectContextLevel` (pure parent-ID-based logic) and `allocateNextId` (loader-based sibling scanning); 22 tests passing with 95% coverage, supporting sparse ranges and multi-letter/multi-digit IDs."
+  tags: [core, wizard, id-allocation, context-detection]
+  challenges:
+    - challenge: "Initial design used filesystem walking for context detection, which was complex and didn't align with wizard workflow"
+      solution: "Simplified to pure parent-ID-based logic: no parent → initiative, 1-segment parent → milestone, 2-segment parent → issue. Much simpler and perfectly suited for the `kodebase add` wizard."
+    - challenge: "Allocating next ID requires finding all siblings without knowing their slugs"
+      solution: "Reused `loadAllArtifactPaths` from loader stack and filtered by parent ID prefix, extracting numeric segments to find max+1 (never fill gaps)."
+    - challenge: "Supporting multi-letter initiatives and multi-digit segments in allocation"
+      solution: "Parent ID validation uses same regex pattern as other wizard helpers (`[A-Z]+(?:\\.\\d+)*`), and numeric segment parsing uses parseInt for any length."
+  insights:
+    - "Context detection doesn't need filesystem access - parent ID alone determines what children can be created, which is exactly what the wizard needs."
+    - "Sparse range handling is intentional: always use max+1 strategy (e.g., if A.1, A.3, A.5 exist, next is A.6), ensuring IDs are append-only and never reused."
+    - "The functions compose naturally with `resolveArtifactPaths` from A.7.1: allocateNextId gives you the ID, then resolveArtifactPaths tells you where to write it."

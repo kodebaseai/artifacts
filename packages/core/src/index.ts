@@ -11,4 +11,5 @@ export * from "./state/state-machine.js";
 export * from "./validator/artifact-validator.js";
 export * from "./validator/dependency-validator.js";
 export * from "./validator/error-formatter.js";
+export * from "./wizard/artifact-context.js";
 export * from "./wizard/artifact-layout.js";

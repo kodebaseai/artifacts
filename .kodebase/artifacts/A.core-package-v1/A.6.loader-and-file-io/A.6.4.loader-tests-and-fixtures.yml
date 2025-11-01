@@ -23,7 +23,7 @@ metadata:
             resolved: true
             resolved_at: "2025-10-31T21:53:00Z"
           - artifact_id: A.6.3
-            resolved: false
+            resolved: true
             resolved_at: "2025-10-31T22:10:00Z"
     - event: ready
       timestamp: "2025-10-31T22:10:00Z"
