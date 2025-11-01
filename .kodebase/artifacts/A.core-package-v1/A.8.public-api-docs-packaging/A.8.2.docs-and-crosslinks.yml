@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.8.1
-            resolved: false
+            resolved: true
+            resolved_at: "2025-11-01T21:47:00Z"
+    - event: ready
+      timestamp: "2025-11-01T21:47:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Update the core package README and crosslink spec sections so that docs reflect

@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-11-01T21:21:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_Ready
+    - event: completed
+      timestamp: "2025-11-01T21:47:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Audit and expose only the MVP surface from @kodebase/core, removing non-MVP
