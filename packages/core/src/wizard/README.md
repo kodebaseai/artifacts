@@ -11,5 +11,10 @@ UI-agnostic helpers for bootstrapping artifacts and managing the `.kodebase/arti
   any artifact ID with optional slug support. For issues, automatically looks up the parent
   milestone directory using the loader stack.
 
+- `artifact-scaffolder.ts` (from `../builder/`) – `scaffoldInitiative`, `scaffoldMilestone`,
+  and `scaffoldIssue` create in-memory artifacts with minimal input, initial draft event,
+  and full schema validation. Composes with `allocateNextId` and `resolveArtifactPaths` for
+  complete wizard workflow.
+
 These utilities power the `kodebase add` command wizard and can be used by IDE extensions
 or other tooling that needs to create artifacts programmatically.

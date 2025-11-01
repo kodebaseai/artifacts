@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-11-01T18:30:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T18:30:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-01T19:29:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement scaffold helpers that build in-memory artifacts with minimal content
@@ -34,3 +42,20 @@ content:
     - Helpers return typed objects that pass schema validation
     - Draft event uses trigger `artifact_created` and ISO-8601 UTC timestamp
     - Notes and optional fields are supported without breaking validation
+implementation_notes:
+  result: "Added `scaffoldInitiative`, `scaffoldMilestone`, `scaffoldIssue` with type-specific parameters and `createTimestamp` utility; 36 tests passing with 100% coverage, composes perfectly with A.7.1 and A.7.2 helpers."
+  tags: [core, builder, wizard, scaffolding, draft-events]
+  challenges:
+    - challenge: "Balancing structural validation (required by schema) vs semantic completeness (filled in later by humans)"
+      solution: "Scaffold functions validate structure (required fields, actor format, arrays not empty) but don't require lifecycle-gated fields like `implementation_notes` which are added after completion."
+    - challenge: "Designing API that works for both simple wizard (scaffold → human completes) and future agentic wizard"
+      solution: "Kept API minimal and focused on artifact creation phase. Optional fields limited to lifecycle-agnostic ones (`notes`, `priority`, `estimation`). Future agentic flow can build on this foundation."
+    - challenge: "Actor validation supporting both human and agent formats while giving clear error messages"
+      solution: "Created `validateActor()` helper that checks against both HUMAN_ACTOR_REGEX and SIMPLE_AGENT_REGEX, providing actionable error messages with format examples."
+    - challenge: "Timestamp generation that's deterministic for testing but defaults to now in production"
+      solution: "Extracted `createTimestamp(date?: Date)` utility that accepts optional Date for testing, defaults to current time, and always strips milliseconds for ISO-8601 UTC format."
+  insights:
+    - "New `src/builder/` namespace provides clear semantic separation: builders construct objects, state/ manages transitions, wizard/ orchestrates workflow."
+    - "100% test coverage achieved by testing at multiple levels: unit (each function), integration (with validators), composition (with A.7.1/A.7.2 helpers)."
+    - "Lifecycle-gated fields (`impact_summary`, `delivery_summary`, `implementation_notes`) excluded from scaffold API keeps it focused on creation, not completion."
+    - "The three helpers compose beautifully: `detectContextLevel` → what to create, `allocateNextId` → what ID to use, `scaffoldXxx` → create the object, `resolveArtifactPaths` → where to write it."
