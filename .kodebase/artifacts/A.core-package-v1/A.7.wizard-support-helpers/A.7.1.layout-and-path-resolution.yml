@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-11-01T17:30:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-01T17:31:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement helpers to ensure the `.kodebase/artifacts` layout exists and to resolve

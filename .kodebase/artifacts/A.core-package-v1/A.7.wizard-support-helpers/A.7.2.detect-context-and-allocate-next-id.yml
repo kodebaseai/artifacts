@@ -21,6 +21,11 @@ metadata:
         blocking_dependencies:
           - artifact_id: A.7.1
             resolved: false
+            resolved_at: "2025-11-01T17:31:00Z"
+    - event: ready
+      timestamp: "2025-11-01T17:31:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Implement context detection for a working directory or target path and allocation
