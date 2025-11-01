@@ -21,6 +21,11 @@ metadata:
         blocking_dependencies:
           - artifact_id: A.6
             resolved: false
+            resolved_at: "2025-11-01T11:49:00Z"
+    - event: ready
+      timestamp: "2025-11-01T11:49:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Provide UI-agnostic helpers to bootstrap artifacts (layout, IDs, scaffolds)
