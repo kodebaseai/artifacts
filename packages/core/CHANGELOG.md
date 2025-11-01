@@ -1,5 +1,21 @@
 # @kodebase/core
 
+## 0.4.0
+
+### Minor Changes
+
+- [#59](https://github.com/kodebaseai/kodebase/pull/59) [`2453d82`](https://github.com/kodebaseai/kodebase/commit/2453d823c1eb0ab14404038fb2b03574f43381e4) Thanks [@migcarva](https://github.com/migcarva)! - Complete wizard support helpers milestone (A.7)
+
+  Add comprehensive wizard helper API for artifact creation and management:
+
+  - Layout and path resolution (ensureArtifactsLayout, resolveArtifactPaths)
+  - Context detection and ID allocation (detectContextLevel, allocateNextId)
+  - Artifact scaffolding (scaffoldInitiative, scaffoldMilestone, scaffoldIssue)
+  - Runtime gating helper (isAncestorBlockedOrCancelled)
+  - Integration tests validating end-to-end workflows
+
+  All helpers use options object pattern for better DX and include defensive handling for edge cases.
+
 ## 0.3.0
 
 ### Minor Changes
