@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T16:34:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-01T17:30:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement helpers to ensure the `.kodebase/artifacts` layout exists and to resolve
@@ -25,3 +33,19 @@ content:
     - Layout helper creates `.kodebase/artifacts` if missing and is idempotent
     - Path resolver returns dirPath and filePath for initiative, milestone, and issue ids
     - Slug support included in file names without altering the id
+implementation_notes:
+  result: "Added `ensureArtifactsLayout` and `resolveArtifactPaths` helpers with smart parent directory lookup; 19 tests passing with 92% coverage, supporting multi-letter initiatives and multi-digit segments."
+  tags: [core, wizard, scaffolding, file-system]
+  challenges:
+    - challenge: "Resolving issue paths requires finding parent milestone directory without knowing its slug"
+      solution: "Used existing loader (`loadAllArtifactPaths`) to discover parent milestone directory dynamically, keeping the API simple for wizard consumers."
+    - challenge: "Distinguishing between initiatives/milestones/issues with same segment patterns"
+      solution: "Count ID segments: 1=initiative, 2=milestone, 3+=issue. Initiatives and milestones require slugs for directories; only issues have slugs in filenames."
+    - challenge: "Supporting flexible ID formats (A to ZZZZ, A.1 to ZZZZ.999999, etc.)"
+      solution: "Regex pattern `[A-Z]+(?:\\.\\d+)*` validates multi-letter initiatives and arbitrary-length numeric segments, aligning with existing loader patterns."
+    - challenge: "Graceful error handling when parent artifacts don't exist yet"
+      solution: "Wrapped filesystem operations in try-catch blocks to convert ENOENT errors into actionable messages (e.g., 'Parent initiative A directory not found')."
+  insights:
+    - "Smart parent lookup via loader eliminates the need for wizards to track parent slugs manually, significantly reducing API complexity."
+    - "Folder names always include slugs (`A.slug/`) but only issue filenames include slugs (`A.1.1.slug.yml`), which the helpers enforce automatically."
+    - "Regex validation reuses existing patterns from `artifact-paths.ts` to ensure consistency between path resolution and discovery."
