@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-11-01T19:29:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-01T19:32:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement scaffold helpers that build in-memory artifacts with minimal content

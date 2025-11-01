@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.7.3
-            resolved: false
+            resolved: true
+            resolved_at: "2025-11-01T19:32:00Z"
+    - event: ready
+      timestamp: "2025-11-01T19:32:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Provide a read-only helper to check the parent chain at runtime and determine
