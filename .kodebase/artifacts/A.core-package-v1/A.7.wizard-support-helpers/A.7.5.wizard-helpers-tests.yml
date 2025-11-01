@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-11-01T20:25:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T20:26:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-01T20:48:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Add tests and simple examples wiring layout, id allocation, scaffolding, and
@@ -34,3 +42,16 @@ content:
     - End-to-end example: ensure layout → allocate ids → scaffold artifacts → write files
     - Unit tests cover edge cases on id allocation and path resolution
     - Gating helper tested for blocked/cancelled parent scenarios
+implementation_notes:
+  result: "Added wizard-helpers.integration.test.ts with 11 comprehensive tests covering end-to-end workflows, file service integration, gating scenarios, and edge cases. All 333 tests passing with 97% overall coverage."
+  tags: [core, wizard, integration-testing, workflow-testing, e2e]
+  challenges:
+    - challenge: "resolveArtifactPaths signature changed from positional to options object"
+      solution: "Updated all calls to use {id, slug, baseDir} object parameter. Ensures directory creation with fs.mkdir before writeArtifact."
+    - challenge: "No built-in allocateNextInitiativeId for root initiatives"
+      solution: "Implemented test helper using letter increment algorithm (A→B, Z→AA). Scans existing initiatives and returns next in sequence."
+    - challenge: "validateArtifact returns {type, data} not {isValid: boolean}"
+      solution: "Fixed test expectations to check validationResult.type and .data properties. Function throws on invalid, so no throw = valid."
+  insights:
+    - "Integration tests reveal API friction points missed by unit tests - positional params vs options objects significantly impact usability."
+    - "Test helpers like allocateNextInitiativeId could be promoted to core helpers if CLI needs them."
