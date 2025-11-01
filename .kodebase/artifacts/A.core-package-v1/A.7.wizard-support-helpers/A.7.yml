@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-11-01T20:52:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: children_completed
+    - event: completed
+      timestamp: "2025-11-01T21:05:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Provide UI-agnostic helpers to bootstrap artifacts (layout, IDs, scaffolds)
