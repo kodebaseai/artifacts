@@ -29,9 +29,22 @@ import {
   validateRelationshipConsistency,
 } from "./dependency-validator.js";
 
+/**
+ * Represents a single validation issue from artifact validation.
+ */
 export type ArtifactValidationIssue = ArtifactParseIssue;
+
+/**
+ * Category of validation error.
+ */
 export type ArtifactValidationErrorKind = ArtifactParseError["kind"];
 
+/**
+ * Error thrown when artifact validation fails.
+ *
+ * Includes detailed issue information for schema validation errors
+ * and context about which artifact type failed validation.
+ */
 export class ArtifactValidationError extends Error {
   readonly kind: ArtifactValidationErrorKind;
   readonly artifactType?: TArtifactType;
@@ -53,7 +66,14 @@ export class ArtifactValidationError extends Error {
   }
 }
 
+/**
+ * Options for artifact validation.
+ */
 export type ValidateArtifactOptions = {
+  /**
+   * Artifact ID to use for relationship validation.
+   * Required if the artifact has any `blocks` or `blocked_by` relationships.
+   */
   artifactId?: string;
 };
 
@@ -362,6 +382,29 @@ function ensureObject(input: unknown): Record<string, unknown> {
   return candidate;
 }
 
+/**
+ * Detect the artifact type from its content structure.
+ *
+ * Attempts to match the input against Initiative, Milestone, and Issue schemas.
+ * Returns the type with the fewest validation errors, or throws if ambiguous.
+ *
+ * @param input - YAML string or object to inspect
+ * @returns The detected artifact type
+ * @throws {ArtifactValidationError} If type cannot be determined or is ambiguous
+ *
+ * @example
+ * ```ts
+ * const yaml = `
+ * metadata:
+ *   title: "Feature"
+ * content:
+ *   summary: "Add feature"
+ *   acceptanceCriteria: ["Works"]
+ * `;
+ *
+ * const type = getArtifactType(yaml); // "issue"
+ * ```
+ */
 export function getArtifactType(input: unknown): TArtifactType {
   const artifact = ensureObject(input);
   const content = artifact.content;
@@ -419,6 +462,29 @@ export function getArtifactType(input: unknown): TArtifactType {
   return best.type;
 }
 
+/**
+ * Validate an Initiative artifact from YAML string or object.
+ *
+ * Performs schema validation and enforces relationship constraints
+ * (initiatives can only depend on other initiatives).
+ *
+ * @param input - YAML string or object to validate
+ * @param options - Validation options (artifactId required if relationships exist)
+ * @returns Validated initiative data
+ * @throws {ArtifactValidationError} If validation fails
+ *
+ * @example
+ * ```ts
+ * try {
+ *   const initiative = validateInitiative(yaml, { artifactId: "A" });
+ *   console.log(initiative.metadata.title);
+ * } catch (err) {
+ *   if (err instanceof ArtifactValidationError) {
+ *     console.error(err.issues); // Detailed validation errors
+ *   }
+ * }
+ * ```
+ */
 export function validateInitiative(
   input: unknown,
   options?: ValidateArtifactOptions,
@@ -426,6 +492,17 @@ export function validateInitiative(
   return mustParse(CArtifact.INITIATIVE, parseInitiative, input, options);
 }
 
+/**
+ * Validate a Milestone artifact from YAML string or object.
+ *
+ * Performs schema validation and enforces relationship constraints
+ * (milestones can only depend on other milestones within the same initiative).
+ *
+ * @param input - YAML string or object to validate
+ * @param options - Validation options (artifactId required if relationships exist)
+ * @returns Validated milestone data
+ * @throws {ArtifactValidationError} If validation fails
+ */
 export function validateMilestone(
   input: unknown,
   options?: ValidateArtifactOptions,
@@ -433,6 +510,17 @@ export function validateMilestone(
   return mustParse(CArtifact.MILESTONE, parseMilestone, input, options);
 }
 
+/**
+ * Validate an Issue artifact from YAML string or object.
+ *
+ * Performs schema validation and enforces relationship constraints
+ * (issues can only depend on other issues within the same milestone).
+ *
+ * @param input - YAML string or object to validate
+ * @param options - Validation options (artifactId required if relationships exist)
+ * @returns Validated issue data
+ * @throws {ArtifactValidationError} If validation fails
+ */
 export function validateIssue(
   input: unknown,
   options?: ValidateArtifactOptions,
@@ -440,11 +528,46 @@ export function validateIssue(
   return mustParse(CArtifact.ISSUE, parseIssue, input, options);
 }
 
+/**
+ * Result type for {@link validateArtifact} containing the detected type and validated data.
+ */
 export type ArtifactValidationSuccess =
   | { type: typeof CArtifact.INITIATIVE; data: TInitiative }
   | { type: typeof CArtifact.MILESTONE; data: TMilestone }
   | { type: typeof CArtifact.ISSUE; data: TIssue };
 
+/**
+ * Universal artifact validator that auto-detects type and validates accordingly.
+ *
+ * This is the recommended validation function for most use cases. It automatically
+ * detects whether the input is an Initiative, Milestone, or Issue and validates
+ * against the appropriate schema with relationship constraints.
+ *
+ * @param input - YAML string or object to validate
+ * @param expectedType - Optional type hint to skip auto-detection
+ * @param options - Validation options (artifactId required if relationships exist)
+ * @returns Object containing detected type and validated data
+ * @throws {ArtifactValidationError} If validation fails
+ *
+ * @example
+ * ```ts
+ * const result = validateArtifact(yaml);
+ *
+ * switch (result.type) {
+ *   case "initiative":
+ *     console.log(result.data.content.vision);
+ *     break;
+ *   case "milestone":
+ *     console.log(result.data.content.deliverables);
+ *     break;
+ *   case "issue":
+ *     console.log(result.data.content.acceptanceCriteria);
+ *     break;
+ * }
+ * ```
+ *
+ * @see {@link validateInitiative}, {@link validateMilestone}, {@link validateIssue}
+ */
 export function validateArtifact(
   input: unknown,
   expectedType?: TArtifactType,
@@ -469,6 +592,15 @@ export function validateArtifact(
   }
 }
 
+/**
+ * Namespace containing all artifact validation functions and utilities.
+ *
+ * Provides a convenient way to import all validators together:
+ * ```ts
+ * import { ArtifactValidator } from "@kodebase/core";
+ * const result = ArtifactValidator.validateArtifact(yaml);
+ * ```
+ */
 export const ArtifactValidator = {
   getArtifactType,
   validateInitiative,

@@ -1,23 +1,54 @@
+/**
+ * Event chronological order validation.
+ *
+ * Validates that artifact event logs follow required rules:
+ * - First event must be "draft"
+ * - Timestamps must be in non-decreasing chronological order
+ *
+ * @module event-order
+ */
+
 import type { TArtifactEvent, TEventTrigger } from "../constants.js";
 import { CArtifactEvent } from "../constants.js";
 
+/**
+ * Event record structure representing a single artifact lifecycle event.
+ */
 export type TEventRecord = {
+  /** The lifecycle state after this event */
   event: TArtifactEvent;
+  /** ISO-8601 UTC timestamp when the event occurred */
   timestamp: string;
+  /** Human actor or agent identifier who triggered the event */
   actor: string;
+  /** The reason or cause of this state transition */
   trigger: TEventTrigger;
+  /** Optional additional metadata for the event */
   metadata?: Record<string, unknown>;
 };
 
+/**
+ * Error codes for event order validation failures.
+ */
 export type EventOrderErrorCode =
   | "EMPTY_EVENTS"
   | "FIRST_EVENT_MUST_BE_DRAFT"
   | "EVENTS_OUT_OF_ORDER";
 
+/**
+ * Error thrown when event log validation fails.
+ *
+ * Contains the error code and contextual information about which
+ * event(s) violated the chronological ordering rules.
+ */
 export class EventOrderError extends Error {
+  /** Error code identifying the type of validation failure */
   readonly code: EventOrderErrorCode;
+  /** Index of the problematic event (if applicable) */
   readonly index?: number;
+  /** Timestamp of the previous event (for ordering errors) */
   readonly prevTimestamp?: string;
+  /** Timestamp of the current event causing the error */
   readonly currTimestamp?: string;
 
   constructor(
@@ -38,7 +69,42 @@ export class EventOrderError extends Error {
   }
 }
 
-// Enforce: first event is draft; timestamps are non-decreasing
+/**
+ * Validate that events follow chronological ordering rules.
+ *
+ * Enforces two critical invariants:
+ * 1. The first event must always be "draft" (artifact creation)
+ * 2. Event timestamps must be in non-decreasing order (equal times allowed)
+ *
+ * @param events - Array of event records to validate
+ * @throws {EventOrderError} If validation fails
+ *
+ * @example
+ * ```ts
+ * import { validateEventOrder } from "@kodebase/core";
+ *
+ * const events = [
+ *   {
+ *     event: "draft",
+ *     timestamp: "2025-10-28T10:00:00Z",
+ *     actor: "Alice (alice@example.com)",
+ *     trigger: "artifact_created"
+ *   },
+ *   {
+ *     event: "ready",
+ *     timestamp: "2025-10-28T10:05:00Z",
+ *     actor: "agent.cascade",
+ *     trigger: "dependencies_met"
+ *   }
+ * ];
+ *
+ * validateEventOrder(events); // OK
+ *
+ * // This would throw: first event is not draft
+ * const invalid = [{ event: "ready", timestamp: "...", ... }];
+ * validateEventOrder(invalid); // throws EventOrderError
+ * ```
+ */
 export function validateEventOrder(events: ReadonlyArray<TEventRecord>): void {
   if (events.length === 0) {
     throw new EventOrderError("Events array cannot be empty", {

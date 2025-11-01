@@ -10,30 +10,54 @@ import {
   type TMilestone,
 } from "../schemas/schemas.js";
 
+/**
+ * Represents a single validation issue from parsing an artifact.
+ */
 export type ArtifactParseIssue = {
+  /** JSON path to the field with the issue */
   path: string;
+  /** Human-readable error message */
   message: string;
+  /** Zod error code (e.g., "invalid_type", "too_small") */
   code?: string;
 };
 
+/**
+ * Category of parse error that occurred.
+ */
 export type ArtifactParseErrorKind = "yaml" | "schema" | "input";
 
+/**
+ * Detailed error information from a failed parse operation.
+ */
 export type ArtifactParseError = {
+  /** Type of error that occurred */
   kind: ArtifactParseErrorKind;
+  /** High-level error message */
   message: string;
+  /** Specific validation issues (for schema errors) */
   issues?: ArtifactParseIssue[];
 };
 
+/**
+ * Successful parse result containing the validated artifact data.
+ */
 export type ArtifactParseSuccess<T> = {
   success: true;
   data: T;
 };
 
+/**
+ * Failed parse result containing error details.
+ */
 export type ArtifactParseFailure = {
   success: false;
   error: ArtifactParseError;
 };
 
+/**
+ * Result type for all parse operations - either success with data or failure with error.
+ */
 export type ArtifactParseResult<T> =
   | ArtifactParseSuccess<T>
   | ArtifactParseFailure;
@@ -164,6 +188,22 @@ function parseWithSchema<T>(
   }
 }
 
+/**
+ * Parse a YAML string into a JavaScript object without schema validation.
+ *
+ * @param input - YAML string to parse
+ * @returns Parse result with either the parsed data or error details
+ *
+ * @example
+ * ```ts
+ * const result = parseYaml("key: value");
+ * if (result.success) {
+ *   console.log(result.data); // { key: "value" }
+ * } else {
+ *   console.error(result.error.message);
+ * }
+ * ```
+ */
 export function parseYaml(input: string): ArtifactParseResult<unknown> {
   if (typeof input !== "string") {
     return {
@@ -200,6 +240,37 @@ export function parseYaml(input: string): ArtifactParseResult<unknown> {
   }
 }
 
+/**
+ * Parse and validate an Initiative artifact from YAML string or object.
+ *
+ * @param input - YAML string or pre-parsed object to validate as initiative
+ * @returns Parse result with either validated initiative data or error details
+ *
+ * @example
+ * ```ts
+ * const yaml = `
+ * metadata:
+ *   title: "Q1 Goals"
+ *   priority: high
+ *   estimation: XL
+ *   created_by: "Ada Lovelace (ada@example.com)"
+ * content:
+ *   vision: "Deliver platform improvements"
+ *   scopeIn: ["API", "Database"]
+ *   scopeOut: ["UI redesign"]
+ *   successCriteria: ["99.9% uptime"]
+ * `;
+ *
+ * const result = parseInitiative(yaml);
+ * if (result.success) {
+ *   console.log(result.data.metadata.title); // "Q1 Goals"
+ * } else {
+ *   console.error(result.error.issues); // Validation errors
+ * }
+ * ```
+ *
+ * @see {@link parseMilestone}, {@link parseIssue}
+ */
 export function parseInitiative(
   input: string | Record<string, unknown>,
 ): ArtifactParseResult<TInitiative> {
@@ -208,6 +279,33 @@ export function parseInitiative(
   );
 }
 
+/**
+ * Parse and validate a Milestone artifact from YAML string or object.
+ *
+ * @param input - YAML string or pre-parsed object to validate as milestone
+ * @returns Parse result with either validated milestone data or error details
+ *
+ * @example
+ * ```ts
+ * const yaml = `
+ * metadata:
+ *   title: "API v2 Launch"
+ *   priority: high
+ *   estimation: L
+ *   created_by: "Grace Hopper (grace@example.com)"
+ * content:
+ *   summary: "Ship new REST API"
+ *   deliverables: ["OpenAPI spec", "Client SDKs"]
+ * `;
+ *
+ * const result = parseMilestone(yaml);
+ * if (result.success) {
+ *   console.log(result.data.content.deliverables);
+ * }
+ * ```
+ *
+ * @see {@link parseInitiative}, {@link parseIssue}
+ */
 export function parseMilestone(
   input: string | Record<string, unknown>,
 ): ArtifactParseResult<TMilestone> {
@@ -216,6 +314,35 @@ export function parseMilestone(
   );
 }
 
+/**
+ * Parse and validate an Issue artifact from YAML string or object.
+ *
+ * @param input - YAML string or pre-parsed object to validate as issue
+ * @returns Parse result with either validated issue data or error details
+ *
+ * @example
+ * ```ts
+ * const yaml = `
+ * metadata:
+ *   title: "Add rate limiting"
+ *   priority: medium
+ *   estimation: M
+ *   created_by: "Alan Turing (alan@example.com)"
+ * content:
+ *   summary: "Implement token bucket algorithm"
+ *   acceptanceCriteria:
+ *     - "Configurable limits"
+ *     - "Graceful degradation"
+ * `;
+ *
+ * const result = parseIssue(yaml);
+ * if (result.success) {
+ *   console.log(result.data.content.acceptanceCriteria);
+ * }
+ * ```
+ *
+ * @see {@link parseInitiative}, {@link parseMilestone}
+ */
 export function parseIssue(
   input: string | Record<string, unknown>,
 ): ArtifactParseResult<TIssue> {
@@ -224,6 +351,15 @@ export function parseIssue(
   );
 }
 
+/**
+ * Namespace containing all artifact parsing functions.
+ *
+ * Provides a convenient way to import all parsers together:
+ * ```ts
+ * import { ArtifactParser } from "@kodebase/core";
+ * const result = ArtifactParser.parseInitiative(yaml);
+ * ```
+ */
 export const ArtifactParser = {
   parseYaml,
   parseInitiative,

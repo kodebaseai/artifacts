@@ -1,7 +1,31 @@
+/**
+ * Low-level artifact file I/O operations.
+ *
+ * Provides read and write functions for artifact YAML files with
+ * error handling and consistent formatting.
+ *
+ * @module artifact-file-service
+ */
+
 import fs from "node:fs/promises";
 
 import yaml from "yaml";
 
+/**
+ * Read and parse an artifact YAML file.
+ *
+ * @param filePath - Absolute path to the artifact YAML file
+ * @returns Parsed artifact data
+ * @throws {Error} If file cannot be read or YAML is invalid
+ *
+ * @example
+ * ```ts
+ * import { readArtifact } from "@kodebase/core";
+ *
+ * const artifact = await readArtifact(".kodebase/artifacts/A.yml");
+ * console.log(artifact.metadata.title);
+ * ```
+ */
 export async function readArtifact<T = unknown>(filePath: string): Promise<T> {
   try {
     const content = await fs.readFile(filePath, "utf8");
@@ -19,10 +43,38 @@ export async function readArtifact<T = unknown>(filePath: string): Promise<T> {
   }
 }
 
+/**
+ * YAML serialization options for consistent formatting.
+ * @internal
+ */
 const YAML_OPTIONS: yaml.ToStringOptions = {
   lineWidth: 0,
 };
 
+/**
+ * Write artifact data to a YAML file.
+ *
+ * Serializes the artifact object to YAML with consistent formatting
+ * (no line wrapping) and writes to the specified file path.
+ *
+ * @param filePath - Absolute path where the artifact should be written
+ * @param data - Artifact data to serialize and write
+ * @throws {Error} If serialization or write operation fails
+ *
+ * @example
+ * ```ts
+ * import { writeArtifact, scaffoldInitiative } from "@kodebase/core";
+ *
+ * const initiative = scaffoldInitiative({
+ *   title: "Q1 Goals",
+ *   priority: "high",
+ *   estimation: "XL",
+ *   actor: "Alice (alice@example.com)"
+ * });
+ *
+ * await writeArtifact(".kodebase/artifacts/A.yml", initiative);
+ * ```
+ */
 export async function writeArtifact(
   filePath: string,
   data: unknown,

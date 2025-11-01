@@ -1,3 +1,14 @@
+/**
+ * Error formatting utilities for validation issues.
+ *
+ * Transforms technical Zod validation errors into user-friendly messages with:
+ * - Clear explanations of what went wrong
+ * - Contextual hints for each field
+ * - Actionable suggestions for fixing issues
+ *
+ * @module error-formatter
+ */
+
 import type * as z from "zod";
 import type { ZodError } from "zod";
 
@@ -6,9 +17,18 @@ type ZodIssue = z.core.$ZodIssue;
 import { CArtifactEvent, CEstimationSize, CPriority } from "../constants.js";
 import type { ArtifactParseIssue } from "../parser/artifact-parser.js";
 
+/**
+ * User-friendly representation of a validation issue.
+ *
+ * Includes the field path, a clear reason for the failure, and an
+ * optional suggestion for how to fix it.
+ */
 export type FormattedValidationIssue = {
+  /** JSON path to the field with the issue (e.g., "metadata.title") */
   path: string;
+  /** Clear explanation of why validation failed */
   reason: string;
+  /** Optional actionable suggestion for fixing the issue */
   suggestion?: string;
 };
 
@@ -264,6 +284,33 @@ function buildReason(issue: ZodIssue, path: string): string {
   }
 }
 
+/**
+ * Format a single Zod validation issue into a user-friendly message.
+ *
+ * Transforms technical Zod error codes into clear explanations with
+ * field-specific hints and actionable suggestions.
+ *
+ * @param issue - Zod validation issue to format
+ * @returns Formatted validation issue with path, reason, and suggestion
+ *
+ * @example
+ * ```ts
+ * import { formatZodIssue } from "@kodebase/core";
+ *
+ * const zodIssue = {
+ *   code: "invalid_type",
+ *   path: ["metadata", "title"],
+ *   message: "Required"
+ * };
+ *
+ * const formatted = formatZodIssue(zodIssue);
+ * // {
+ * //   path: "metadata.title",
+ * //   reason: "metadata.title is required.",
+ * //   suggestion: "Add the required field 'metadata.title' with a value that matches the schema."
+ * // }
+ * ```
+ */
 export function formatZodIssue(issue: ZodIssue): FormattedValidationIssue {
   const path = formatPath(issue.path);
   return {
@@ -273,10 +320,58 @@ export function formatZodIssue(issue: ZodIssue): FormattedValidationIssue {
   };
 }
 
+/**
+ * Format all issues from a Zod validation error.
+ *
+ * Convenience function that maps all issues in a ZodError to formatted
+ * validation issues with user-friendly messages.
+ *
+ * @param error - Zod validation error containing multiple issues
+ * @returns Array of formatted validation issues
+ *
+ * @example
+ * ```ts
+ * import { formatZodError } from "@kodebase/core";
+ *
+ * try {
+ *   schema.parse(data);
+ * } catch (error) {
+ *   if (error instanceof ZodError) {
+ *     const formatted = formatZodError(error);
+ *     formatted.forEach(issue => {
+ *       console.log(`${issue.path}: ${issue.reason}`);
+ *       if (issue.suggestion) console.log(`  Hint: ${issue.suggestion}`);
+ *     });
+ *   }
+ * }
+ * ```
+ */
 export function formatZodError(error: ZodError): FormattedValidationIssue[] {
   return error.issues.map(formatZodIssue);
 }
 
+/**
+ * Format parser validation issues into user-friendly messages.
+ *
+ * Converts parser-level validation issues (from YAML parsing) into
+ * formatted issues with contextual hints.
+ *
+ * @param issues - Array of parse issues from artifact parser
+ * @returns Array of formatted validation issues
+ *
+ * @example
+ * ```ts
+ * import { parseInitiative, formatParseIssues } from "@kodebase/core";
+ *
+ * const result = parseInitiative(yaml);
+ * if (!result.success && result.error.issues) {
+ *   const formatted = formatParseIssues(result.error.issues);
+ *   formatted.forEach(issue => {
+ *     console.error(`${issue.path}: ${issue.reason}`);
+ *   });
+ * }
+ * ```
+ */
 export function formatParseIssues(
   issues: readonly ArtifactParseIssue[],
 ): FormattedValidationIssue[] {
@@ -290,6 +385,30 @@ export function formatParseIssues(
   });
 }
 
+/**
+ * Format multiple validation issues into a single summary string.
+ *
+ * Creates a formatted multi-line string suitable for CLI output or error messages.
+ * Single issues are formatted inline, multiple issues are numbered and bulleted.
+ *
+ * @param issues - Array of formatted validation issues
+ * @returns Formatted summary string (or "No validation issues found." if empty)
+ *
+ * @example
+ * ```ts
+ * import { formatIssuesSummary } from "@kodebase/core";
+ *
+ * const issues = [
+ *   { path: "metadata.title", reason: "Title is required.", suggestion: "Add a title" },
+ *   { path: "metadata.priority", reason: "Invalid priority value." }
+ * ];
+ *
+ * console.log(formatIssuesSummary(issues));
+ * // Validation failed with 2 issues:
+ * // - 1. metadata.title: Title is required. (Hint: Add a title)
+ * // - 2. metadata.priority: Invalid priority value.
+ * ```
+ */
 export function formatIssuesSummary(
   issues: readonly FormattedValidationIssue[],
 ): string {

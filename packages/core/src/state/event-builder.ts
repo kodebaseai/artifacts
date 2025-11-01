@@ -1,3 +1,12 @@
+/**
+ * Event builder utilities for creating artifact lifecycle events.
+ *
+ * Provides factory functions to create properly formatted event records
+ * with automatic trigger validation and timestamp generation.
+ *
+ * @module event-builder
+ */
+
 import {
   CArtifactEvent,
   CEventTrigger,
@@ -7,15 +16,28 @@ import {
 } from "../constants.js";
 import type { TEventRecord } from "./event-order.js";
 
+/**
+ * Arguments for creating an event record.
+ */
 export type CreateEventArgs = {
+  /** The lifecycle state after this event */
   event: TArtifactEvent;
+  /** Human actor or agent identifier triggering the event */
   actor: string;
-  trigger?: TEventTrigger; // explicit at runtime; throws if missing
-  timestamp?: string; // ISO-8601 UTC (YYYY-MM-DDTHH:MM:SSZ). Defaults to now.
+  /** The reason/cause of this state transition (required) */
+  trigger?: TEventTrigger;
+  /** ISO-8601 UTC timestamp (defaults to current time) */
+  timestamp?: string;
+  /** Optional additional metadata for the event */
   metadata?: Record<string, unknown>;
 };
 
-// Allowed triggers by event for core flows (v1)
+/**
+ * Map of allowed triggers for each event type.
+ *
+ * Defines which triggers are valid for transitioning to each state.
+ * Used by {@link assertEventTrigger} to validate event-trigger combinations.
+ */
 export const EVENT_TRIGGER_BY_EVENT: Record<
   TArtifactEvent,
   ReadonlyArray<TEventTrigger>
@@ -42,6 +64,24 @@ export const EVENT_TRIGGER_BY_EVENT: Record<
   ],
 };
 
+/**
+ * Validate that a trigger is allowed for the given event type.
+ *
+ * @param event - The event type being created
+ * @param trigger - The trigger causing the event
+ * @throws {Error} If the trigger is not allowed for this event
+ *
+ * @example
+ * ```ts
+ * import { assertEventTrigger, CArtifactEvent, CEventTrigger } from "@kodebase/core";
+ *
+ * // Valid combination
+ * assertEventTrigger(CArtifactEvent.READY, CEventTrigger.DEPENDENCIES_MET); // OK
+ *
+ * // Invalid combination
+ * assertEventTrigger(CArtifactEvent.READY, CEventTrigger.PR_MERGED); // throws
+ * ```
+ */
 export function assertEventTrigger(
   event: TArtifactEvent,
   trigger: TEventTrigger,
@@ -56,13 +96,39 @@ export function assertEventTrigger(
   }
 }
 
-// Generate ISO-8601 UTC with seconds precision (no milliseconds)
+/**
+ * Generate ISO-8601 UTC timestamp with seconds precision (no milliseconds).
+ * @internal
+ */
 function nowIsoUtcSeconds(): string {
   const d = new Date();
   // toISOString includes milliseconds; strip them
   return d.toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
+/**
+ * Create an event record with validation.
+ *
+ * Generic event creator that validates the trigger-event combination and
+ * provides timestamp defaults. Prefer using specific helper functions like
+ * {@link createDraftEvent} when possible.
+ *
+ * @param args - Event creation arguments
+ * @returns Validated event record
+ * @throws {Error} If trigger is missing or invalid for the event type
+ *
+ * @example
+ * ```ts
+ * import { createEvent, CArtifactEvent, CEventTrigger } from "@kodebase/core";
+ *
+ * const event = createEvent({
+ *   event: CArtifactEvent.IN_PROGRESS,
+ *   actor: "Alice (alice@example.com)",
+ *   trigger: CEventTrigger.BRANCH_CREATED,
+ *   metadata: { branch: "feature/auth" }
+ * });
+ * ```
+ */
 export function createEvent(args: CreateEventArgs): TEventRecord {
   const { event, actor, trigger, timestamp, metadata } = args;
 
@@ -82,6 +148,14 @@ export function createEvent(args: CreateEventArgs): TEventRecord {
   };
 }
 
+/**
+ * Create a "draft" event (initial artifact creation).
+ *
+ * @param actor - Human or agent creating the artifact
+ * @param timestamp - Optional ISO-8601 UTC timestamp (defaults to now)
+ * @param metadata - Optional additional metadata
+ * @returns Draft event record with trigger=artifact_created
+ */
 export function createDraftEvent(
   actor: string,
   timestamp?: string,
@@ -96,6 +170,11 @@ export function createDraftEvent(
   });
 }
 
+/**
+ * Create a "ready" event (all dependencies met).
+ *
+ * @param actor - Human or agent triggering the ready state
+ */
 export function createReadyEvent(
   actor: string,
   timestamp?: string,
@@ -110,15 +189,27 @@ export function createReadyEvent(
   });
 }
 
-// -----------------------------
-// Blocked helper (with metadata)
-// -----------------------------
+/**
+ * Blocking dependency information for blocked events.
+ */
 export type BlockingDependency = {
+  /** ID of the artifact blocking this one */
   artifact_id: string;
+  /** Whether this dependency has been resolved */
   resolved?: boolean;
-  resolved_at?: string; // ISO when resolved
+  /** ISO-8601 UTC timestamp when resolved */
+  resolved_at?: string;
 };
 
+/**
+ * Create a "blocked" event (has unfulfilled dependencies).
+ *
+ * @param actor - Human or agent recording the blocked state
+ * @param blockingDependencies - Array of dependencies blocking progress
+ * @param timestamp - Optional ISO-8601 UTC timestamp (defaults to now)
+ * @returns Blocked event with dependency metadata
+ * @throws {Error} If no dependencies provided or resolved_at is invalid
+ */
 export function createBlockedEvent(
   actor: string,
   blockingDependencies: ReadonlyArray<BlockingDependency>,
@@ -157,9 +248,7 @@ export function createBlockedEvent(
   });
 }
 
-// -----------------------------
-// Remaining common helpers
-// -----------------------------
+/** Create an "in_progress" event (work started, typically branch created). */
 export function createInProgressEvent(
   actor: string,
   timestamp?: string,
@@ -174,6 +263,7 @@ export function createInProgressEvent(
   });
 }
 
+/** Create an "in_review" event (pull request ready for review). */
 export function createInReviewEvent(
   actor: string,
   timestamp?: string,
@@ -188,6 +278,7 @@ export function createInReviewEvent(
   });
 }
 
+/** Create a "completed" event (pull request merged, work finished). */
 export function createCompletedEvent(
   actor: string,
   timestamp?: string,
@@ -202,6 +293,7 @@ export function createCompletedEvent(
   });
 }
 
+/** Create a "cancelled" event (work abandoned or deprioritized). */
 export function createCancelledEvent(
   actor: string,
   timestamp?: string,
@@ -216,9 +308,23 @@ export function createCancelledEvent(
   });
 }
 
+/**
+ * Valid causes for archiving an artifact.
+ */
 type ArchivedCause =
   | typeof CEventTrigger.PARENT_COMPLETED
   | typeof CEventTrigger.PARENT_ARCHIVED;
+
+/**
+ * Create an "archived" event (artifact archived due to parent state).
+ *
+ * @param actor - Human or agent (typically cascade engine) archiving the artifact
+ * @param cause - Why the artifact is being archived (parent_completed or parent_archived)
+ * @param timestamp - Optional ISO-8601 UTC timestamp (defaults to now)
+ * @param metadata - Optional additional metadata
+ * @returns Archived event with appropriate trigger
+ * @throws {Error} If cause is not a valid archive trigger
+ */
 export function createArchivedEvent(
   actor: string,
   cause: ArchivedCause,
