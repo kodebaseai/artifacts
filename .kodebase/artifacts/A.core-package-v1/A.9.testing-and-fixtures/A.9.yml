@@ -20,7 +20,11 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.8
-            resolved: false
+            resolved: true
+    - event: ready
+      timestamp: "2025-11-01T23:43:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Provide golden fixtures and integration tests across core flows; ensure CI
