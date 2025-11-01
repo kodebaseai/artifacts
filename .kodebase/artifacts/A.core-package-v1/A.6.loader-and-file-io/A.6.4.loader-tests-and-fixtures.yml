@@ -37,6 +37,10 @@ metadata:
       timestamp: "2025-11-01T11:34:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-01T11:38:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Add unit and integration tests with golden fixtures for discovery, type filters,
