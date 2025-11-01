@@ -30,6 +30,10 @@ metadata:
       timestamp: "2025-11-01T16:34:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: children_started
+    - event: in_review
+      timestamp: "2025-11-01T20:52:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: children_completed
 content:
   summary: >-
     Provide UI-agnostic helpers to bootstrap artifacts (layout, IDs, scaffolds)
@@ -42,3 +46,22 @@ content:
   validation:
     - CLI can scaffold A/A.1/A.1.1 with these helpers
     - Gating prevents start when ancestors are blocked/cancelled; tests cover cases
+delivery_summary:
+  outcome: >-
+    Complete wizard helper API with layout management, context detection, ID allocation,
+    artifact scaffolding, and runtime gating; comprehensive test coverage (97%) and
+    integration tests validating end-to-end workflows ready for CLI wizard integration.
+  delivered:
+    - "Layout and path resolution (`artifact-layout.ts`) with `ensureArtifactsLayout` creating `.kodebase/artifacts` structure and `resolveArtifactPaths` handling canonical paths with slug support; 100% test coverage."
+    - "Context detection and ID allocation (`artifact-context.ts`) with `detectContextLevel` determining artifact type from parent and `allocateNextId` scanning siblings for sparse-aware numeric allocation; 100% test coverage."
+    - "Artifact scaffolding helpers (`artifact-scaffolder.ts`) with `scaffoldInitiative`, `scaffoldMilestone`, and `scaffoldIssue` creating validated in-memory artifacts with initial draft events; 100% test coverage."
+    - "Runtime gating helper (`artifact-gating.ts`) with `isAncestorBlockedOrCancelled` walking parent chain to prevent operations when ancestors are blocked/cancelled; defensive handling for orphaned artifacts; 100% test coverage."
+    - "Integration test suite (`wizard-helpers.integration.test.ts`) with 11 comprehensive tests validating end-to-end workflows (layout → allocate → scaffold → write), file service integration, gating scenarios, and edge cases; 97% overall coverage with 333 passing tests."
+    - "Documentation updates to wizard module README describing all four helper modules and their integration with loader stack."
+  next: >-
+    Integrate wizard helpers into `kodebase add` CLI command for interactive artifact creation,
+    implement `--check-parent` flag for runtime gating enforcement, and extend helpers to support
+    batch artifact creation workflows for initiative planning.
+  risks:
+    - "Letter increment algorithm for root initiatives (A→B→Z→AA) assumes sequential allocation; concurrent artifact creation may require locking or atomic ID reservation."
+    - "Integration tests use `allocateNextInitiativeId` helper not exposed in public API; CLI may need this promoted if manual initiative ID selection isn't desired."
