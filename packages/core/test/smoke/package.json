@@ -1,0 +1,14 @@
+{
+  "name": "@kodebase/core-smoke-tests",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "tsx esm-import.test.ts && tsc --project tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.1",
+    "tsx": "^4.19.2",
+    "typescript": "5.8.2"
+  }
+}

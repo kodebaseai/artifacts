@@ -7,7 +7,11 @@ import {
   ImplementationNotesSchema,
   IssueContentSchema,
 } from "./registries/issue-registry.js";
-import { ArtifactMetadataSchema } from "./registries/metadata-registry.js";
+import {
+  ArtifactMetadataSchema,
+  type TArtifactMetadata,
+  type TEvent,
+} from "./registries/metadata-registry.js";
 import {
   DeliverySummarySchema,
   MilestoneContentSchema,
@@ -81,3 +85,6 @@ export const InitiativeSchema = z
 export type TIssue = z.infer<typeof IssueSchema>;
 export type TMilestone = z.infer<typeof MilestoneSchema>;
 export type TInitiative = z.infer<typeof InitiativeSchema>;
+
+// Re-export metadata types for public API
+export type { TArtifactMetadata, TEvent };

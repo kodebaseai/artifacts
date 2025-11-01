@@ -436,6 +436,59 @@ await writeArtifact(filePath, issue);
 
 ---
 
+## Package Structure
+
+@kodebase/core is a pure **ESM** package built with TypeScript. The package follows modern Node.js conventions:
+
+```
+packages/core/
+├── src/              # TypeScript source files
+├── dist/             # Compiled JavaScript + type declarations (generated)
+│   ├── *.js          # ES modules
+│   ├── *.d.ts        # TypeScript declarations
+│   ├── *.js.map      # Source maps for debugging
+│   └── *.d.ts.map    # Declaration source maps
+├── test/
+│   └── smoke/        # Consumer smoke tests
+└── package.json      # ESM exports configuration
+```
+
+### Building the Package
+
+```bash
+# Build TypeScript → JavaScript + declarations
+pnpm --filter @kodebase/core build
+
+# Clean build artifacts
+pnpm --filter @kodebase/core clean
+```
+
+The build process:
+1. Compiles TypeScript (`src/**/*.ts`) to JavaScript ESM (`dist/**/*.js`)
+2. Generates type declarations (`dist/**/*.d.ts`)
+3. Creates source maps for debugging
+
+### Testing Package Integrity
+
+```bash
+# Run smoke tests (minimal consumer validation)
+cd packages/core/test/smoke && pnpm install && pnpm test
+
+# Validate package.json exports
+pnpm --filter @kodebase/core lint:package
+
+# Check type declarations (requires published package)
+pnpm --filter @kodebase/core lint:types
+```
+
+The smoke tests verify:
+- ✅ All public exports are importable without bundler configuration
+- ✅ TypeScript type declarations are complete and correct
+- ✅ No implicit `any` types in the public API
+- ✅ ESM module resolution works correctly
+
+---
+
 ## Development
 
 ### Run Tests

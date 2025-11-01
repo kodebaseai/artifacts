@@ -2,12 +2,24 @@
   "extends": "@kodebase/typescript-config/base.json",
   "compilerOptions": {
     "rootDir": "src",
+    "outDir": "dist",
     "baseUrl": ".",
     "types": ["node"],
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
     "paths": {
       "@kodebase/core": ["./src"]
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/*.test.ts",
+    "**/*.integration.test.ts",
+    "test"
+  ]
 }

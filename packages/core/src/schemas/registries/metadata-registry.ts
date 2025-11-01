@@ -349,4 +349,5 @@ export const ArtifactMetadataSchema = z
   });
 
 export type TArtifactMetadata = z.infer<typeof ArtifactMetadataSchema>;
+export type TEvent = z.infer<typeof EventSchema>;
 // Each schema and registry is exported for docs/consumers

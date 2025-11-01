@@ -1,4 +1,3 @@
-import type { TInitiative, TIssue, TMilestone } from "src/schemas/schemas.ts";
 import {
   CArtifactEvent,
   CEventTrigger,
@@ -7,6 +6,7 @@ import {
   type TEstimationSize,
   type TPriority,
 } from "../constants.js";
+import type { TInitiative, TIssue, TMilestone } from "../schemas/schemas.js";
 import { createTimestamp } from "./timestamp-utils.js";
 
 /**
