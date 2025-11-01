@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T21:08:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-01T21:21:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_Ready
 content:
   summary: >-
     Audit and expose only the MVP surface from @kodebase/core, removing non-MVP
@@ -25,3 +33,19 @@ content:
     - 'index.ts exports match the spec public API surface'
     - 'Non-MVP modules are not exported and remain internal or removed'
     - 'Tree-shaking works on consumer builds (no unused exports pulled)'
+implementation_notes:
+  result: "Curated public API exports by removing timestamp-utils utility; rewrote README.md with comprehensive API documentation organized by module; verified tree-shaking compatibility. All 333 tests passing with 97% coverage."
+  tags: [core, public-api, tree-shaking, exports, mvp, documentation]
+  changes:
+    - change: "Removed builder/timestamp-utils.ts from public exports"
+      rationale: "Internal utility; consumers can use standard Date.toISOString() instead. Keeps public API minimal and focused on core functionality"
+    - change: "Completely rewrote README.md with organized API documentation"
+      rationale: "Previous README mixed implementation details with API docs. New version clearly documents public API surface with imports, usage examples, and explanations for each module category"
+    - change: "Kept index.ts clean and scannable without section comments"
+      rationale: "Section comments add noise to what should be a simple export list. API organization belongs in README where it's actually helpful"
+    - change: "Verified package.json has sideEffects:false for optimal tree-shaking"
+      rationale: "Ensures bundlers can eliminate unused exports in consumer builds"
+  insights:
+    - "Package was already in excellent shape - no non-MVP modules existed to remove, all current exports are MVP-aligned per spec section 6"
+    - "README is far more valuable than index.ts comments for documenting API surface - it's where developers actually look for guidance"
+    - "New README structure (Constants → Schemas → Parser → Validator → State → Cascade → Loading → Wizard → Builder) mirrors the natural workflow of artifact management"

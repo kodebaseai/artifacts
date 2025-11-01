@@ -26,6 +26,10 @@ metadata:
       timestamp: "2025-11-01T21:05:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T21:08:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: children_started
 content:
   summary: >-
     Finalize the core’s public surface, documentation, and packaging so that it
