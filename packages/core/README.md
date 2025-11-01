@@ -111,6 +111,45 @@ Comprehensive validation with helpful error messages. The validator handles both
 
 ---
 
+### Error Formatting
+
+```ts
+import {
+  formatZodIssue,
+  formatZodError,
+  formatParseIssues,
+  formatIssuesSummary,
+} from "@kodebase/core";
+
+// Format single Zod validation issue
+const formatted = formatZodIssue(zodIssue);
+// { path: "metadata.title", reason: "...", suggestion: "..." }
+
+// Format entire Zod error
+try {
+  schema.parse(data);
+} catch (error) {
+  if (error instanceof ZodError) {
+    const issues = formatZodError(error);
+    issues.forEach(issue => {
+      console.log(`${issue.path}: ${issue.reason}`);
+      if (issue.suggestion) console.log(`  → ${issue.suggestion}`);
+    });
+  }
+}
+
+// Format parser issues
+const result = parseInitiative(yaml);
+if (!result.success && result.error.issues) {
+  const formatted = formatParseIssues(result.error.issues);
+  console.error(formatIssuesSummary(formatted));
+}
+```
+
+Transform technical Zod validation errors into user-friendly messages with field-specific hints and actionable suggestions. Critical for developer experience when validation fails.
+
+---
+
 ### State Machine
 
 ```ts
