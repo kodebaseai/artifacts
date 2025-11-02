@@ -34,9 +34,9 @@ metadata:
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: children_completed
     - event: completed
-      timestamp: "2025-11-02T01:15:00Z"
+      timestamp: "2025-11-02T01:08:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
-      trigger: validation_passed
+      trigger: pr_merged
 content:
   summary: >-
     Provide golden fixtures and integration tests across core flows; ensure CI
