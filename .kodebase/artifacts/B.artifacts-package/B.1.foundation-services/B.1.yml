@@ -13,6 +13,10 @@ metadata:
       timestamp: "2025-11-02T11:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: in_progress
+      timestamp: "2025-11-02T17:44:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: children_started
 content:
   summary: >-
     Establish core CRUD and validation operations that all other services depend on.

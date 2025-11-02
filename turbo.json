@@ -20,7 +20,7 @@
       "dependsOn": ["^topo"]
     },
     "check-types": {
-      "dependsOn": ["topo"]
+      "dependsOn": ["^build"]
     },
     "test": {
       "dependsOn": ["^build", "^test"],

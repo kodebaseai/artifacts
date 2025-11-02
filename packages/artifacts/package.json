@@ -1,0 +1,47 @@
+{
+  "name": "@kodebase/artifacts",
+  "version": "0.0.0",
+  "description": "High-level artifact operations for Kodebase",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "prebuild": "pnpm clean",
+    "check-types": "tsc -p tsconfig.json --noEmit",
+    "lint": "biome lint .",
+    "lint:package": "publint",
+    "lint:types": "attw --pack .",
+    "format": "biome format .",
+    "test": "vitest run",
+    "prepack": "pnpm lint:package && pnpm lint:types"
+  },
+  "dependencies": {
+    "@kodebase/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.0",
+    "@kodebase/typescript-config": "workspace:*",
+    "@types/node": "^22.5.1",
+    "@vitest/coverage-istanbul": "^3.0.7",
+    "memfs": "^4.50.0",
+    "publint": "^0.3.15"
+  }
+}
