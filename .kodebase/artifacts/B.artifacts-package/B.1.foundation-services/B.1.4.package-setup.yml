@@ -49,3 +49,20 @@ content:
     - "Type declarations (.d.ts) generated correctly"
     - "Package can be imported by CLI package"
     - "Package follows monorepo conventions (matches core package structure)"
+implementation_notes:
+  result: "Complete package setup for @kodebase/artifacts with ESM-only distribution, tree-shakable exports, TypeScript strict mode, and attw validation achieving all acceptance criteria"
+  challenges:
+    - challenge: "attw (Are The Types Wrong) failing with CJSResolvesToESM error blocking CI pipeline"
+      solution: "Configured attw with --profile esm-only flag which validates ESM consumers while ignoring CommonJS resolution warnings, allowing intentional ESM-only packages to pass validation"
+    - challenge: "Understanding attw node16 resolution mode applicability to modern Node.js versions (20, 22, 24)"
+      solution: "Researched and confirmed node16 refers to the ESM resolution algorithm introduced in Node 16 that remains unchanged in all subsequent versions, not the Node.js version itself"
+    - challenge: "Ensuring tree-shaking works correctly for selective imports"
+      solution: "Set sideEffects: false in package.json and used ESM-only exports to enable bundlers to eliminate unused code, verified with test imports showing correct tree-shaking behavior"
+  insights:
+    - "Package configuration matches @kodebase/core conventions: ESM-only (type: module), tree-shakable (sideEffects: false), strict TypeScript via shared config, publint + attw validation"
+    - "TypeScript moduleResolution NodeNext (via base config) uses the modern ESM algorithm from Node 16+ that applies to all current Node.js versions (16, 18, 20, 22, 24)"
+    - "attw --profile esm-only ignores node10 and node16-cjs resolutions, validating only node16-esm and bundler contexts which is correct for intentional ESM-only packages"
+    - "declarationMap: true generates .d.ts.map files enabling IDEs to jump-to-definition to original TypeScript source instead of generated declarations"
+    - "Fixed @kodebase/core package.json to use attw --profile esm-only, resolving CI pipeline failures that previously blocked npm publication"
+    - "Zero circular dependencies confirmed via madge, all validation scripts pass (build, check-types, lint:package, lint:types), and selective imports verified working"
+  tags: [package-config, esm-only, tree-shaking, typescript, attw, module-resolution, monorepo]
