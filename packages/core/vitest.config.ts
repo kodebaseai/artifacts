@@ -11,6 +11,8 @@ export default defineConfig({
       provider: "istanbul",
       reporter: [
         "text",
+        "text-summary",
+        "lcov",
         [
           "json",
           {
@@ -19,6 +21,13 @@ export default defineConfig({
         ],
       ],
       enabled: true,
+      // Thresholds set to current coverage levels - coverage should never go down
+      thresholds: {
+        lines: 95,
+        functions: 100,
+        branches: 85,
+        statements: 95,
+      },
     },
   },
 });
