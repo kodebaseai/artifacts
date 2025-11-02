@@ -25,6 +25,14 @@ metadata:
       timestamp: "2025-11-02T00:14:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-02T00:16:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-02T00:39:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_Ready
 content:
   summary: >-
     Add end-to-end tests covering the primary flows: create→validate, start→cascade,
@@ -34,3 +42,21 @@ content:
     - 'Cascade: last issue completed → milestone/initiative get in_review recommendations'
     - 'Completion: completion info present → completed event appended (simulated)'
     - 'Tests run under Vitest; no network, deterministic results'
+implementation_notes:
+  result: "16 integration tests covering validation, cascade, and completion flows with 100% pass rate"
+  challenges:
+    - challenge: "Initial test imports referenced wrong module paths"
+      solution: "User corrected imports to use centralized constants.js instead of scattered type files"
+    - challenge: "API signature mismatches with CascadeEngine methods"
+      solution: "Fixed shouldCascadeToParent signature (children[], parentState) and return type (CascadeDecision)"
+    - challenge: "Double-parsing YAML from readArtifact"
+      solution: "Removed parseYaml calls - readArtifact<T> already returns parsed data"
+    - challenge: "Missing resolutionTimestamp parameter in dependency resolution"
+      solution: "Added timestamp parameter to all resolveDependencyCompletion calls"
+  insights:
+    - "Import organization matters - centralized constants prevent type mismatches and import errors"
+    - "Integration tests should verify structure/behavior, not schema compliance - leave validation to CLI layer"
+    - "Helper functions (buildChild, sequence, buildBlockedDependent) reduce test duplication significantly"
+    - "Fake timers (vi.useFakeTimers) ensure deterministic timestamp generation in tests"
+    - "structuredClone snapshots verify immutability without complex mocking"
+  tags: [integration-tests, vitest, cascade-engine, fixtures, core-flows, testing]

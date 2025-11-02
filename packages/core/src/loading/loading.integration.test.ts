@@ -20,17 +20,67 @@ describe("loader integration", () => {
   it("discovers artifacts within the fixture tree while skipping hidden entries", async () => {
     const paths = await loadAllArtifactPaths(FIXTURE_ROOT);
     const expected = [
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.1.development-phase", "A.1.1.backend-api.yml"),
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.1.development-phase", "A.1.2.database-schema.yml"),
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.1.development-phase", "A.1.3.frontend-integration.yml"),
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.1.development-phase", "A.1.4.end-to-end-tests.yml"),
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.1.development-phase", "A.1.yml"),
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.2.operations-phase", "A.2.1.documentation.yml"),
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.2.operations-phase", "A.2.2.deployment.yml"),
-      path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.2.operations-phase", "A.2.yml"),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.1.development-phase",
+        "A.1.1.backend-api.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.1.development-phase",
+        "A.1.2.database-schema.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.1.development-phase",
+        "A.1.3.frontend-integration.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.1.development-phase",
+        "A.1.4.end-to-end-tests.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.1.development-phase",
+        "A.1.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.2.operations-phase",
+        "A.2.1.documentation.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.2.operations-phase",
+        "A.2.2.deployment.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "A.cascade-initiative",
+        "A.2.operations-phase",
+        "A.2.yml",
+      ),
       path.join(FIXTURE_ROOT, "A.cascade-initiative", "A.yml"),
-      path.join(FIXTURE_ROOT, "B.loader-enhancements", "B.1.loader-enhancements", "B.1.1.maintenance.yml"),
-      path.join(FIXTURE_ROOT, "B.loader-enhancements", "B.1.loader-enhancements", "B.1.yml"),
+      path.join(
+        FIXTURE_ROOT,
+        "B.loader-enhancements",
+        "B.1.loader-enhancements",
+        "B.1.1.maintenance.yml",
+      ),
+      path.join(
+        FIXTURE_ROOT,
+        "B.loader-enhancements",
+        "B.1.loader-enhancements",
+        "B.1.yml",
+      ),
       path.join(FIXTURE_ROOT, "B.loader-enhancements", "B.yml"),
     ].sort();
     expect(paths).toEqual(expected);
@@ -40,7 +90,11 @@ describe("loader integration", () => {
     const paths = await loadAllArtifactPaths(FIXTURE_ROOT);
 
     expect(loadArtifactsByType(paths, "initiative")).toEqual(["A", "B"]);
-    expect(loadArtifactsByType(paths, "milestone")).toEqual(["A.1", "A.2", "B.1"]);
+    expect(loadArtifactsByType(paths, "milestone")).toEqual([
+      "A.1",
+      "A.2",
+      "B.1",
+    ]);
     expect(loadArtifactsByType(paths, "issue")).toEqual([
       "A.1.1",
       "A.1.2",
