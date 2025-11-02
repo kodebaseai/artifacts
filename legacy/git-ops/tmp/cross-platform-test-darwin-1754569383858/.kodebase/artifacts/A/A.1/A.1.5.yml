@@ -1,0 +1,22 @@
+metadata:
+  title: Test artifact
+  priority: medium
+  estimation: S
+  created_by: Test User (test@example.com)
+  assignee: Test User (test@example.com)
+  schema_version: 0.2.0
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - timestamp: 2025-01-01T12:00:00Z
+      event: ready
+      actor: Test User (test@example.com)
+      event_id: evt_test123
+      metadata:
+        correlation_id: evt_test123
+        parent_event_id: null
+content:
+  summary: Test artifact for cross-platform testing
+  acceptance_criteria:
+    - Should work on all platforms

@@ -1,0 +1,83 @@
+{
+  "name": "@kodebase/git-ops",
+  "version": "0.1.1",
+  "description": "Git operations and hook implementations for the Kodebase methodology",
+  "keywords": [
+    "kodebase",
+    "git",
+    "hooks",
+    "automation",
+    "branch-management"
+  ],
+  "author": "Kodebase Team",
+  "homepage": "https://github.com/kodebaseai/kodebase/tree/main/packages/git-ops",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.mjs",
+      "require": "./dist/hooks/index.js"
+    },
+    "./branch": {
+      "types": "./dist/branch/index.d.ts",
+      "import": "./dist/branch/index.mjs",
+      "require": "./dist/branch/index.js"
+    },
+    "./automation": {
+      "types": "./dist/automation/index.d.ts",
+      "import": "./dist/automation/index.mjs",
+      "require": "./dist/automation/index.js"
+    },
+    "./coordination": {
+      "types": "./dist/coordination/index.d.ts",
+      "import": "./dist/coordination/index.mjs",
+      "require": "./dist/coordination/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage",
+    "check-types": "tsc --noEmit",
+    "lint": "biome lint .",
+    "format": "biome format --write ."
+  },
+  "dependencies": {
+    "@kodebase/core": "workspace:*",
+    "simple-git": "^3.22.0",
+    "yaml": "^2.6.1",
+    "zod": "^3.24.1",
+    "glob": "^10.3.10",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@kodebase/typescript-config": "workspace:*",
+    "@vitest/coverage-istanbul": "^3.2.4",
+    "@types/node": "^22.5.5",
+    "tsup": "^8.3.6",
+    "typescript": "^5.8.2",
+    "vitest": "latest"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
