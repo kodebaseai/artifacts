@@ -20,7 +20,11 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.9.3
-            resolved: false
+            resolved: true
+    - event: ready
+      timestamp: "2025-11-02T00:51:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Define coverage thresholds for critical modules and ensure tests are deterministic

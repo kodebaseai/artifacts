@@ -33,6 +33,10 @@ metadata:
       timestamp: "2025-11-02T00:49:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-02T00:51:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Ensure the test jobs run in the turbo pipeline and GitHub Actions, with proper
