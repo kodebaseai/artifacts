@@ -1,0 +1,36 @@
+metadata:
+  title: "Loader Performance & Reliability"
+  priority: medium
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.1.0"
+  relationships:
+    blocked_by: []
+    blocks: []
+  events:
+    - event: draft
+      timestamp: "2025-10-21T10:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-22T09:00:00Z"
+      actor: "Kodebase CLI (cli@v1.0.0)"
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-28T14:00:00Z"
+      actor: "System Cascade (cascade@completion)"
+      trigger: children_started
+    - event: in_review
+      timestamp: "2025-10-30T16:00:00Z"
+      actor: "System Cascade (cascade@completion)"
+      trigger: children_completed
+content:
+  summary: "Enhance loader performance, add caching, and improve error handling."
+  deliverables:
+    - "Optimized file system scanning"
+    - "Caching layer for artifacts"
+    - "Better error messages"
+  validation:
+    - "Performance benchmarks met"
+    - "All error cases handled gracefully"

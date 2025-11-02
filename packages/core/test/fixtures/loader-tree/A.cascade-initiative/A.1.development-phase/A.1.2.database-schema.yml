@@ -1,0 +1,47 @@
+metadata:
+  title: "Database Schema Design"
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [A.1.1]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-18T08:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-18T15:00:00Z"
+      actor: "Kodebase CLI (cli@v1.0.0)"
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-19T09:30:00Z"
+      actor: "Git Hook (hook@post-checkout)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-10-21T14:00:00Z"
+      actor: "Kodebase CLI (cli@v1.0.0)"
+      trigger: pr_ready
+    - event: completed
+      timestamp: "2025-10-21T16:45:00Z"
+      actor: "GitHub Action (action@pr-merge)"
+      trigger: pr_merged
+content:
+  summary: "Design and implement the database schema with proper indexing, relationships, and migrations."
+  acceptance_criteria:
+    - "Create entity-relationship diagram"
+    - "Define database tables with proper constraints"
+    - "Add necessary indexes for query performance"
+    - "Create migration scripts"
+implementation_notes:
+  result: "Schema implemented with normalized tables, composite indexes, and migration scripts"
+  challenges:
+    - challenge: "Query performance degradation with large datasets"
+      solution: "Added composite indexes on frequently queried column combinations"
+  insights:
+    - "Using partial indexes for status columns reduced index size by 40%"
+    - "Migration rollback strategy essential for zero-downtime deployments"
+  tags: [database, postgresql, migrations, indexing, schema-design]

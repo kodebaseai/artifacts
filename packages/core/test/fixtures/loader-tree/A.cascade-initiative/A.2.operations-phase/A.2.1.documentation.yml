@@ -1,0 +1,30 @@
+metadata:
+  title: "Technical Documentation"
+  priority: medium
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.1.0"
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-25T09:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T15:00:00Z"
+      actor: "Kodebase CLI (cli@v1.0.0)"
+      trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-10-29T10:00:00Z"
+      actor: "Git Hook (hook@post-checkout)"
+      trigger: branch_created
+content:
+  summary: "Create comprehensive technical documentation including API reference, architecture overview, and user guides."
+  acceptance_criteria:
+    - "Write API documentation with examples"
+    - "Create architecture diagrams"
+    - "Document deployment procedures"
+    - "Add troubleshooting guide"

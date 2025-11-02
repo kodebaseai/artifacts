@@ -1,0 +1,26 @@
+metadata:
+  title: "Production Deployment Setup"
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.1.0"
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-10-25T09:15:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-10-28T15:00:00Z"
+      actor: "Kodebase CLI (cli@v1.0.0)"
+      trigger: dependencies_met
+content:
+  summary: "Configure production deployment infrastructure including CI/CD pipelines, monitoring, and rollback procedures."
+  acceptance_criteria:
+    - "Set up CI/CD pipeline"
+    - "Configure monitoring and alerting"
+    - "Create rollback procedures"
+    - "Test deployment in staging"

@@ -1,0 +1,39 @@
+metadata:
+  title: "Backend API Implementation"
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [A.1.3]
+    blocked_by: [A.1.2]
+  events:
+    - event: draft
+      timestamp: "2025-10-20T09:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-20T09:15:00Z"
+      actor: "Kodebase CLI (cli@v1.0.0)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.1.2
+            resolved: true
+            resolved_at: "2025-10-21T16:45:00Z"
+    - event: ready
+      timestamp: "2025-10-22T14:30:00Z"
+      actor: "System Cascade (cascade@completion)"
+      trigger: dependency_completed
+    - event: in_progress
+      timestamp: "2025-10-23T10:00:00Z"
+      actor: "Git Hook (hook@post-checkout)"
+      trigger: branch_created
+content:
+  summary: "Implement REST API endpoints for core business logic, including authentication, data validation, and error handling."
+  acceptance_criteria:
+    - "Create RESTful endpoints for CRUD operations"
+    - "Implement request validation middleware"
+    - "Add comprehensive error handling"
+    - "Include authentication and authorization"

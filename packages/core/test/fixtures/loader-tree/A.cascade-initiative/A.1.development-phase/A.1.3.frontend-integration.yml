@@ -1,0 +1,30 @@
+metadata:
+  title: "Frontend Integration"
+  priority: medium
+  estimation: L
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.1.0"
+  relationships:
+    blocks: [A.1.4]
+    blocked_by: [A.1.1]
+  events:
+    - event: draft
+      timestamp: "2025-10-20T09:30:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-10-20T10:00:00Z"
+      actor: "Kodebase CLI (cli@v1.0.0)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: A.1.1
+            resolved: false
+content:
+  summary: "Integrate frontend application with backend API endpoints, including state management and error handling."
+  acceptance_criteria:
+    - "Connect React components to API endpoints"
+    - "Implement client-side state management"
+    - "Add loading and error states"
+    - "Handle authentication flow in UI"

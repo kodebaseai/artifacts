@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-10-28T14:44:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T23:45:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-02T00:12:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Build a small but representative artifacts tree for tests, including several issues,
@@ -25,3 +33,18 @@ content:
     - 'Fixtures include A.yml, A.1.yml, multiple A.1.X.slug.yml with varied dependencies'
     - 'At least one dependency chain and one independent issue set'
     - 'Fixtures live under a test/fixtures directory and are easy to extend'
+implementation_notes:
+  result: "Comprehensive fixture tree with real artifact structure, spec-compliant events, and dependency tracking"
+  challenges:
+    - challenge: "Initial structure didn't match real artifact folder hierarchy"
+      solution: "Restructured to use ID-based naming (A.cascade-initiative/A.yml instead of A/artifact.yml)"
+    - challenge: "Event triggers and metadata didn't match event system spec"
+      solution: "Updated all triggers (has_dependencies, children_started, pr_ready) and added metadata.blocking_dependencies"
+    - challenge: "State consistency between parents and children"
+      solution: "Added proper cascade events (children_started, children_completed) with System Cascade actor"
+  insights:
+    - "Fixtures must match production structure exactly to be useful - generic names hide issues"
+    - "Blocked events require metadata.blocking_dependencies with resolved tracking for accurate testing"
+    - "Cascade events propagate from children to parents - timing must be consistent across hierarchy"
+    - "Completion details (implementation_notes) essential even for test fixtures as documentation"
+  tags: [fixtures, testing, event-system, dependencies, cascade, loader-tree]

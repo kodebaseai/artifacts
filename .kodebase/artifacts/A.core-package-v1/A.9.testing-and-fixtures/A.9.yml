@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-11-01T23:43:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-01T23:45:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: children_started
 content:
   summary: >-
     Provide golden fixtures and integration tests across core flows; ensure CI
