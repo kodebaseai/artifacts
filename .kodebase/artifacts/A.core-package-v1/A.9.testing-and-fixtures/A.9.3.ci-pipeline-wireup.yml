@@ -20,7 +20,11 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: A.9.2
-            resolved: false
+            resolved: true
+    - event: ready
+      timestamp: "2025-11-02T00:43:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Ensure the test jobs run in the turbo pipeline and GitHub Actions, with proper

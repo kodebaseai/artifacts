@@ -32,7 +32,11 @@ metadata:
     - event: in_review
       timestamp: "2025-11-02T00:39:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
-      trigger: pr_Ready
+      trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-02T00:43:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Add end-to-end tests covering the primary flows: create→validate, start→cascade,
