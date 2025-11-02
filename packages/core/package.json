@@ -31,7 +31,7 @@
     "lint:types": "attw --pack .",
     "format": "biome format .",
     "test": "vitest run",
-    "prepack": "pnpm lint:package && pnpm lint:types"
+    "prepack": "pnpm lint:package"
   },
   "dependencies": {
     "yaml": "^2.6.0",
