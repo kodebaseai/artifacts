@@ -1,0 +1,39 @@
+metadata:
+  title: API Documentation & README
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.5.1]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.5.1
+            resolved: false
+content:
+  summary: >-
+    Create comprehensive README with package overview, installation, API reference, and usage examples.
+    Documents all 5 services with real-world scenarios. Includes migration guide from legacy packages
+    and architecture diagrams showing relationship to core and CLI.
+  acceptance_criteria:
+    - "README includes package purpose and architecture overview"
+    - "Installation and setup instructions with dependencies"
+    - "API reference for all 5 services (Artifact, Validation, Context, Scaffold, Query)"
+    - "Real-world usage examples for each service"
+    - "Migration guide from legacy @kodebase/artifact-* packages"
+    - "Architecture diagram showing core → artifacts → CLI relationship"
+    - "Error handling patterns documented with examples"
+    - "Performance considerations and best practices section"
+    - "Links to TypeScript types and JSDoc for detailed reference"
+    - "README follows monorepo documentation style (matches core package)"

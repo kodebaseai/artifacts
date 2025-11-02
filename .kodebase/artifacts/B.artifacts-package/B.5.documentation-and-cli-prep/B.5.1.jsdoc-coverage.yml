@@ -1,0 +1,35 @@
+metadata:
+  title: JSDoc Coverage
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.5.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Add comprehensive JSDoc comments to all public APIs: service classes, methods, utilities,
+    and type definitions. Documents parameters, return types, exceptions, and usage examples.
+    Achieves 95%+ coverage verified by tooling.
+  acceptance_criteria:
+    - "All service classes have JSDoc with description and @example"
+    - "All public methods documented with @param, @returns, @throws"
+    - "Complex types have JSDoc explaining structure and usage"
+    - "Error classes documented with error codes and scenarios"
+    - "Utilities have usage examples in JSDoc"
+    - "JSDoc includes links to related methods (@see tags)"
+    - "Coverage verified by jsdoc-coverage tool at 95%+"
+    - "JSDoc renders correctly in IDE hover tooltips"
+    - "Examples in JSDoc are syntactically correct TypeScript"
+    - "No undocumented public exports in index.ts"

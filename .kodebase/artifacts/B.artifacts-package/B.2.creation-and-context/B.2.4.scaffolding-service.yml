@@ -1,0 +1,43 @@
+metadata:
+  title: ScaffoldService Implementation
+  priority: critical
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.2.1, B.2.2, B.2.3]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.2.1
+            resolved: false
+          - artifact_id: B.2.2
+            resolved: false
+          - artifact_id: B.2.3
+            resolved: false
+content:
+  summary: >-
+    Implement ScaffoldService orchestrating ContextService, ID allocation, and artifact templates
+    to generate complete, valid artifacts. Methods scaffoldInitiative(), scaffoldMilestone(), and
+    scaffoldIssue() combine context detection, ID allocation, and template population into single API.
+  acceptance_criteria:
+    - "scaffoldInitiative(title, metadata?) uses templates from B.2.3"
+    - "scaffoldMilestone(parentId, title, metadata?) uses ID allocation from B.2.2"
+    - "scaffoldIssue(parentId, title, metadata?) uses ContextService from B.2.1"
+    - "Auto-allocates IDs using ID allocation utilities"
+    - "Populates metadata with defaults merged with user overrides"
+    - "Generates slugs from titles using slug utilities"
+    - "Adds draft event with current timestamp and git-based actor"
+    - "Scaffolded artifacts pass schema validation without modification"
+    - "Integration test: scaffold → validate → create workflow succeeds"
+    - "90%+ test coverage with mocked dependencies"

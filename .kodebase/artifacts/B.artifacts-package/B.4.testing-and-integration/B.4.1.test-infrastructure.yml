@@ -1,0 +1,35 @@
+metadata:
+  title: Test Infrastructure Setup
+  priority: critical
+  estimation: XS
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.4.2, B.4.3, B.4.4]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Configure test infrastructure: vitest config, test utilities, fixture helpers, and shared test setup.
+    Establishes foundation for unit, integration, and performance tests. Sets up temp directory management
+    and A.9.1 fixture loading utilities.
+  acceptance_criteria:
+    - "vitest.config.ts configured with coverage thresholds (90%+)"
+    - "Test utilities for mocking filesystem operations"
+    - "Fixture loader utilities for A.9.1 artifacts-tree"
+    - "Temp directory helpers (create, cleanup, isolated per test)"
+    - "Shared test setup (beforeEach, afterEach patterns)"
+    - "TypeScript test configuration (tsconfig.test.json)"
+    - "Coverage reporting configured (text, html, lcov)"
+    - "Test scripts in package.json (test, test:watch, test:coverage)"
+    - "All test infrastructure follows monorepo conventions"
+    - "Documentation on writing tests (test/README.md)"

@@ -1,0 +1,35 @@
+metadata:
+  title: CLI Integration Examples
+  priority: high
+  estimation: XS
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Create runnable example scripts demonstrating how CLI package will use @kodebase/artifacts.
+    Examples cover kodebase add, validate, and status command flows using all 5 services.
+    Serves as reference implementation for Initiative C (CLI Package).
+  acceptance_criteria:
+    - "Example: kodebase add workflow (ContextService → ScaffoldService → ArtifactService)"
+    - "Example: kodebase validate workflow (ValidationService → error formatting)"
+    - "Example: kodebase status workflow (QueryService → tree traversal → filtering)"
+    - "Examples use TypeScript with proper imports from @kodebase/artifacts"
+    - "Each example is self-contained and runnable via tsx/ts-node"
+    - "Examples include error handling patterns"
+    - "Code demonstrates best practices (async/await, error boundaries)"
+    - "Examples compile successfully with no type errors"
+    - "README references these examples in usage section"
+    - "Examples serve as starting point for CLI implementation (Initiative C)"

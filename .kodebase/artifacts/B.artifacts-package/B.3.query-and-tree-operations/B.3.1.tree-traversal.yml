@@ -1,0 +1,35 @@
+metadata:
+  title: Tree Traversal Operations
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.3.2, B.3.3]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Implement tree traversal operations in QueryService: getTree() to load full artifact hierarchy,
+    getChildren(parentId) to get direct children, getAncestors(id) to traverse up the tree,
+    and getSiblings(id) to get artifacts at same level. Uses lazy loading and caching for performance.
+  acceptance_criteria:
+    - "getTree() returns hierarchical structure (initiatives → milestones → issues)"
+    - "getChildren(parentId) returns direct children only (not grandchildren)"
+    - "getAncestors(id) returns array from root to parent (e.g., [A, A.1] for A.1.3)"
+    - "getSiblings(id) returns artifacts with same parent"
+    - "Lazy loading: only loads artifacts when accessed"
+    - "Caching: repeated calls reuse loaded artifacts"
+    - "Handles circular references gracefully (throws error)"
+    - "Performance: handles 1000+ artifacts in <1 second"
+    - "Works with A.9.1 fixtures (real artifact tree)"
+    - "90%+ test coverage with performance benchmarks"

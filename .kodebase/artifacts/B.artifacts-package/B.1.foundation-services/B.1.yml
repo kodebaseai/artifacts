@@ -1,0 +1,27 @@
+metadata:
+  title: Foundation Services
+  priority: critical
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.2, B.3]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Establish core CRUD and validation operations that all other services depend on.
+  deliverables:
+    - ArtifactService with CRUD, event, and metadata operations
+    - ValidationService orchestrating schema, readiness, state machine, and dependency checks
+    - Error formatting utilities (ArtifactError, formatters)
+  validation:
+    - All ArtifactService methods tested with core fixtures
+    - ValidationService orchestrates all 4 core validators
+    - Error messages include artifact context and suggested fixes
+    - Integration test (create → validate → update) passes

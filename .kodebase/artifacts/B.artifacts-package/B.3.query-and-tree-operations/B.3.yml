@@ -1,0 +1,27 @@
+metadata:
+  title: Query & Tree Operations
+  priority: high
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.1]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Enable tree traversal, dependency graphs, and filtered queries for status operations.
+  deliverables:
+    - QueryService with tree operations, dependency graph, and filtered queries
+    - Tree traversal algorithms with lazy loading and caching
+    - Dependency graph operations (blocked_by, blocking, resolution)
+  validation:
+    - Tree traversal handles 1000+ artifacts efficiently
+    - Dependency graph correctly resolves sibling-only relationships
+    - Query filters work with multiple criteria (type, state, assignee)
+    - Performance test (validate 1000 artifacts in <1 second) passes

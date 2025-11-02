@@ -1,0 +1,39 @@
+metadata:
+  title: Unit Test Suite
+  priority: critical
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.4.3]
+    blocked_by: [B.4.1]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.4.1
+            resolved: false
+content:
+  summary: >-
+    Implement comprehensive unit test suite for all services (ArtifactService, ValidationService,
+    ContextService, ScaffoldService, QueryService) and utilities (error formatters, ID allocation).
+    Uses Vitest with mocked dependencies for isolated testing. Achieves 90%+ coverage.
+  acceptance_criteria:
+    - "ArtifactService tests cover CRUD operations with mocked filesystem"
+    - "ValidationService tests cover all validator orchestration paths"
+    - "ContextService tests cover path and branch parsing edge cases"
+    - "ScaffoldService tests verify template generation for all artifact types"
+    - "QueryService tests cover tree traversal and filtering with mocked data"
+    - "Error formatter tests verify all error types produce correct output"
+    - "ID allocation tests cover letter wrapping and numeric sequences"
+    - "All tests run in isolation with no shared state"
+    - "90%+ code coverage across all services and utilities"
+    - "Tests run in <10 seconds total"

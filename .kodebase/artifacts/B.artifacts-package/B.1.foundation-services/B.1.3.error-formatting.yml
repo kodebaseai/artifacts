@@ -1,0 +1,35 @@
+metadata:
+  title: Error Formatting Utilities
+  priority: high
+  estimation: XS
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.1.4]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Implement error formatting utilities with ArtifactError class, formatValidationErrors(errors[]),
+    formatSchemaError(zodError, artifactId?), and createUserFriendlyError(error, context?).
+    Provides artifact context, field paths, and actionable suggested fixes.
+  acceptance_criteria:
+    - "ArtifactError includes { code, message, artifactId, field, suggestion }"
+    - "formatValidationErrors() produces CLI-friendly output"
+    - "Zod errors converted to ValidationError with field paths"
+    - "Error messages include artifact ID and field path"
+    - "Schema errors show expected vs actual values"
+    - "Dependency errors reference specific artifact IDs"
+    - "Suggested fixes are actionable (e.g., \"Remove A.2 from blocked_by\")"
+    - "Unknown errors wrapped gracefully (no crashes)"
+    - "Error formatting tested with real validation failures"
+    - "95%+ test coverage (critical for UX)"

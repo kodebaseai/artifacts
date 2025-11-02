@@ -1,0 +1,35 @@
+metadata:
+  title: Artifact Templates
+  priority: critical
+  estimation: XS
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.2.4]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Create template objects for Initiative, Milestone, and Issue artifacts with proper metadata,
+    content fields, and default values. Templates serve as foundation for ScaffoldService.
+    Ensures all scaffolded artifacts have consistent structure and required fields.
+  acceptance_criteria:
+    - "Initiative template includes metadata (title, priority, estimation) and content (vision, in_scope, out_of_scope)"
+    - "Milestone template includes metadata and content (summary, deliverables, validation)"
+    - "Issue template includes metadata and content (summary, acceptance_criteria)"
+    - "All templates include draft event with timestamp placeholder"
+    - "Templates include default values (priority: medium, estimation: M)"
+    - "Slug generation utility creates URL-safe, lowercased slugs"
+    - "Templates pass schema validation when populated with real data"
+    - "Template structure matches A.9.1 fixture format exactly"
+    - "Utility functions for merging user metadata with template defaults"
+    - "95%+ test coverage on template generation and slug utilities"

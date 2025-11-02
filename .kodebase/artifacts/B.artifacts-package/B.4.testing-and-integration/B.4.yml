@@ -1,0 +1,28 @@
+metadata:
+  title: Testing & Integration
+  priority: critical
+  estimation: M
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.5]
+    blocked_by: [B.1, B.2, B.3]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  summary: >-
+    Comprehensive test coverage, CI integration, and package build configuration.
+  deliverables:
+    - Unit test suite for all services and utilities (90%+ coverage)
+    - Integration tests using core fixtures (A.9.1 artifacts-tree)
+    - Performance benchmarks (1000+ artifacts in <1s)
+    - Package configuration (package.json, tsconfig, vitest config)
+  validation:
+    - All tests passing (unit + integration + performance)
+    - 90%+ test coverage achieved
+    - CI pipeline runs tests on PR
+    - Package builds successfully with no type errors

@@ -1,0 +1,39 @@
+metadata:
+  title: Query & Filter Operations
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.3.1]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.3.1
+            resolved: false
+content:
+  summary: >-
+    Implement query and filter operations: findByState(state) to filter by current state,
+    findByType(type) for initiatives/milestones/issues, findByAssignee(assignee), findByPriority(priority),
+    and findArtifacts(criteria) for complex multi-criteria queries. Supports combinations and sorting.
+  acceptance_criteria:
+    - "findByState(state) returns artifacts in specific state (draft, in_progress, completed, etc.)"
+    - "findByType(type) filters by artifact type (initiative, milestone, issue)"
+    - "findByAssignee(assignee) returns artifacts assigned to specific person"
+    - "findByPriority(priority) filters by priority level"
+    - "findArtifacts(criteria) supports multiple filters combined (e.g., state + assignee)"
+    - "Query results can be sorted by ID, priority, or timestamp"
+    - "Supports pagination for large result sets (offset, limit)"
+    - "Returns empty array for no matches (not null or error)"
+    - "Performance: filters 1000+ artifacts in <100ms"
+    - "90%+ test coverage with complex query combinations"

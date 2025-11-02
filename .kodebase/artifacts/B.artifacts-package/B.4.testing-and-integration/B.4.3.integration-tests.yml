@@ -1,0 +1,41 @@
+metadata:
+  title: Integration Tests
+  priority: critical
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.4.1, B.4.2]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.4.1
+            resolved: false
+          - artifact_id: B.4.2
+            resolved: false
+content:
+  summary: >-
+    Implement integration tests using real A.9.1 artifacts-tree fixtures from @kodebase/core.
+    Tests full workflows: create → validate → query, scaffolding → creation, context detection → scaffolding.
+    Verifies services work together correctly with real artifact data.
+  acceptance_criteria:
+    - "Uses A.9.1 artifacts-tree fixtures as test data (real artifact structure)"
+    - "Tests create → validate → query workflow end-to-end"
+    - "Tests scaffolding → validation → creation workflow"
+    - "Tests context detection → scaffolding → ID allocation workflow"
+    - "Validates dependency graph operations with real relationships"
+    - "Tests tree traversal with nested artifact hierarchies"
+    - "Verifies error formatting with real validation failures"
+    - "All integration tests use real filesystem (temp directories)"
+    - "Tests clean up temporary files after completion"
+    - "All integration tests passing with real core validators"

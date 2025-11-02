@@ -1,0 +1,39 @@
+metadata:
+  title: Dependency Graph Operations
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.3.1]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.3.1
+            resolved: false
+content:
+  summary: >-
+    Implement dependency graph operations: getDependencies(id) to get blocked_by artifacts,
+    getBlockedArtifacts(id) to get artifacts blocked by this one, isBlocked(id) to check blocking state,
+    and resolveDependencyChain(id) to traverse full dependency graph. Enforces sibling-only constraint.
+  acceptance_criteria:
+    - "getDependencies(id) returns all artifacts in blocked_by array"
+    - "getBlockedArtifacts(id) returns artifacts where this ID appears in their blocked_by"
+    - "isBlocked(id) returns true if any blocked_by dependency is not completed"
+    - "resolveDependencyChain(id) returns full transitive closure of dependencies"
+    - "Enforces sibling-only constraint (dependencies must share same parent)"
+    - "Detects circular dependencies (A blocks B, B blocks A)"
+    - "Handles missing dependency IDs gracefully (warns, doesn't crash)"
+    - "Performance: resolves dependency chain for 100+ artifacts in <100ms"
+    - "Integration test with A.9.1 fixtures validates real dependencies"
+    - "90%+ test coverage with circular and invalid dependency tests"

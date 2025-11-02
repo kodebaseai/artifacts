@@ -1,0 +1,39 @@
+metadata:
+  title: Performance Benchmarks
+  priority: high
+  estimation: XS
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.4.1]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.4.1
+            resolved: false
+content:
+  summary: >-
+    Implement performance benchmarks to ensure package meets scalability requirements.
+    Tests with 1000+ artifacts to validate tree traversal, validation, and query operations
+    complete within acceptable timeframes. Uses Vitest bench for consistent measurements.
+  acceptance_criteria:
+    - "Tree traversal benchmark: 1000+ artifacts in <1 second"
+    - "Validation benchmark: validate 1000 artifacts in <1 second"
+    - "Query benchmark: filter 1000+ artifacts in <100ms"
+    - "ID allocation benchmark: scan 100+ artifacts in <100ms"
+    - "Dependency graph benchmark: resolve chain for 100+ artifacts in <100ms"
+    - "Benchmarks run with realistic artifact distribution (initiatives/milestones/issues)"
+    - "Performance regression tests fail if benchmarks exceed thresholds"
+    - "Benchmark results logged to CI for tracking over time"
+    - "Memory usage stays within acceptable limits (no leaks)"
+    - "All benchmarks passing with margin for variation"

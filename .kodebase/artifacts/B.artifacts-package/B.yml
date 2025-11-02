@@ -1,0 +1,39 @@
+metadata:
+  title: Artifacts Package
+  priority: high
+  estimation: L
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+content:
+  vision: >-
+    Ship high-level artifact operations package bridging @kodebase/core and CLI,
+    enabling batteries-included workflows for creation, validation, and querying.
+  in_scope:
+    - Five service modules (Artifact, Validation, Context, Scaffold, Query)
+    - Unified validation pipeline orchestrating core validators
+    - Context-aware scaffolding with auto-allocated IDs
+    - Tree traversal and dependency graph operations
+    - Comprehensive error formatting
+    - 90%+ test coverage with integration tests
+    - JSDoc documentation (95%+ coverage)
+  out_of_scope:
+    - Git operations (CLI responsibility)
+    - Network/API calls (future cloud sync)
+    - AI/intelligence features (premium-only)
+    - Multi-repository operations
+    - Migration/refactoring tools
+  success_criteria:
+    - All 5 services implemented and tested
+    - Unified validation pipeline (schema + readiness + state machine)
+    - Context detection from directory and branch name
+    - Query operations handle 1000+ artifacts in <1 second
+    - CLI package (Initiative C) can consume this API

@@ -1,0 +1,32 @@
+metadata:
+  title: ArtifactService CRUD Operations
+  priority: critical
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.1.2]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Implement ArtifactService with CRUD operations: createArtifact(artifact, slug), getArtifact(id),
+    updateMetadata(id, updates), and appendEvent(id, event). Includes proper directory structure handling,
+    YAML serialization, and path resolution helpers.
+  acceptance_criteria:
+    - "ArtifactService creates all 3 artifact types with proper directory structure"
+    - "Reads existing artifacts from A.9.1 fixtures without errors"
+    - "Metadata updates preserve events array (no overwrites)"
+    - "Event appending maintains immutability"
+    - "Handles missing files gracefully (throws ArtifactNotFoundError)"
+    - "YAML formatting matches core package conventions"
+    - "90%+ test coverage on all methods"

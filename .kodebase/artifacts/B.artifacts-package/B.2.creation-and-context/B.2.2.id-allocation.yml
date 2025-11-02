@@ -1,0 +1,35 @@
+metadata:
+  title: ID Allocation Logic
+  priority: critical
+  estimation: XS
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.2.4]
+    blocked_by: []
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: ready
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
+content:
+  summary: >-
+    Implement ID allocation utilities: allocateNextInitiativeId() for letter-based IDs (A→Z→AA→AB),
+    allocateNextMilestoneId(parentId) for numeric milestone IDs (A.1, A.2), and allocateNextIssueId(parentId)
+    for numeric issue IDs (A.1.1, A.1.2). Always increments from highest existing ID (no gap filling).
+  acceptance_criteria:
+    - "allocateNextInitiativeId() returns next letter ID (A, B, ..., Z, AA, AB, ...)"
+    - "Handles single letters (A-Z) before wrapping to double letters (AA)"
+    - "Always increments from highest ID (e.g., A, C, D → returns E, never fills gaps)"
+    - "allocateNextMilestoneId(parentId) returns next numeric ID under parent (A.1, A.2, ...)"
+    - "allocateNextIssueId(parentId) returns next numeric ID under parent (A.1.1, A.1.2, ...)"
+    - "Scans filesystem to find existing IDs (no in-memory state)"
+    - "Handles empty artifact folders (returns first ID: A, .1, or .1)"
+    - "IDs maintain chronological order (newest artifacts have highest IDs)"
+    - "Performance: scans 100+ artifacts in <100ms"
+    - "95%+ test coverage with edge cases (missing IDs, wrapping, empty folders)"

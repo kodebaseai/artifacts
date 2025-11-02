@@ -1,0 +1,41 @@
+metadata:
+  title: Package Setup & Exports
+  priority: high
+  estimation: XS
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.1.2, B.1.3]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.1.2
+            resolved: false
+          - artifact_id: B.1.3
+            resolved: false
+content:
+  summary: >-
+    Configure package.json, tsconfig.json, and index.ts for @kodebase/artifacts with ESM-only exports,
+    TypeScript strict mode, and tree-shakable public API exporting ArtifactService, ValidationService,
+    and error utilities.
+  acceptance_criteria:
+    - "pnpm build succeeds in packages/artifacts/"
+    - "Package builds successfully with no type errors"
+    - "import { ArtifactService } from '@kodebase/artifacts' works"
+    - "Exports tree-shakable (only used services bundled)"
+    - "@kodebase/core listed as dependency"
+    - "TypeScript strict mode enabled"
+    - "No circular dependencies detected"
+    - "Type declarations (.d.ts) generated correctly"
+    - "Package can be imported by CLI package"
+    - "Package follows monorepo conventions (matches core package structure)"

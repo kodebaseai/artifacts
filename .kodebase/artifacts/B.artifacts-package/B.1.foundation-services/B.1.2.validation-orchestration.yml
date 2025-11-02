@@ -1,0 +1,39 @@
+metadata:
+  title: ValidationService Orchestration
+  priority: critical
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: [B.1.4]
+    blocked_by: [B.1.1]
+  events:
+    - event: draft
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.1.1
+            resolved: false
+content:
+  summary: >-
+    Implement ValidationService orchestrating all four core validators (schema, readiness, state machine, dependency)
+    into unified pipeline. Includes validateArtifact(artifact), validateAll(artifacts[]) with batch optimization,
+    and delegation to core validators with aggregated results.
+  acceptance_criteria:
+    - "validateArtifact() returns { valid: boolean, errors: [], warnings: [] }"
+    - "All four validators called in correct order"
+    - "Results aggregated into single ValidationResult"
+    - "Errors include artifact context (ID, field path, suggested fix)"
+    - "Schema errors formatted with field paths and suggestions"
+    - "Dependency errors reference actual artifact IDs"
+    - "Readiness checks detect missing required relationships"
+    - "Batch validation reuses tree loading (no redundant disk I/O)"
+    - "Integration test with A.9.1 fixtures catches real violations"
+    - "90%+ test coverage with mocked and real validators"
