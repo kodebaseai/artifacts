@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-11-02T11:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-02T18:46:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-02T18:53:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement error formatting utilities with ArtifactError class, formatValidationErrors(errors[]),
@@ -33,3 +41,20 @@ content:
     - "Unknown errors wrapped gracefully (no crashes)"
     - "Error formatting tested with real validation failures"
     - "95%+ test coverage (critical for UX)"
+implementation_notes:
+  result: "Complete error formatting utilities with ArtifactError class, CLI-friendly formatters, Zod error conversion, and graceful unknown error handling achieving 98.79% coverage"
+  challenges:
+    - challenge: "CLI-friendly output format with consistent structure across error types"
+      solution: "Created formatValidationErrors() with emoji indicators (❌ for errors, ⚠️ for warnings, 💡 for suggestions), consistent indentation, and field path annotations in parentheses"
+    - challenge: "Zod error conversion with field path handling including array indices"
+      solution: "Implemented path.join('.') to convert Zod's path arrays (including numeric indices) into dot-notation strings (e.g., ['content', 'acceptance_criteria', 0] → 'content.acceptance_criteria.0')"
+    - challenge: "Graceful handling of unknown error types without crashes"
+      solution: "createUserFriendlyError() uses type guards and fallback logic: Error → message extraction, string → direct use, object → JSON.stringify, null/undefined → generic message"
+  insights:
+    - "ArtifactError extends Error with artifact context while preserving stack traces and cause chains via Error.captureStackTrace and cause parameter"
+    - "Suggested fix logic in formatSchemaError() matches on error code patterns (required, invalid_type, invalid_enum, too_small, too_big) to provide context-aware guidance"
+    - "CLI output format uses visual hierarchy: header with emoji, indented error blocks, field paths in parentheses, suggestions prefixed with 💡"
+    - "formatValidationWarnings() mirrors formatValidationErrors() structure for consistency, differing only in emoji (⚠️) and header text"
+    - "Error wrapping preserves original error as cause (error.cause) enabling error chain inspection while adding user-friendly context"
+    - "34 comprehensive tests cover all error types, edge cases (null/undefined, objects without message), and formatting scenarios achieving 98.79% coverage"
+  tags: [error-handling, cli-output, zod-integration, user-experience, error-formatting, typescript]
