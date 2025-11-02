@@ -28,7 +28,7 @@
     "check-types": "tsc -p tsconfig.json --noEmit",
     "lint": "biome lint .",
     "lint:package": "publint",
-    "lint:types": "attw --pack .",
+    "lint:types": "attw --pack . --profile esm-only",
     "format": "biome format .",
     "test": "vitest run",
     "prepack": "pnpm lint:package"

@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-11-02T18:53:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-02T18:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement error formatting utilities with ArtifactError class, formatValidationErrors(errors[]),
