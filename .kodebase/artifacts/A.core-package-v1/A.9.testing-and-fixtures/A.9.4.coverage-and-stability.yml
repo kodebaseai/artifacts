@@ -33,6 +33,10 @@ metadata:
       timestamp: "2025-11-02T00:58:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-02T01:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Define coverage thresholds for critical modules and ensure tests are deterministic
