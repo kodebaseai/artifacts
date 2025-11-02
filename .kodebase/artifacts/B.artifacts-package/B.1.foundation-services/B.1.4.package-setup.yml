@@ -37,6 +37,10 @@ metadata:
       timestamp: "2025-11-02T23:18:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-02T23:19:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Configure package.json, tsconfig.json, and index.ts for @kodebase/artifacts with ESM-only exports,
