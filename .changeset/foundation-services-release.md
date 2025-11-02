@@ -36,6 +36,7 @@ Complete artifact operations layer providing CRUD services, orchestrated validat
 - Zero circular dependencies (verified with madge)
 - Full type declarations with source maps for IDE navigation
 - Package validation with publint and attw (esm-only profile)
+- Public mirror repository at https://github.com/kodebaseai/artifacts
 
 ---
 

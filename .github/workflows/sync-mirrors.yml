@@ -56,31 +56,13 @@ jobs:
         run: pnpm build
         env: { CI: true }
 
-      # Detect changes specifically in packages/core/**
-      - name: Detect changes in packages/core
-        id: changed-core
-        run: |
-          set -euo pipefail
-          if [ "${{ github.event_name }}" = "push" ]; then
-            base="${{ github.event.before }}"
-            head="${{ github.sha }}"
-          else
-            # For workflow_dispatch (no 'before'), compare to previous commit
-            base="$(git rev-parse HEAD~1 || true)"
-            head="$(git rev-parse HEAD)"
-          fi
-          if [ -n "$base" ] && git diff --quiet "$base" "$head" -- packages/core; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Sync Core Package
-        if: steps.changed-core.outputs.changed == 'true'
+      # Sync public mirrors for changed packages
+      - name: Sync public mirrors
         env:
           MIRROR_GITHUB_TOKEN: ${{ secrets.MIRROR_GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+
           if [ -z "${MIRROR_GITHUB_TOKEN:-}" ]; then
             echo "MIRROR_GITHUB_TOKEN is not set. Add it as a repo secret." >&2
             exit 1
@@ -89,19 +71,56 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git clone "https://github.com/kodebaseai/core.git" core-mirror
+          # Determine base and head commits for diff
+          if [ "${{ github.event_name }}" = "push" ]; then
+            base="${{ github.event.before }}"
+            head="${{ github.sha }}"
+          else
+            # For workflow_dispatch (no 'before'), compare to previous commit
+            base="$(git rev-parse HEAD~1 || true)"
+            head="$(git rev-parse HEAD)"
+          fi
 
-          # Sync package contents into repo root but keep repo metadata and CI files
-          rsync -av --delete \
-            --exclude "node_modules" \
-            --exclude ".git" \
-            --exclude ".github" \
-            packages/core/ core-mirror/
+          # Function to sync a package to its mirror
+          sync_package() {
+            local package_name="$1"
+            local mirror_repo="$2"
 
-          cd core-mirror
-          git status --porcelain
-          git add -A
-          git commit -m "Sync Core package from ${{ github.repository }}@${{ github.sha }}" || { echo "No changes to commit"; exit 0; }
+            echo "Checking for changes in packages/${package_name}..."
 
-          # Push using the token without storing credentials
-          git push "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/kodebaseai/core.git" HEAD:main
+            # Check if package has changes
+            if [ -n "$base" ] && git diff --quiet "$base" "$head" -- "packages/${package_name}"; then
+              echo "No changes detected in packages/${package_name}, skipping sync"
+              return 0
+            fi
+
+            echo "Changes detected in packages/${package_name}, syncing to ${mirror_repo}..."
+
+            # Clone the mirror repository
+            git clone "https://github.com/${mirror_repo}.git" "${package_name}-mirror"
+
+            # Sync package contents into repo root but keep repo metadata and CI files
+            rsync -av --delete \
+              --exclude "node_modules" \
+              --exclude ".git" \
+              --exclude ".github" \
+              "packages/${package_name}/" "${package_name}-mirror/"
+
+            cd "${package_name}-mirror"
+            git status --porcelain
+            git add -A
+
+            if git commit -m "Sync ${package_name} package from ${{ github.repository }}@${{ github.sha }}"; then
+              # Push using the token without storing credentials
+              git push "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/${mirror_repo}.git" HEAD:main
+              echo "Successfully synced ${package_name} to ${mirror_repo}"
+            else
+              echo "No changes to commit for ${package_name}"
+            fi
+
+            cd ..
+          }
+
+          # Sync each package that has a public mirror
+          sync_package "core" "kodebaseai/core"
+          sync_package "artifacts" "kodebaseai/artifacts"
