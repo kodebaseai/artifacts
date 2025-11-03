@@ -21,13 +21,13 @@ metadata:
         blocking_dependencies:
           - artifact_id: B.3.2
             resolved: true
-            resolved_at: "2025-11-02T13:55:00Z"
+            resolved_at: "2025-11-03T13:55:00Z"
     - event: ready
-      timestamp: "2025-11-02T13:55:00Z"
+      timestamp: "2025-11-03T13:55:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
     - event: in_progress
-      timestamp: "2025-11-02T1:13:00Z"
+      timestamp: "2025-11-03T1:13:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: branch_created
     - event: in_review

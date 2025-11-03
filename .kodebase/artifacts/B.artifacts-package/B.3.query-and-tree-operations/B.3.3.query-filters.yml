@@ -21,19 +21,23 @@ metadata:
         blocking_dependencies:
           - artifact_id: B.3.1
             resolved: true
-            resolved_at: "2025-11-02T13:19:00Z"
+            resolved_at: "2025-11-03T13:19:00Z"
     - event: ready
-      timestamp: "2025-11-02T13:19:00Z"
+      timestamp: "2025-11-03T13:19:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
     - event: in_progress
-      timestamp: "2025-11-02T15:45:00Z"
+      timestamp: "2025-11-03T15:45:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: branch_created
     - event: in_review
       timestamp: "2025-11-03T16:22:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-03T16:30:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement query and filter operations: findByState(state) to filter by current state,
