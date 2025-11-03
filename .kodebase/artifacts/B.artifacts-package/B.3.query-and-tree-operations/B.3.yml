@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-11-03T17:05:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: children_completed
+    - event: completed
+      timestamp: "2025-11-03T18:02:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Enable tree traversal, dependency graphs, and filtered queries for status operations.

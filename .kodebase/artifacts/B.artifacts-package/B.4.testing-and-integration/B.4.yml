@@ -26,7 +26,12 @@ metadata:
             resolved: true
             resolved_at: "2025-11-03T12:16:00Z"
           - artifact_id: B.3
-            resolved: false
+            resolved: true
+            resolved_at: "2025-11-03T18:02:00Z"
+    - event: ready
+      timestamp: "2025-11-03T18:02:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Comprehensive test coverage, CI integration, and package build configuration.
