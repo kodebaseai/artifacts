@@ -25,7 +25,7 @@ metadata:
     - event: ready
       timestamp: "2025-11-02T13:19:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
-      trigger: dependencies_metse
+      trigger: dependencies_met
     - event: in_progress
       timestamp: "2025-11-02T13:39:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-11-02T13:50:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-02T13:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement dependency graph operations: getDependencies(id) to get blocked_by artifacts,
