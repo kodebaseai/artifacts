@@ -34,6 +34,10 @@ metadata:
       timestamp: "2025-11-03T12:00:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: children_completed
+    - event: completed
+      timestamp: "2025-11-03T12:16:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Enable artifact creation with context awareness and auto-allocated IDs.

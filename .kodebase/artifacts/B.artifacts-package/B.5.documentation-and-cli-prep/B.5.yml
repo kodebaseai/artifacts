@@ -13,6 +13,14 @@ metadata:
       timestamp: "2025-11-02T11:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.4
+            resolved: false
 content:
   summary: >-
     Prepare package for CLI consumption with comprehensive documentation.

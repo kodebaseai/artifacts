@@ -13,6 +13,20 @@ metadata:
       timestamp: "2025-11-02T11:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-02T11:56:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.1
+            resolved: true
+            resolved_at: "2025-11-02T23:45:00Z"
+          - artifact_id: B.2
+            resolved: true
+            resolved_at: "2025-11-03T12:16:00Z"
+          - artifact_id: B.3
+            resolved: false
 content:
   summary: >-
     Comprehensive test coverage, CI integration, and package build configuration.
