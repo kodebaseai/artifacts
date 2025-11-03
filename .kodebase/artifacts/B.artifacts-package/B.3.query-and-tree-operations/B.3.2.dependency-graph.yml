@@ -20,7 +20,12 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: B.3.1
-            resolved: false
+            resolved: true
+            resolved_at: "2025-11-02T13:19:00Z"
+    - event: ready
+      timestamp: "2025-11-02T13:19:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_metse
 content:
   summary: >-
     Implement dependency graph operations: getDependencies(id) to get blocked_by artifacts,

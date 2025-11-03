@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-11-02T13:03:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-02T13:19:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement tree traversal operations in QueryService: getTree() to load full artifact hierarchy,
