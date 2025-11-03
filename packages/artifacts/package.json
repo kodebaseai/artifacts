@@ -37,9 +37,9 @@
     "@kodebase/core": "workspace:*"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.17.0",
+    "@arethetypeswrong/cli": "^0.18.2",
     "@kodebase/typescript-config": "workspace:*",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.19.0",
     "@vitest/coverage-istanbul": "^3.0.7",
     "memfs": "^4.50.0",
     "publint": "^0.3.15"

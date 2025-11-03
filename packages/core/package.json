@@ -38,10 +38,10 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.17.0",
+    "@arethetypeswrong/cli": "^0.18.2",
     "@kodebase/typescript-config": "workspace:*",
     "@vitest/coverage-istanbul": "^3.0.7",
-    "@types/node": "^22.5.1",
+    "@types/node": "^22.19.0",
     "publint": "^0.3.15"
   }
 }

@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-11-02T11:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-03T09:52:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-03T10:12:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement ID allocation utilities: allocateNextInitiativeId() for letter-based IDs (A→Z→AA→AB),
@@ -33,3 +41,17 @@ content:
     - "IDs maintain chronological order (newest artifacts have highest IDs)"
     - "Performance: scans 100+ artifacts in <100ms"
     - "95%+ test coverage with edge cases (missing IDs, wrapping, empty folders)"
+implementation_notes:
+  result: "Complete IdAllocationService with 3 allocation methods achieving 97.32% test coverage (29 tests), providing stateless filesystem-based ID allocation"
+  challenges:
+    - challenge: "Base-26 conversion for initiative IDs (A→Z→AA→ZZ→AAA like Excel columns)"
+      solution: "Bidirectional conversion using letterIdToNumber() and numberToLetterId() with (n-1)%26 modulo arithmetic"
+    - challenge: "TypeScript strict null checks on array[0] and string.split() operations"
+      solution: "Explicit type guards with descriptive error messages for impossible cases"
+  insights:
+    - "Complements ContextService (B.2.1): context detection shows where you are, ID allocation determines what's next"
+    - "Gap-filling deliberately avoided - preserves chronological meaning (A, C, D → returns E, not B)"
+    - "Stateless filesystem scanning via @kodebase/core utilities - no cache invalidation needed"
+    - "Performance <100ms for 100+ artifacts verified with comprehensive test suite"
+    - "Ready for integration with ScaffoldingService (B.2.4)"
+  tags: [id-allocation, base26-conversion, stateless-operation]
