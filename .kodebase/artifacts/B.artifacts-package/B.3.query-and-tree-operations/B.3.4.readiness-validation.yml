@@ -1,0 +1,42 @@
+metadata:
+  title: Readiness Validation
+  priority: high
+  estimation: S
+  created_by: "Miguel Carvalho (m@kodebase.ai)"
+  assignee: "Miguel Carvalho (m@kodebase.ai)"
+  schema_version: "0.0.1"
+  relationships:
+    blocks: []
+    blocked_by: [B.3.2]
+  events:
+    - event: draft
+      timestamp: "2025-11-03T13:45:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: artifact_created
+    - event: blocked
+      timestamp: "2025-11-03T13:45:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: has_dependencies
+      metadata:
+        blocking_dependencies:
+          - artifact_id: B.3.2
+            resolved: false
+content:
+  summary: >-
+    Implement ReadinessService with comprehensive readiness validation: isReady(id) checks if artifact
+    is ready to work on (no incomplete blocking siblings + parent completed if in ready state),
+    getReadyArtifacts() returns all artifacts ready to work on, getBlockingReasons(id) explains why
+    artifact is not ready, and canTransitionToInProgress(id) validates ready→in_progress transition.
+  acceptance_criteria:
+    - "isReady(id) returns true only if no incomplete blocking siblings exist"
+    - "isReady(id) checks parent completion ONLY if artifact already has ready event"
+    - "getReadyArtifacts() returns all artifacts ready to work on (filtered by isReady)"
+    - "getBlockingReasons(id) returns array of blocking reasons (incomplete deps, incomplete parent, wrong state)"
+    - "canTransitionToInProgress(id) validates artifact can transition from ready to in_progress"
+    - "Integrates with DependencyGraphService for sibling dependency checks"
+    - "Integrates with QueryService for parent traversal"
+    - "Integrates with state machine from core for state validation"
+    - "Handles missing artifacts gracefully (returns appropriate errors)"
+    - "Performance: checks readiness for 100+ artifacts in <100ms"
+    - "Works with A.9.1 fixtures (real artifact tree)"
+    - "90%+ test coverage with state transition scenarios"
