@@ -26,6 +26,14 @@ metadata:
       timestamp: "2025-11-02T13:55:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-02T1:13:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-03T14:35:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: implementation_complete
 content:
   summary: >-
     Implement ReadinessService with comprehensive readiness validation: isReady(id) checks if artifact
@@ -45,3 +53,15 @@ content:
     - "Performance: checks readiness for 100+ artifacts in <100ms"
     - "Works with A.9.1 fixtures (real artifact tree)"
     - "90%+ test coverage with state transition scenarios"
+implementation_notes:
+  result: "4 methods, 96% coverage (22 tests), <100ms performance, full ancestor chain validation"
+  challenges:
+    - challenge: "Conditional ancestor checking complexity"
+      solution: "Two-stage: siblings first, then ALL ancestors if READY event exists"
+    - challenge: "Parent state logic misunderstanding"
+      solution: "Only READY/IN_PROGRESS allow children; IN_REVIEW/COMPLETED block new work"
+  insights:
+    - "Validates entire ancestor chain (Initiative→Milestone→Issue), not just immediate parent"
+    - "State check only triggers if artifact has READY event in history"
+    - "BlockingReason provides structured diagnostics per ancestor"
+  tags: [readiness-validation, state-transitions, dependency-checking, workflow-automation]
