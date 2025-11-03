@@ -1,6 +1,11 @@
-import { ArtifactValidator, CArtifact, CArtifactEvent } from "@kodebase/core";
+import {
+  ArtifactValidator,
+  CArtifact,
+  CArtifactEvent,
+  type TAnyArtifact,
+} from "@kodebase/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { type TAnyArtifact, ValidationService } from "./validation-service.js";
+import { ValidationService } from "./validation-service.js";
 
 // Mock @kodebase/core validators
 vi.mock("@kodebase/core", async () => {

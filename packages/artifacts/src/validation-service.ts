@@ -14,8 +14,8 @@ import {
   type CrossLevelDependencyIssue,
   type RelationshipConsistencyIssue,
   type StateTransitionError,
+  type TAnyArtifact,
 } from "@kodebase/core";
-import type { TAnyArtifact } from "./artifact-service.js";
 
 /**
  * Aggregated validation result with errors and warnings from all validators.

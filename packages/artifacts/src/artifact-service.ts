@@ -12,19 +12,12 @@ import fs from "node:fs/promises";
 import {
   readArtifact,
   resolveArtifactPaths,
+  type TAnyArtifact,
   type TEvent,
-  type TInitiative,
-  type TIssue,
-  type TMilestone,
   writeArtifact,
 } from "@kodebase/core";
 
 import { ArtifactNotFoundError } from "./errors.js";
-
-/**
- * Union type of all artifact types.
- */
-export type TAnyArtifact = TInitiative | TMilestone | TIssue;
 
 /**
  * Options for creating an artifact.

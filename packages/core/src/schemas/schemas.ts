@@ -86,5 +86,7 @@ export type TIssue = z.infer<typeof IssueSchema>;
 export type TMilestone = z.infer<typeof MilestoneSchema>;
 export type TInitiative = z.infer<typeof InitiativeSchema>;
 
+export type TAnyArtifact = TInitiative | TMilestone | TIssue;
+
 // Re-export metadata types for public API
 export type { TArtifactMetadata, TEvent };
