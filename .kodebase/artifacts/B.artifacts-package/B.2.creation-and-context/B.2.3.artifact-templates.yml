@@ -17,6 +17,14 @@ metadata:
       timestamp: "2025-11-02T11:56:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-03T10:18:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-03T10:29:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Create template objects for Initiative, Milestone, and Issue artifacts with proper metadata,
@@ -33,3 +41,17 @@ content:
     - "Template structure matches A.9.1 fixture format exactly"
     - "Utility functions for merging user metadata with template defaults"
     - "95%+ test coverage on template generation and slug utilities"
+implementation_notes:
+  result: "Template utilities implementation with generateSlug() achieving 100% test coverage (44 tests), plus re-exports of existing scaffold functions from @kodebase/core"
+  challenges:
+    - challenge: "Discovered scaffold functions already exist in @kodebase/core with 95%+ coverage"
+      solution: "Re-exported scaffoldInitiative/Milestone/Issue from @kodebase/core instead of reimplementing, focusing on missing slug generation utility"
+    - challenge: "Slug generation edge cases - Unicode, emoji, multiple special characters"
+      solution: "Single regex-based approach: lowercase → replace non-alphanumeric with hyphens → trim hyphens from edges, handles all cases consistently"
+  insights:
+    - "scaffold* functions in @kodebase/core already generate spec-compliant artifacts matching A.9.1 fixture format - no need to duplicate"
+    - "Slug generation was the only missing utility - now handles all edge cases (Unicode, emoji, special chars) with 100% coverage"
+    - "Re-export pattern keeps @kodebase/artifacts as single entry point while leveraging @kodebase/core primitives"
+    - "generateSlug() uses simple algorithm: lowercase + collapse non-alphanumeric to hyphens + trim edges = URL-safe slugs"
+    - "All acceptance criteria met: templates available via re-exports, slug utility added, 100% test coverage achieved"
+  tags: [slug-generation, template-utilities, re-exports]
