@@ -593,6 +593,561 @@ describe("QueryService", () => {
       expect(tree.children.length).toBeGreaterThan(0);
     });
   });
+
+  describe("Filter Methods", () => {
+    describe("findByState", () => {
+      it("finds artifacts by draft state", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByState("draft");
+
+        // All artifacts created with scaffoldX start in draft state
+        expect(results.length).toBeGreaterThan(0);
+        for (const item of results) {
+          const events = item.artifact.metadata.events;
+          const lastEvent = events[events.length - 1];
+          expect(lastEvent?.event).toBe("draft");
+        }
+      });
+
+      it("returns empty array when no artifacts match state", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByState("completed");
+
+        expect(results).toEqual([]);
+      });
+
+      it("finds artifacts in completed state", async () => {
+        await createSimpleHierarchy();
+
+        // Mark A.1.1 as completed
+        await artifactService.appendEvent({
+          id: "A.1.1",
+          slug: "issue-a11",
+          event: {
+            event: "completed",
+            timestamp: new Date().toISOString(),
+            actor: "Test User (test@example.com)",
+            trigger: "pr_merged",
+          },
+          baseDir: testBaseDir,
+        });
+
+        // Clear cache to reload
+        queryService.clearCache();
+
+        const results = await queryService.findByState("completed");
+
+        expect(results).toHaveLength(1);
+        expect(results[0].id).toBe("A.1.1");
+      });
+    });
+
+    describe("findByType", () => {
+      it("finds all initiatives", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByType("initiative");
+
+        expect(results.length).toBe(2); // A and B
+        expect(results.map((r) => r.id).sort()).toEqual(["A", "B"]);
+      });
+
+      it("finds all milestones", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByType("milestone");
+
+        expect(results.length).toBe(3); // A.1, A.2, B.1
+        expect(results.map((r) => r.id).sort()).toEqual(["A.1", "A.2", "B.1"]);
+      });
+
+      it("finds all issues", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByType("issue");
+
+        expect(results.length).toBe(3); // A.1.1, A.1.2, A.2.1
+        expect(results.map((r) => r.id).sort()).toEqual([
+          "A.1.1",
+          "A.1.2",
+          "A.2.1",
+        ]);
+      });
+
+      it("returns empty array when no artifacts of type exist", async () => {
+        // Create only initiatives and milestones, no issues
+        await artifactService.createArtifact({
+          id: "C",
+          artifact: scaffoldInitiative({
+            title: "Initiative C",
+            createdBy: "Test User (test@example.com)",
+            vision: "Vision C",
+            scopeIn: ["Feature C"],
+            scopeOut: ["Feature Z"],
+            successCriteria: ["Criterion C"],
+          }),
+          slug: "initiative-c",
+          baseDir: testBaseDir,
+        });
+
+        await artifactService.createArtifact({
+          id: "C.1",
+          artifact: scaffoldMilestone({
+            title: "Milestone C.1",
+            createdBy: "Test User (test@example.com)",
+            summary: "Summary C.1",
+            deliverables: ["Deliverable C.1"],
+          }),
+          slug: "milestone-c1",
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findByType("issue");
+
+        expect(results).toEqual([]);
+      });
+    });
+
+    describe("findByAssignee", () => {
+      it("finds artifacts by exact assignee match", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByAssignee(
+          "Test User (test@example.com)",
+        );
+
+        // All artifacts in simple hierarchy have same assignee
+        expect(results.length).toBe(8); // 2 initiatives + 3 milestones + 3 issues
+      });
+
+      it("returns empty array when no artifacts match assignee", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByAssignee(
+          "Unknown User (unknown@example.com)",
+        );
+
+        expect(results).toEqual([]);
+      });
+
+      it("finds artifacts with different assignees", async () => {
+        await createSimpleHierarchy();
+
+        // Change assignee for A.1.1
+        await artifactService.updateMetadata({
+          id: "A.1.1",
+          slug: "issue-a11",
+          updates: {
+            assignee: "Alice (alice@example.com)",
+          },
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findByAssignee(
+          "Alice (alice@example.com)",
+        );
+
+        expect(results).toHaveLength(1);
+        expect(results[0].id).toBe("A.1.1");
+      });
+    });
+
+    describe("findByPriority", () => {
+      it("finds high priority artifacts", async () => {
+        await createSimpleHierarchy();
+
+        // Change B.1 to high priority
+        await artifactService.updateMetadata({
+          id: "B.1",
+          slug: "milestone-b1",
+          updates: { priority: "high" },
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findByPriority("high");
+
+        expect(results.length).toBeGreaterThan(0);
+        for (const item of results) {
+          expect(item.artifact.metadata.priority).toBe("high");
+        }
+      });
+
+      it("finds critical priority artifacts", async () => {
+        await createSimpleHierarchy();
+
+        // Change A.1 to critical
+        await artifactService.updateMetadata({
+          id: "A.1",
+          slug: "milestone-a1",
+          updates: {
+            priority: "critical",
+          },
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findByPriority("critical");
+
+        expect(results).toHaveLength(1);
+        expect(results[0].id).toBe("A.1");
+      });
+
+      it("returns empty array when no artifacts match priority", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findByPriority("low");
+
+        expect(results).toEqual([]);
+      });
+    });
+
+    describe("findArtifacts - Complex Queries", () => {
+      it("filters by single criterion (state)", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          state: "draft",
+        });
+
+        expect(results.length).toBeGreaterThan(0);
+        for (const item of results) {
+          const lastEvent =
+            item.artifact.metadata.events[
+              item.artifact.metadata.events.length - 1
+            ];
+          expect(lastEvent?.event).toBe("draft");
+        }
+      });
+
+      it("filters by multiple criteria (type + priority)", async () => {
+        await createSimpleHierarchy();
+
+        // Set all issues to high priority
+        await artifactService.updateMetadata({
+          id: "A.1.1",
+          slug: "issue-a11",
+          updates: { priority: "high" },
+          baseDir: testBaseDir,
+        });
+        await artifactService.updateMetadata({
+          id: "A.1.2",
+          slug: "issue-a12",
+          updates: { priority: "high" },
+          baseDir: testBaseDir,
+        });
+        await artifactService.updateMetadata({
+          id: "A.2.1",
+          slug: "issue-a21",
+          updates: { priority: "high" },
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          priority: "high",
+        });
+
+        expect(results.length).toBe(3); // A.1.1, A.1.2, A.2.1
+        for (const item of results) {
+          expect(item.id.split(".").length).toBe(3); // Issues have 3 segments
+          expect(item.artifact.metadata.priority).toBe("high");
+        }
+      });
+
+      it("filters by state + assignee", async () => {
+        await createSimpleHierarchy();
+
+        // Change assignee for A.1
+        await artifactService.updateMetadata({
+          id: "A.1",
+          slug: "milestone-a1",
+          updates: {
+            assignee: "Bob (bob@example.com)",
+          },
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findArtifacts({
+          state: "draft",
+          assignee: "Bob (bob@example.com)",
+        });
+
+        expect(results).toHaveLength(1);
+        expect(results[0].id).toBe("A.1");
+      });
+
+      it("sorts by id ascending", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          sortBy: "id",
+          sortOrder: "asc",
+        });
+
+        const ids = results.map((r) => r.id);
+        expect(ids).toEqual(["A.1.1", "A.1.2", "A.2.1"]);
+      });
+
+      it("sorts by id descending", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          sortBy: "id",
+          sortOrder: "desc",
+        });
+
+        const ids = results.map((r) => r.id);
+        expect(ids).toEqual(["A.2.1", "A.1.2", "A.1.1"]);
+      });
+
+      it("sorts by priority ascending", async () => {
+        await createSimpleHierarchy();
+
+        // Set different priorities
+        await artifactService.updateMetadata({
+          id: "A.1",
+          slug: "milestone-a1",
+          updates: { priority: "low" },
+          baseDir: testBaseDir,
+        });
+
+        await artifactService.updateMetadata({
+          id: "A.2",
+          slug: "milestone-a2",
+          updates: { priority: "critical" },
+          baseDir: testBaseDir,
+        });
+
+        await artifactService.updateMetadata({
+          id: "B.1",
+          slug: "milestone-b1",
+          updates: { priority: "high" },
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findArtifacts({
+          type: "milestone",
+          sortBy: "priority",
+          sortOrder: "asc",
+        });
+
+        const priorities = results.map((r) => r.artifact.metadata.priority);
+        expect(priorities).toEqual(["low", "high", "critical"]);
+      });
+
+      it("sorts by priority descending", async () => {
+        await createSimpleHierarchy();
+
+        // Set different priorities
+        await artifactService.updateMetadata({
+          id: "A.1",
+          slug: "milestone-a1",
+          updates: { priority: "low" },
+          baseDir: testBaseDir,
+        });
+
+        await artifactService.updateMetadata({
+          id: "A.2",
+          slug: "milestone-a2",
+          updates: { priority: "critical" },
+          baseDir: testBaseDir,
+        });
+
+        await artifactService.updateMetadata({
+          id: "B.1",
+          slug: "milestone-b1",
+          updates: { priority: "high" },
+          baseDir: testBaseDir,
+        });
+
+        queryService.clearCache();
+
+        const results = await queryService.findArtifacts({
+          type: "milestone",
+          sortBy: "priority",
+          sortOrder: "desc",
+        });
+
+        const priorities = results.map((r) => r.artifact.metadata.priority);
+        expect(priorities).toEqual(["critical", "high", "low"]);
+      });
+
+      it("sorts by timestamp ascending", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          type: "milestone",
+          sortBy: "timestamp",
+          sortOrder: "asc",
+        });
+
+        // Verify timestamps are in ascending order
+        for (let i = 1; i < results.length; i++) {
+          const prevTime =
+            results[i - 1].artifact.metadata.events[
+              results[i - 1].artifact.metadata.events.length - 1
+            ]?.timestamp || "";
+          const currTime =
+            results[i].artifact.metadata.events[
+              results[i].artifact.metadata.events.length - 1
+            ]?.timestamp || "";
+          expect(currTime >= prevTime).toBe(true);
+        }
+      });
+
+      it("applies pagination with limit", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          limit: 2,
+        });
+
+        expect(results).toHaveLength(2);
+      });
+
+      it("applies pagination with offset", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          sortBy: "id",
+          offset: 1,
+        });
+
+        expect(results).toHaveLength(2); // Total 3, skip first
+        expect(results[0].id).toBe("A.1.2");
+      });
+
+      it("applies pagination with offset and limit", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          sortBy: "id",
+          offset: 1,
+          limit: 1,
+        });
+
+        expect(results).toHaveLength(1);
+        expect(results[0].id).toBe("A.1.2");
+      });
+
+      it("returns empty array when no artifacts match criteria", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          state: "completed",
+        });
+
+        expect(results).toEqual([]);
+      });
+
+      it("handles empty criteria (returns all)", async () => {
+        await createSimpleHierarchy();
+
+        const results = await queryService.findArtifacts({});
+
+        expect(results.length).toBe(8); // All artifacts
+      });
+    });
+
+    describe("Performance", () => {
+      it("filters 1000+ artifacts in <100ms (warm cache)", async () => {
+        // Helper to convert number to letter-based ID (1→AA, 2→AB, etc.)
+        const numToLetters = (n: number): string => {
+          let result = "";
+          let num = n;
+          while (num > 0) {
+            const remainder = (num - 1) % 26;
+            result = String.fromCharCode(65 + remainder) + result;
+            num = Math.floor((num - 1) / 26);
+          }
+          return result || "A";
+        };
+
+        // Create a large hierarchy
+        for (let i = 1; i <= 100; i++) {
+          const initiativeId = numToLetters(i);
+          await artifactService.createArtifact({
+            id: initiativeId,
+            artifact: scaffoldInitiative({
+              title: `Perf Initiative ${i}`,
+              createdBy: "Test User (test@example.com)",
+              vision: `Vision ${i}`,
+              scopeIn: [`Feature ${i}`],
+              scopeOut: ["Out"],
+              successCriteria: [`Criterion ${i}`],
+            }),
+            slug: `perf-init-${i}`,
+            baseDir: testBaseDir,
+          });
+
+          // Add 2 milestones per initiative
+          for (let j = 1; j <= 2; j++) {
+            await artifactService.createArtifact({
+              id: `${initiativeId}.${j}`,
+              artifact: scaffoldMilestone({
+                title: `Perf Milestone ${i}.${j}`,
+                createdBy: "Test User (test@example.com)",
+                summary: `Summary ${i}.${j}`,
+                deliverables: [`Deliverable ${i}.${j}`],
+              }),
+              slug: `perf-mile-${i}-${j}`,
+              baseDir: testBaseDir,
+            });
+
+            // Add 5 issues per milestone
+            for (let k = 1; k <= 5; k++) {
+              await artifactService.createArtifact({
+                id: `${initiativeId}.${j}.${k}`,
+                artifact: scaffoldIssue({
+                  title: `Perf Issue ${i}.${j}.${k}`,
+                  createdBy: "Test User (test@example.com)",
+                  summary: `Summary ${i}.${j}.${k}`,
+                  acceptanceCriteria: [`AC ${i}.${j}.${k}`],
+                }),
+                slug: `perf-issue-${i}-${j}-${k}`,
+                baseDir: testBaseDir,
+              });
+            }
+          }
+        }
+
+        // Pre-load all artifacts into cache (warm up)
+        await queryService.findArtifacts({});
+
+        // Now measure only the filtering performance (cache is warm)
+        const start = performance.now();
+        const results = await queryService.findArtifacts({
+          type: "issue",
+          priority: "medium",
+        });
+        const duration = performance.now() - start;
+
+        expect(results.length).toBe(1000); // 100 initiatives * 2 milestones * 5 issues
+        expect(duration).toBeLessThan(100); // Pure filtering should be <100ms with warm cache
+      });
+    });
+  });
 });
 
 /**

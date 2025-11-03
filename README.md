@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/@kodebase/artifacts.svg?style=flat-square)](https://www.npmjs.com/package/@kodebase/artifacts)
 [![CI status](https://img.shields.io/github/actions/workflow/status/kodebaseai/kodebase/ci.yml?branch=main&style=flat-square)](https://github.com/kodebaseai/kodebase/actions)
 
-High-level artifact operations for Kodebase. Provides CRUD services, orchestrated validation, and user-friendly error formatting for Initiatives, Milestones, and Issues.
+High-level artifact operations for Kodebase. Provides CRUD services, tree traversal, dependency graph analysis, readiness validation, query filtering, and user-friendly error formatting for Initiatives, Milestones, and Issues.
 
 ## Installation
 
@@ -77,6 +77,131 @@ const withEvent = await service.appendEvent({
 
 **Throws:**
 - `ArtifactNotFoundError` - When artifact file doesn't exist
+
+---
+
+### QueryService
+
+Query and traverse the artifact tree with filtering, tree operations, and dependency graph support.
+
+```ts
+import { QueryService } from "@kodebase/artifacts";
+
+const service = new QueryService();
+
+// Tree traversal
+const tree = await service.getTree(); // Full hierarchy
+const children = await service.getChildren("A.1"); // Direct children of A.1
+const ancestors = await service.getAncestors("A.1.3"); // ["A", "A.1"]
+const siblings = await service.getSiblings("A.1.3"); // Other A.1.x issues
+
+// Query and filter
+const inProgress = await service.findByState("in_progress");
+const milestones = await service.findByType("milestone");
+const aliceWork = await service.findByAssignee("Alice (alice@example.com)");
+const critical = await service.findByPriority("critical");
+
+// Complex queries
+const results = await service.findArtifacts({
+  state: "ready",
+  type: "issue",
+  assignee: "Alice (alice@example.com)",
+  priority: "high"
+});
+```
+
+**Tree Methods:**
+- `getTree()` - Returns full artifact hierarchy with lazy loading
+- `getChildren(parentId)` - Gets direct children of an artifact
+- `getAncestors(id)` - Returns array from root to parent (e.g., [A, A.1] for A.1.3)
+- `getSiblings(id)` - Returns artifacts with same parent
+
+**Query Methods:**
+- `findByState(state)` - Filter by current state (draft, ready, in_progress, etc.)
+- `findByType(type)` - Filter by type (initiative, milestone, issue)
+- `findByAssignee(assignee)` - Filter by assignee
+- `findByPriority(priority)` - Filter by priority (low, medium, high, critical)
+- `findArtifacts(criteria)` - Multi-criteria queries with combinations
+
+**Performance:**
+- Filters 1000+ artifacts in <100ms (with warm cache)
+- Two-level caching (path cache + artifact cache) for fast repeated queries
+- Lazy loading for tree traversal
+
+---
+
+### DependencyGraphService
+
+Operations for dependency graph analysis, blocking relationships, and circular dependency detection.
+
+```ts
+import { DependencyGraphService } from "@kodebase/artifacts";
+
+const service = new DependencyGraphService();
+
+// Dependency analysis
+const deps = await service.getDependencies("A.1.3"); // Get blocked_by artifacts
+const blocked = await service.getBlockedArtifacts("A.1.2"); // What does this block?
+const isBlocked = await service.isBlocked("A.1.3"); // Check if ready to work on
+const chain = await service.resolveDependencyChain("A.1.5"); // Full transitive closure
+
+// Validation
+const hasCircular = await service.hasCircularDependencies("A.1.2");
+const crossLevel = await service.hasCrossLevelDependencies("A.1");
+const consistent = await service.isRelationshipConsistent("A.1.2", "A.1.3");
+```
+
+**Core Methods:**
+- `getDependencies(id)` - Returns all artifacts in blocked_by array
+- `getBlockedArtifacts(id)` - Returns artifacts where this ID appears in their blocked_by
+- `isBlocked(id)` - Returns true if any blocked_by dependency is not completed
+- `resolveDependencyChain(id)` - Returns full transitive closure of dependencies
+
+**Validation Methods:**
+- `hasCircularDependencies(id)` - Detects circular blocking relationships
+- `hasCrossLevelDependencies(id)` - Checks for invalid cross-level dependencies
+- `isRelationshipConsistent(id1, id2)` - Validates bidirectional relationship integrity
+
+**Features:**
+- BFS with path tracking for circular dependency detection
+- Sibling-only constraint enforcement
+- Graceful handling of missing dependencies (warns, doesn't crash)
+- Performance: resolves 150+ artifact chains in <100ms
+
+---
+
+### ReadinessService
+
+Comprehensive readiness validation for artifact workflow and state transitions.
+
+```ts
+import { ReadinessService } from "@kodebase/artifacts";
+
+const service = new ReadinessService();
+
+// Readiness checks
+const ready = await service.isReady("A.1.3"); // Can work start?
+const allReady = await service.getReadyArtifacts(); // All ready artifacts
+const reasons = await service.getBlockingReasons("A.1.3"); // Why not ready?
+const canStart = await service.canTransitionToInProgress("A.1.3"); // Valid transition?
+```
+
+**Methods:**
+- `isReady(id)` - Returns true if artifact is ready to work on (no incomplete blocking siblings + ancestors completed if in ready state)
+- `getReadyArtifacts()` - Returns all artifacts ready to work on
+- `getBlockingReasons(id)` - Returns array of structured blocking reasons with ancestor diagnostics
+- `canTransitionToInProgress(id)` - Validates ready→in_progress state transition
+
+**Validation Rules:**
+1. **Sibling dependencies:** No incomplete blocking siblings
+2. **Ancestor validation:** Full ancestor chain (Initiative→Milestone→Issue) must be complete if artifact has READY event
+3. **State transitions:** Only READY/IN_PROGRESS ancestors allow children to start; IN_REVIEW/COMPLETED block new work
+
+**Integration:**
+- Uses DependencyGraphService for sibling dependency checks
+- Uses QueryService for parent traversal
+- Uses state machine from @kodebase/core for state validation
+- Performance: checks 100+ artifacts in <100ms
 
 ---
 
@@ -212,6 +337,17 @@ import type {
   GetArtifactOptions,
   UpdateMetadataOptions,
   AppendEventOptions,
+
+  // QueryService types
+  ArtifactTreeNode,
+  ArtifactWithId,
+  QueryCriteria,
+
+  // DependencyGraphService types
+  DependencyChainNode,
+
+  // ReadinessService types
+  BlockingReason,
 
   // ValidationService types
   ValidationResult,

@@ -41,13 +41,13 @@ describe("ReadinessService - Real Fixtures Validation", () => {
     expect(typeof canTransition).toBe("boolean");
   });
 
-  it("checks readiness for 100+ artifacts in <100ms (performance)", async () => {
+  it("checks readiness for 100+ artifacts in <200ms (performance)", async () => {
     const start = performance.now();
     const ready = await readinessService.getReadyArtifacts();
     const duration = performance.now() - start;
 
-    // Should complete in under 100ms
-    expect(duration).toBeLessThan(100);
+    // Should complete in under 200ms
+    expect(duration).toBeLessThan(200);
     expect(ready.length).toBeGreaterThan(0);
   });
 

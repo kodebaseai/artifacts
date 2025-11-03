@@ -12,6 +12,11 @@ import {
   loadAllArtifactPaths,
   readArtifact,
   type TAnyArtifact,
+  type TArtifactEvent,
+  type TArtifactType,
+  type TPriority,
+  type TSortBy,
+  type TSortOrder,
 } from "@kodebase/core";
 
 import { ArtifactNotFoundError } from "./errors.js";
@@ -38,6 +43,28 @@ export interface ArtifactTreeNode {
   children: ArtifactTreeNode[];
   /** Parent artifact ID (undefined for root initiatives) */
   parentId?: string;
+}
+
+/**
+ * Criteria for querying and filtering artifacts.
+ */
+export interface QueryCriteria {
+  /** Filter by current state (draft, ready, in_progress, completed, etc.) */
+  state?: TArtifactEvent;
+  /** Filter by artifact type (initiative, milestone, issue) */
+  type?: TArtifactType;
+  /** Filter by assignee (exact match) */
+  assignee?: string;
+  /** Filter by priority level */
+  priority?: TPriority;
+  /** Sort field */
+  sortBy?: TSortBy;
+  /** Sort order (default: asc) */
+  sortOrder?: TSortOrder;
+  /** Pagination offset (default: 0) */
+  offset?: number;
+  /** Pagination limit (default: no limit) */
+  limit?: number;
 }
 
 /**
@@ -379,6 +406,285 @@ export class QueryService {
 
     // Filter out self
     return siblings.filter((item) => item.id !== id);
+  }
+
+  /**
+   * Finds artifacts by their current state.
+   *
+   * @param state - The state to filter by (draft, ready, in_progress, completed, etc.)
+   * @returns Array of artifacts in the specified state
+   *
+   * @example
+   * ```ts
+   * // Get all artifacts in progress
+   * const inProgress = await queryService.findByState("in_progress");
+   *
+   * // Get all completed artifacts
+   * const completed = await queryService.findByState("completed");
+   * ```
+   */
+  async findByState(state: TArtifactEvent): Promise<ArtifactWithId[]> {
+    const allArtifacts = await this.getAllArtifacts();
+
+    return allArtifacts.filter((item) => {
+      const currentState = this.getCurrentState(item.artifact);
+      return currentState === state;
+    });
+  }
+
+  /**
+   * Finds artifacts by their type.
+   *
+   * @param type - The artifact type (initiative, milestone, issue)
+   * @returns Array of artifacts of the specified type
+   *
+   * @example
+   * ```ts
+   * // Get all initiatives
+   * const initiatives = await queryService.findByType("initiative");
+   *
+   * // Get all milestones
+   * const milestones = await queryService.findByType("milestone");
+   * ```
+   */
+  async findByType(type: TArtifactType): Promise<ArtifactWithId[]> {
+    const allArtifacts = await this.getAllArtifacts();
+
+    return allArtifacts.filter((item) => {
+      const artifactType = this.getArtifactType(item.id);
+      return artifactType === type;
+    });
+  }
+
+  /**
+   * Finds artifacts by assignee.
+   *
+   * @param assignee - The assignee to filter by (exact match)
+   * @returns Array of artifacts assigned to the specified person
+   *
+   * @example
+   * ```ts
+   * // Get all artifacts assigned to a specific person
+   * const artifacts = await queryService.findByAssignee("John Doe (john@example.com)");
+   * ```
+   */
+  async findByAssignee(assignee: string): Promise<ArtifactWithId[]> {
+    const allArtifacts = await this.getAllArtifacts();
+
+    return allArtifacts.filter((item) => {
+      return item.artifact.metadata.assignee === assignee;
+    });
+  }
+
+  /**
+   * Finds artifacts by priority level.
+   *
+   * @param priority - The priority level (low, medium, high, critical)
+   * @returns Array of artifacts with the specified priority
+   *
+   * @example
+   * ```ts
+   * // Get all high priority artifacts
+   * const highPriority = await queryService.findByPriority("high");
+   *
+   * // Get all critical artifacts
+   * const critical = await queryService.findByPriority("critical");
+   * ```
+   */
+  async findByPriority(priority: TPriority): Promise<ArtifactWithId[]> {
+    const allArtifacts = await this.getAllArtifacts();
+
+    return allArtifacts.filter((item) => {
+      return item.artifact.metadata.priority === priority;
+    });
+  }
+
+  /**
+   * Finds artifacts using complex query criteria with filtering, sorting, and pagination.
+   *
+   * @param criteria - Query criteria with optional filters, sorting, and pagination
+   * @returns Array of filtered, sorted, and paginated artifacts
+   *
+   * @example
+   * ```ts
+   * // Get all high priority issues in progress
+   * const results = await queryService.findArtifacts({
+   *   type: "issue",
+   *   state: "in_progress",
+   *   priority: "high"
+   * });
+   *
+   * // Get all artifacts assigned to John, sorted by priority
+   * const results = await queryService.findArtifacts({
+   *   assignee: "John Doe (john@example.com)",
+   *   sortBy: "priority",
+   *   sortOrder: "desc"
+   * });
+   *
+   * // Get completed milestones with pagination
+   * const results = await queryService.findArtifacts({
+   *   type: "milestone",
+   *   state: "completed",
+   *   offset: 10,
+   *   limit: 20
+   * });
+   * ```
+   */
+  async findArtifacts(criteria: QueryCriteria): Promise<ArtifactWithId[]> {
+    let results = await this.getAllArtifacts();
+
+    // Apply filters
+    if (criteria.state !== undefined) {
+      results = results.filter((item) => {
+        const currentState = this.getCurrentState(item.artifact);
+        return currentState === criteria.state;
+      });
+    }
+
+    if (criteria.type !== undefined) {
+      results = results.filter((item) => {
+        const artifactType = this.getArtifactType(item.id);
+        return artifactType === criteria.type;
+      });
+    }
+
+    if (criteria.assignee !== undefined) {
+      results = results.filter((item) => {
+        return item.artifact.metadata.assignee === criteria.assignee;
+      });
+    }
+
+    if (criteria.priority !== undefined) {
+      results = results.filter((item) => {
+        return item.artifact.metadata.priority === criteria.priority;
+      });
+    }
+
+    // Apply sorting
+    if (criteria.sortBy) {
+      results = this.sortArtifacts(
+        results,
+        criteria.sortBy,
+        criteria.sortOrder,
+      );
+    }
+
+    // Apply pagination
+    const offset = criteria.offset ?? 0;
+    const limit = criteria.limit;
+
+    if (limit !== undefined) {
+      results = results.slice(offset, offset + limit);
+    } else if (offset > 0) {
+      results = results.slice(offset);
+    }
+
+    return results;
+  }
+
+  /**
+   * Sorts artifacts by the specified field and order.
+   *
+   * @param artifacts - Array of artifacts to sort
+   * @param sortBy - Field to sort by (id, priority, timestamp)
+   * @param sortOrder - Sort order (asc or desc, default: asc)
+   * @returns Sorted array of artifacts
+   */
+  private sortArtifacts(
+    artifacts: ArtifactWithId[],
+    sortBy: TSortBy,
+    sortOrder: TSortOrder = "asc",
+  ): ArtifactWithId[] {
+    const sorted = [...artifacts];
+
+    sorted.sort((a, b) => {
+      let comparison = 0;
+
+      if (sortBy === "id") {
+        comparison = a.id.localeCompare(b.id);
+      } else if (sortBy === "priority") {
+        const priorityWeight: Record<TPriority, number> = {
+          low: 1,
+          medium: 2,
+          high: 3,
+          critical: 4,
+        };
+        const aWeight =
+          priorityWeight[a.artifact.metadata.priority as TPriority] || 0;
+        const bWeight =
+          priorityWeight[b.artifact.metadata.priority as TPriority] || 0;
+        comparison = aWeight - bWeight;
+      } else if (sortBy === "timestamp") {
+        const aTimestamp =
+          a.artifact.metadata.events[a.artifact.metadata.events.length - 1]
+            ?.timestamp || "";
+        const bTimestamp =
+          b.artifact.metadata.events[b.artifact.metadata.events.length - 1]
+            ?.timestamp || "";
+        comparison = aTimestamp.localeCompare(bTimestamp);
+      }
+
+      return sortOrder === "desc" ? -comparison : comparison;
+    });
+
+    return sorted;
+  }
+
+  /**
+   * Gets the current state of an artifact from its events.
+   *
+   * @param artifact - The artifact
+   * @returns The current state (last event) or null if no events
+   */
+  private getCurrentState(artifact: TAnyArtifact): TArtifactEvent | null {
+    const events = artifact.metadata.events;
+    if (!events || events.length === 0) {
+      return null;
+    }
+    return (events[events.length - 1]?.event as TArtifactEvent) ?? null;
+  }
+
+  /**
+   * Gets the artifact type from its ID structure.
+   *
+   * @param id - The artifact ID
+   * @returns The artifact type
+   *
+   * @example
+   * ```ts
+   * getArtifactType("A")     // "initiative"
+   * getArtifactType("A.1")   // "milestone"
+   * getArtifactType("A.1.1") // "issue"
+   * ```
+   */
+  private getArtifactType(id: string): TArtifactType {
+    const segments = id.split(".");
+    if (segments.length === 1) {
+      return "initiative";
+    }
+    if (segments.length === 2) {
+      return "milestone";
+    }
+    return "issue";
+  }
+
+  /**
+   * Loads all artifacts from the path cache.
+   *
+   * @returns Array of all artifacts with IDs
+   */
+  private async getAllArtifacts(): Promise<ArtifactWithId[]> {
+    const pathCache = await this.loadPathCache();
+    const artifacts: ArtifactWithId[] = [];
+
+    for (const [id, _path] of pathCache.entries()) {
+      try {
+        const artifact = await this.loadArtifact(id);
+        artifacts.push({ id, artifact });
+      } catch {}
+    }
+
+    return artifacts;
   }
 
   /**
