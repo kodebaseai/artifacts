@@ -24,6 +24,10 @@ metadata:
     - event: in_review
       timestamp: "2025-11-03T10:12:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-03T10:15:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_merged
 content:
   summary: >-

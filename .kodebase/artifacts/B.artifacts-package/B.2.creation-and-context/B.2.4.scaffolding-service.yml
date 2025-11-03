@@ -23,7 +23,8 @@ metadata:
             resolved: true
             resolved_at: "2025-11-03T00:44:00Z"
           - artifact_id: B.2.2
-            resolved: false
+            resolved: true
+            resolved_at: "2025-11-03T10:15:00Z"
           - artifact_id: B.2.3
             resolved: false
 content:
