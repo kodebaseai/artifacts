@@ -31,6 +31,7 @@ export interface ContextInfo {
  * and validate Kodebase project structure.
  */
 export class ContextService {
+  /** Base directory of the project */
   private readonly baseDir: string;
 
   constructor(baseDir: string = process.cwd()) {

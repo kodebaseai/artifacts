@@ -1,5 +1,41 @@
 # @kodebase/artifacts
 
+## 1.0.0
+
+### Major Changes
+
+- [#112](https://github.com/kodebaseai/kodebase/pull/112) [`0004502`](https://github.com/kodebaseai/kodebase/commit/0004502cef1c1ae6142f0e5827ca857749345228) Thanks [@migcarva](https://github.com/migcarva)! - 🎉 Initiative B Complete: @kodebase/artifacts v1.0.0
+
+  - ✅ **8 Service Modules**: ArtifactService, ValidationService, ContextService, ScaffoldingService, QueryService, DependencyGraphService, ReadinessService, IdAllocationService
+  - ✅ **Unified Validation Pipeline**: Schema + readiness + state machine validation orchestration
+  - ✅ **Context-Aware Scaffolding**: Auto-allocated IDs with template-based artifact creation
+  - ✅ **Tree Traversal & Queries**: Dependency graph operations with multi-level caching
+  - ✅ **Comprehensive Error Formatting**: CLI-friendly error messages with actionable suggestions
+
+  ## Quality Metrics
+
+  - **330 tests** across 13 test files with **96.21% code coverage** (B.4.1)
+  - **100% JSDoc coverage** (418+ lines) verified via TypeDoc plugin (B.5.1)
+  - **Performance validated**: 1000+ artifacts tree traversal in ~1.5s, filtering in ~90ms with warm cache (B.4.4)
+  - **1056-line README** with architecture diagrams, API reference, 4 real-world examples, and migration guide (B.5.2)
+
+## 0.4.0
+
+### Minor Changes
+
+- [#110](https://github.com/kodebaseai/kodebase/pull/110) [`2f61c86`](https://github.com/kodebaseai/kodebase/commit/2f61c860b0159ab403ed34d273e00db481f4f148) Thanks [@migcarva](https://github.com/migcarva)! - Comprehensive documentation coverage for @kodebase/artifacts package:
+
+  - **JSDoc Coverage (B.5.1)**: 100% coverage (418+ lines) with TypeDoc validation on all 8 services, 15+ cross-references
+  - **API Documentation (B.5.2)**: 1056-line README with architecture diagrams, API reference for all services, 4 real-world usage examples, error handling patterns, performance benchmarks, and migration guide
+
+  Package is now fully documented and ready for CLI integration (Initiative C).
+
+## 0.3.1
+
+### Patch Changes
+
+- [#106](https://github.com/kodebaseai/kodebase/pull/106) [`2081df1`](https://github.com/kodebaseai/kodebase/commit/2081df15ee3dd394ddc63e2850be3bee1fe74423) Thanks [@migcarva](https://github.com/migcarva)! - Complete B.4 Testing & Integration milestone: comprehensive test infrastructure with 330 tests, 96.21% coverage, real-world validation against A.9.1 fixtures, and performance benchmarks ensuring 1000+ artifact scalability
+
 ## 0.3.0
 
 ### Minor Changes

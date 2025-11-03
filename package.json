@@ -1,6 +1,6 @@
 {
   "name": "@kodebase/artifacts",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "High-level artifact operations for Kodebase",
   "license": "MIT",
   "publishConfig": {
@@ -31,6 +31,11 @@
     "lint:types": "attw --pack . --profile esm-only",
     "format": "biome format .",
     "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "docs": "typedoc",
+    "docs:coverage": "typedoc --plugin typedoc-plugin-coverage",
     "prepack": "pnpm lint:package"
   },
   "dependencies": {
@@ -42,6 +47,8 @@
     "@types/node": "^22.19.0",
     "@vitest/coverage-istanbul": "^3.0.7",
     "memfs": "^4.50.0",
-    "publint": "^0.3.15"
+    "publint": "^0.3.15",
+    "typedoc": "^0.28.14",
+    "typedoc-plugin-coverage": "^4.0.2"
   }
 }

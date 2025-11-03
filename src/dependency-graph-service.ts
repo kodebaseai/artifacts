@@ -47,8 +47,13 @@ import type { ArtifactWithId } from "./query-service.js";
  * ```
  */
 export class DependencyGraphService {
+  /** Internal cache mapping artifact IDs to loaded artifacts */
   private readonly cache: Map<string, TAnyArtifact> = new Map();
+
+  /** Lazy-loaded cache mapping artifact IDs to file paths */
   private pathCache: Map<string, string> | null = null;
+
+  /** Absolute path to the artifacts directory */
   private readonly artifactsPath: string;
 
   /**

@@ -69,15 +69,37 @@ export interface QueryCriteria {
 
 /**
  * Error thrown when a circular reference is detected in the artifact tree.
+ *
+ * This error occurs when traversing dependencies would create an infinite loop,
+ * typically during dependency graph analysis or tree traversal operations.
+ *
+ * @example
+ * ```ts
+ * try {
+ *   const tree = await queryService.getTree();
+ * } catch (error) {
+ *   if (error instanceof CircularReferenceError) {
+ *     console.error(`Circular dependency detected at ${error.artifactId}`);
+ *     console.error(`Dependency chain: ${error.chain.join(" → ")}`);
+ *   }
+ * }
+ * ```
+ *
+ * @see {@link DependencyGraphService} for dependency graph operations that may throw this error
  */
 export class CircularReferenceError extends Error {
-  constructor(
-    public readonly artifactId: string,
-    public readonly chain: string[],
-  ) {
+  /** The artifact ID where the circular reference was detected */
+  public readonly artifactId: string;
+
+  /** The chain of artifact IDs leading to the circular reference */
+  public readonly chain: string[];
+
+  constructor(artifactId: string, chain: string[]) {
     super(
       `Circular reference detected at artifact "${artifactId}". Chain: ${chain.join(" → ")}`,
     );
+    this.artifactId = artifactId;
+    this.chain = chain;
     this.name = "CircularReferenceError";
     Error.captureStackTrace(this, CircularReferenceError);
   }
@@ -106,8 +128,13 @@ export class CircularReferenceError extends Error {
  * ```
  */
 export class QueryService {
+  /** Internal cache mapping artifact IDs to loaded artifacts */
   private readonly cache: Map<string, TAnyArtifact> = new Map();
+
+  /** Lazy-loaded cache mapping artifact IDs to file paths */
   private pathCache: Map<string, string> | null = null;
+
+  /** Absolute path to the artifacts directory */
   private readonly artifactsPath: string;
 
   /**
@@ -316,6 +343,10 @@ export class QueryService {
    * const issues = await queryService.getChildren("A.1");
    * // Returns: [{id: "A.1.1", artifact: ...}, {id: "A.1.2", artifact: ...}, ...]
    * ```
+   *
+   * @see {@link getAncestors} for retrieving parent artifacts
+   * @see {@link getSiblings} for retrieving sibling artifacts
+   * @see {@link getTree} for building a full hierarchical tree
    */
   async getChildren(parentId: string): Promise<ArtifactWithId[]> {
     // Verify parent exists (this will throw if it doesn't)
@@ -352,6 +383,9 @@ export class QueryService {
    * const ancestors = await queryService.getAncestors("A");
    * // Returns: []
    * ```
+   *
+   * @see {@link getChildren} for retrieving child artifacts
+   * @see {@link getSiblings} for retrieving sibling artifacts
    */
   async getAncestors(id: string): Promise<ArtifactWithId[]> {
     const segments = id.split(".");
@@ -384,6 +418,9 @@ export class QueryService {
    * const siblings = await queryService.getSiblings("A.2");
    * // Returns: [{id: "A.1", ...}, {id: "A.3", ...}, ...] (excludes A.2)
    * ```
+   *
+   * @see {@link getChildren} for retrieving child artifacts
+   * @see {@link getAncestors} for retrieving parent artifacts
    */
   async getSiblings(id: string): Promise<ArtifactWithId[]> {
     // Verify artifact exists (this will throw if it doesn't)

@@ -61,7 +61,10 @@ export interface BlockingReason {
  * ```
  */
 export class ReadinessService {
+  /** Dependency graph service for analyzing blocking relationships */
   private readonly depService: DependencyGraphService;
+
+  /** Query service for retrieving artifact information */
   private readonly queryService: QueryService;
 
   /**

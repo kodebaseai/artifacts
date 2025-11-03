@@ -1,0 +1,17 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "plugin": ["typedoc-plugin-coverage"],
+  "excludePrivate": false,
+  "excludeInternal": false,
+  "readme": "README.md",
+  "tsconfig": "tsconfig.json",
+  "treatWarningsAsErrors": true,
+  "validation": {
+    "invalidLink": true,
+    "notExported": true,
+    "notDocumented": true
+  },
+  "commentStyle": "jsdoc"
+}

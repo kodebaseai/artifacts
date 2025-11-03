@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true,
+    "types": ["node", "vitest/globals"],
+    "resolveJsonModule": true,
+    "paths": {
+      "@kodebase/artifacts": ["./src"],
+      "@kodebase/artifacts/test/*": ["./test/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.test.ts", "test/**/*.ts"],
+  "exclude": ["dist", "node_modules"]
+}
