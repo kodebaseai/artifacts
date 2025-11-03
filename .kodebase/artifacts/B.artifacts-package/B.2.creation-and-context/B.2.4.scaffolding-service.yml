@@ -26,7 +26,12 @@ metadata:
             resolved: true
             resolved_at: "2025-11-03T10:15:00Z"
           - artifact_id: B.2.3
-            resolved: false
+            resolved: true
+            resolved_at: "2025-11-03T10:32:00Z"
+    - event: ready
+      timestamp: "2025-11-03T10:32:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: dependencies_met
 content:
   summary: >-
     Implement ScaffoldService orchestrating ContextService, ID allocation, and artifact templates

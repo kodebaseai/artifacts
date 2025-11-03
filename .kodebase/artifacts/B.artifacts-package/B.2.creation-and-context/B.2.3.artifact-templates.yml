@@ -25,6 +25,10 @@ metadata:
       timestamp: "2025-11-03T10:29:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-03T10:32:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Create template objects for Initiative, Milestone, and Issue artifacts with proper metadata,
