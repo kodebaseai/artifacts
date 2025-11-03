@@ -40,6 +40,10 @@ metadata:
       timestamp: "2025-11-03T11:49:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-03T12:00:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement ScaffoldService orchestrating ContextService, ID allocation, and artifact templates
