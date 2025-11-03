@@ -1071,7 +1071,9 @@ describe("QueryService", () => {
     });
 
     describe("Performance", () => {
-      it("filters 1000+ artifacts in <100ms (warm cache)", async () => {
+      it(
+        "filters 1000+ artifacts in <100ms (warm cache)",
+        async () => {
         // Helper to convert number to letter-based ID (1→AA, 2→AB, etc.)
         const numToLetters = (n: number): string => {
           let result = "";
@@ -1117,14 +1119,18 @@ describe("QueryService", () => {
 
             // Add 5 issues per milestone
             for (let k = 1; k <= 5; k++) {
+              const issue = scaffoldIssue({
+                title: `Perf Issue ${i}.${j}.${k}`,
+                createdBy: "Test User (test@example.com)",
+                summary: `Summary ${i}.${j}.${k}`,
+                acceptanceCriteria: [`AC ${i}.${j}.${k}`],
+              });
+              // Set priority to medium for filtering test
+              issue.metadata.priority = "medium";
+
               await artifactService.createArtifact({
                 id: `${initiativeId}.${j}.${k}`,
-                artifact: scaffoldIssue({
-                  title: `Perf Issue ${i}.${j}.${k}`,
-                  createdBy: "Test User (test@example.com)",
-                  summary: `Summary ${i}.${j}.${k}`,
-                  acceptanceCriteria: [`AC ${i}.${j}.${k}`],
-                }),
+                artifact: issue,
                 slug: `perf-issue-${i}-${j}-${k}`,
                 baseDir: testBaseDir,
               });
@@ -1145,7 +1151,9 @@ describe("QueryService", () => {
 
         expect(results.length).toBe(1000); // 100 initiatives * 2 milestones * 5 issues
         expect(duration).toBeLessThan(100); // Pure filtering should be <100ms with warm cache
-      });
+        },
+        10000,
+      ); // 10 second timeout for artifact creation + filtering
     });
   });
 });

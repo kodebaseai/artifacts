@@ -111,8 +111,8 @@ jobs:
             git add -A
 
             if git commit -m "Sync ${package_name} package from ${{ github.repository }}@${{ github.sha }}"; then
-              # Push using the token without storing credentials
-              git push "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/${mirror_repo}.git" HEAD:main
+              # Push using the token without storing credentials (with tags)
+              git push --follow-tags "https://x-access-token:${MIRROR_GITHUB_TOKEN}@github.com/${mirror_repo}.git" HEAD:main
               echo "Successfully synced ${package_name} to ${mirror_repo}"
             else
               echo "No changes to commit for ${package_name}"
