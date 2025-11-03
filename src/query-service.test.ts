@@ -1117,14 +1117,18 @@ describe("QueryService", () => {
 
             // Add 5 issues per milestone
             for (let k = 1; k <= 5; k++) {
+              const issue = scaffoldIssue({
+                title: `Perf Issue ${i}.${j}.${k}`,
+                createdBy: "Test User (test@example.com)",
+                summary: `Summary ${i}.${j}.${k}`,
+                acceptanceCriteria: [`AC ${i}.${j}.${k}`],
+              });
+              // Set priority to medium for filtering test
+              issue.metadata.priority = "medium";
+
               await artifactService.createArtifact({
                 id: `${initiativeId}.${j}.${k}`,
-                artifact: scaffoldIssue({
-                  title: `Perf Issue ${i}.${j}.${k}`,
-                  createdBy: "Test User (test@example.com)",
-                  summary: `Summary ${i}.${j}.${k}`,
-                  acceptanceCriteria: [`AC ${i}.${j}.${k}`],
-                }),
+                artifact: issue,
                 slug: `perf-issue-${i}-${j}-${k}`,
                 baseDir: testBaseDir,
               });
@@ -1145,7 +1149,7 @@ describe("QueryService", () => {
 
         expect(results.length).toBe(1000); // 100 initiatives * 2 milestones * 5 issues
         expect(duration).toBeLessThan(100); // Pure filtering should be <100ms with warm cache
-      });
+      }, 10000); // 10 second timeout for artifact creation + filtering
     });
   });
 });
