@@ -20,7 +20,8 @@ metadata:
       metadata:
         blocking_dependencies:
           - artifact_id: B.2.1
-            resolved: false
+            resolved: true
+            resolved_at: "2025-11-03T00:44:00Z"
           - artifact_id: B.2.2
             resolved: false
           - artifact_id: B.2.3
