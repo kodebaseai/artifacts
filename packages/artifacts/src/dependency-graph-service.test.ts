@@ -61,9 +61,7 @@ describe("DependencyGraphService", () => {
       artifact: scaffoldMilestone({
         title: "Milestone A.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       }),
       slug: "milestone-a1",
@@ -74,9 +72,7 @@ describe("DependencyGraphService", () => {
     let issue = scaffoldIssue({
       title: "Issue A.1.1",
       createdBy: "Test User (test@example.com)",
-      description: "First issue",
-      scopeIn: ["Task 1"],
-      scopeOut: ["Not included"],
+      summary: "First issue",
       acceptanceCriteria: ["Criterion 1"],
     });
     // Add completed event
@@ -102,9 +98,7 @@ describe("DependencyGraphService", () => {
     issue = scaffoldIssue({
       title: "Issue A.1.2",
       createdBy: "Test User (test@example.com)",
-      description: "Second issue",
-      scopeIn: ["Task 2"],
-      scopeOut: ["Not included"],
+      summary: "Second issue",
       acceptanceCriteria: ["Criterion 2"],
     });
     issue.metadata.relationships = {
@@ -122,9 +116,7 @@ describe("DependencyGraphService", () => {
     issue = scaffoldIssue({
       title: "Issue A.1.3",
       createdBy: "Test User (test@example.com)",
-      description: "Third issue",
-      scopeIn: ["Task 3"],
-      scopeOut: ["Not included"],
+      summary: "Third issue",
       acceptanceCriteria: ["Criterion 3"],
     });
     issue.metadata.relationships = {
@@ -176,9 +168,7 @@ describe("DependencyGraphService", () => {
       const issue = scaffoldIssue({
         title: "Issue A.1.4",
         createdBy: "Test User (test@example.com)",
-        description: "Fourth issue",
-        scopeIn: ["Task 4"],
-        scopeOut: ["Not included"],
+        summary: "Fourth issue",
         acceptanceCriteria: ["Criterion 4"],
       });
       issue.metadata.relationships = {
@@ -227,9 +217,7 @@ describe("DependencyGraphService", () => {
       const issue = scaffoldIssue({
         title: "Issue A.1.4",
         createdBy: "Test User (test@example.com)",
-        description: "Fourth issue",
-        scopeIn: ["Task 4"],
-        scopeOut: ["Not included"],
+        summary: "Fourth issue",
         acceptanceCriteria: ["Criterion 4"],
       });
       issue.metadata.relationships = {
@@ -285,9 +273,7 @@ describe("DependencyGraphService", () => {
       const issue = scaffoldIssue({
         title: "Issue A.1.4",
         createdBy: "Test User (test@example.com)",
-        description: "Fourth issue",
-        scopeIn: ["Task 4"],
-        scopeOut: ["Not included"],
+        summary: "Fourth issue",
         acceptanceCriteria: ["Criterion 4"],
       });
       issue.metadata.relationships = {
@@ -350,9 +336,7 @@ describe("DependencyGraphService", () => {
       const issue = scaffoldIssue({
         title: "Issue A.1.4",
         createdBy: "Test User (test@example.com)",
-        description: "Fourth issue",
-        scopeIn: ["Task 4"],
-        scopeOut: ["Not included"],
+        summary: "Fourth issue",
         acceptanceCriteria: ["Criterion 4"],
       });
       issue.metadata.relationships = {
@@ -387,9 +371,7 @@ describe("DependencyGraphService", () => {
       let issue = scaffoldIssue({
         title: "Issue A.1.4",
         createdBy: "Test User (test@example.com)",
-        description: "Fourth issue",
-        scopeIn: ["Task 4"],
-        scopeOut: ["Not included"],
+        summary: "Fourth issue",
         acceptanceCriteria: ["Criterion 4"],
       });
       issue.metadata.relationships = {
@@ -406,9 +388,7 @@ describe("DependencyGraphService", () => {
       issue = scaffoldIssue({
         title: "Issue A.1.5",
         createdBy: "Test User (test@example.com)",
-        description: "Fifth issue",
-        scopeIn: ["Task 5"],
-        scopeOut: ["Not included"],
+        summary: "Fifth issue",
         acceptanceCriteria: ["Criterion 5"],
       });
       issue.metadata.relationships = {
@@ -458,9 +438,7 @@ describe("DependencyGraphService", () => {
         artifact: scaffoldMilestone({
           title: "Milestone A.1",
           createdBy: "Test User (test@example.com)",
-          description: "First milestone",
-          scopeIn: ["Sub-feature 1"],
-          scopeOut: ["Out of scope"],
+          summary: "First milestone",
           deliverables: ["Deliverable 1"],
         }),
         slug: "milestone-a1",
@@ -470,9 +448,7 @@ describe("DependencyGraphService", () => {
       let issue = scaffoldIssue({
         title: "Issue A.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       issue.metadata.relationships = {
@@ -489,9 +465,7 @@ describe("DependencyGraphService", () => {
       issue = scaffoldIssue({
         title: "Issue A.1.2",
         createdBy: "Test User (test@example.com)",
-        description: "Second issue",
-        scopeIn: ["Task 2"],
-        scopeOut: ["Not included"],
+        summary: "Second issue",
         acceptanceCriteria: ["Criterion 2"],
       });
       issue.metadata.relationships = {
@@ -589,9 +563,7 @@ describe("DependencyGraphService", () => {
         artifact: scaffoldMilestone({
           title: "Milestone A.1",
           createdBy: "Test User (test@example.com)",
-          description: "First milestone",
-          scopeIn: ["Sub-feature 1"],
-          scopeOut: ["Out of scope"],
+          summary: "First milestone",
           deliverables: ["Deliverable 1"],
         }),
         slug: "milestone-a1",
@@ -603,9 +575,7 @@ describe("DependencyGraphService", () => {
         const issue = scaffoldIssue({
           title: `Issue A.1.${i}`,
           createdBy: "Test User (test@example.com)",
-          description: `Issue ${i}`,
-          scopeIn: ["Task"],
-          scopeOut: ["Not included"],
+          summary: `Issue ${i}`,
           acceptanceCriteria: ["Criterion"],
         });
 

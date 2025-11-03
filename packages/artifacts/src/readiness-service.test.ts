@@ -29,7 +29,7 @@ describe("ReadinessService", () => {
     vol.reset();
 
     readinessService = new ReadinessService(testBaseDir);
-    artifactService = new ArtifactService(testBaseDir);
+    artifactService = new ArtifactService();
   });
 
   afterEach(() => {
@@ -71,9 +71,7 @@ describe("ReadinessService", () => {
     const milestone = scaffoldMilestone({
       title: "Milestone A.1",
       createdBy: "Test User (test@example.com)",
-      description: "First milestone",
-      scopeIn: ["Sub-feature 1"],
-      scopeOut: ["Out of scope"],
+      summary: "First milestone",
       deliverables: ["Deliverable 1"],
     });
     milestone.metadata.events.push({
@@ -93,9 +91,7 @@ describe("ReadinessService", () => {
     const issue1 = scaffoldIssue({
       title: "Issue A.1.1",
       createdBy: "Test User (test@example.com)",
-      description: "First issue",
-      scopeIn: ["Task 1"],
-      scopeOut: ["Not included"],
+      summary: "First issue",
       acceptanceCriteria: ["Criterion 1"],
     });
     issue1.metadata.events.push({
@@ -119,9 +115,7 @@ describe("ReadinessService", () => {
     const issue2 = scaffoldIssue({
       title: "Issue A.1.2",
       createdBy: "Test User (test@example.com)",
-      description: "Second issue",
-      scopeIn: ["Task 2"],
-      scopeOut: ["Not included"],
+      summary: "Second issue",
       acceptanceCriteria: ["Criterion 2"],
     });
     issue2.metadata.events.push({
@@ -145,9 +139,7 @@ describe("ReadinessService", () => {
     const issue3 = scaffoldIssue({
       title: "Issue A.1.3",
       createdBy: "Test User (test@example.com)",
-      description: "Third issue",
-      scopeIn: ["Task 3"],
-      scopeOut: ["Not included"],
+      summary: "Third issue",
       acceptanceCriteria: ["Criterion 3"],
     });
     issue3.metadata.relationships = {
@@ -210,9 +202,7 @@ describe("ReadinessService", () => {
       const milestone = scaffoldMilestone({
         title: "Milestone B.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       });
       // Parent B.1 is NOT completed (still in draft)
@@ -226,9 +216,7 @@ describe("ReadinessService", () => {
       const issue = scaffoldIssue({
         title: "Issue B.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       // Issue has READY event
@@ -281,9 +269,7 @@ describe("ReadinessService", () => {
       const milestone = scaffoldMilestone({
         title: "Milestone J.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       });
       // Parent J.1 is IN_PROGRESS (non-blocking state)
@@ -303,9 +289,7 @@ describe("ReadinessService", () => {
       const issue = scaffoldIssue({
         title: "Issue J.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       // Issue has READY event
@@ -428,9 +412,7 @@ describe("ReadinessService", () => {
       const milestone = scaffoldMilestone({
         title: "Milestone D.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       });
       await artifactService.createArtifact({
@@ -443,9 +425,7 @@ describe("ReadinessService", () => {
       const issue = scaffoldIssue({
         title: "Issue D.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       issue.metadata.relationships = {
@@ -515,9 +495,7 @@ describe("ReadinessService", () => {
       const milestone = scaffoldMilestone({
         title: "Milestone E.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       });
       // Parent E.1 is NOT completed
@@ -531,9 +509,7 @@ describe("ReadinessService", () => {
       const issue = scaffoldIssue({
         title: "Issue E.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       // Issue has READY event
@@ -593,9 +569,7 @@ describe("ReadinessService", () => {
       const milestone = scaffoldMilestone({
         title: "Milestone F.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       });
       // Parent F.1 is NOT completed
@@ -610,9 +584,7 @@ describe("ReadinessService", () => {
       const issue1 = scaffoldIssue({
         title: "Issue F.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       issue1.metadata.relationships = {
@@ -629,9 +601,7 @@ describe("ReadinessService", () => {
       const issue2 = scaffoldIssue({
         title: "Issue F.1.2",
         createdBy: "Test User (test@example.com)",
-        description: "Second issue",
-        scopeIn: ["Task 2"],
-        scopeOut: ["Not included"],
+        summary: "Second issue",
         acceptanceCriteria: ["Criterion 2"],
       });
       // Issue has READY event
@@ -703,9 +673,7 @@ describe("ReadinessService", () => {
       const milestone = scaffoldMilestone({
         title: "Milestone G.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       });
       await artifactService.createArtifact({
@@ -719,9 +687,7 @@ describe("ReadinessService", () => {
       const issue1 = scaffoldIssue({
         title: "Issue G.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       issue1.metadata.relationships = {
@@ -738,9 +704,7 @@ describe("ReadinessService", () => {
       const issue2 = scaffoldIssue({
         title: "Issue G.1.2",
         createdBy: "Test User (test@example.com)",
-        description: "Second issue",
-        scopeIn: ["Task 2"],
-        scopeOut: ["Not included"],
+        summary: "Second issue",
         acceptanceCriteria: ["Criterion 2"],
       });
       // Issue is in READY state
@@ -787,9 +751,7 @@ describe("ReadinessService", () => {
       const milestone = scaffoldMilestone({
         title: "Milestone H.1",
         createdBy: "Test User (test@example.com)",
-        description: "First milestone",
-        scopeIn: ["Sub-feature 1"],
-        scopeOut: ["Out of scope"],
+        summary: "First milestone",
         deliverables: ["Deliverable 1"],
       });
       // Parent H.1 is NOT completed
@@ -803,9 +765,7 @@ describe("ReadinessService", () => {
       const issue = scaffoldIssue({
         title: "Issue H.1.1",
         createdBy: "Test User (test@example.com)",
-        description: "First issue",
-        scopeIn: ["Task 1"],
-        scopeOut: ["Not included"],
+        summary: "First issue",
         acceptanceCriteria: ["Criterion 1"],
       });
       // Issue has READY event
