@@ -33,7 +33,11 @@ metadata:
     - event: in_review
       timestamp: "2025-11-03T14:35:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
-      trigger: implementation_complete
+      trigger: pr_ready
+    - event: completed
+      timestamp: "2025-11-03T14:55:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_merged
 content:
   summary: >-
     Implement ReadinessService with comprehensive readiness validation: isReady(id) checks if artifact
