@@ -11,3 +11,16 @@ export class ArtifactNotFoundError extends Error {
     Error.captureStackTrace(this, ArtifactNotFoundError);
   }
 }
+
+/**
+ * Error thrown when operation is attempted outside of a Kodebase project.
+ */
+export class NotInKodebaseProjectError extends Error {
+  constructor(public readonly directory: string) {
+    super(
+      `Not in a Kodebase project. No .kodebase/ directory found at: ${directory}`,
+    );
+    this.name = "NotInKodebaseProjectError";
+    Error.captureStackTrace(this, NotInKodebaseProjectError);
+  }
+}
