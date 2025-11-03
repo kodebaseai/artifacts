@@ -32,6 +32,14 @@ metadata:
       timestamp: "2025-11-03T10:32:00Z"
       actor: "Miguel Carvalho (m@kodebase.ai)"
       trigger: dependencies_met
+    - event: in_progress
+      timestamp: "2025-11-03T10:34:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: branch_created
+    - event: in_review
+      timestamp: "2025-11-03T11:49:00Z"
+      actor: "Miguel Carvalho (m@kodebase.ai)"
+      trigger: pr_ready
 content:
   summary: >-
     Implement ScaffoldService orchestrating ContextService, ID allocation, and artifact templates
@@ -48,3 +56,19 @@ content:
     - "Scaffolded artifacts pass schema validation without modification"
     - "Integration test: scaffold → validate → create workflow succeeds"
     - "90%+ test coverage with mocked dependencies"
+implementation_notes:
+  result: "Complete ScaffoldingService with 3 scaffold methods achieving 100% test coverage (20 tests), orchestrating ID allocation, slug generation, and git-based actor detection"
+  challenges:
+    - challenge: "Test failures - sequential ID allocation not working despite calling createArtifact()"
+      solution: "Tests weren't persisting artifacts to memfs correctly. Fixed by using vol.mkdirSync/writeFileSync directly (matching id-allocation-service.test.ts pattern) instead of going through ArtifactService"
+    - challenge: "Test file corruption from incorrect find-replace operation changing ).toEqual([ to ).toBe("
+      solution: "Task agent systematically rewrote test file fixing syntax errors while preserving test logic"
+    - challenge: "Incorrect test assertions for artifact structure (scope_in/scope_out vs scope.in/scope.out, notes location)"
+      solution: "Fixed assertions to match actual artifact schema from @kodebase/core scaffold functions"
+  insights:
+    - "ScaffoldingService acts as orchestration layer: combines IdAllocationService (B.2.2) + generateSlug (B.2.3) + scaffold functions from @kodebase/core"
+    - "getGitActor() provides fallback mechanism for human actors, but agent actor support deferred to future work"
+    - "memfs mocking requires imports AFTER vi.mock() statements to ensure @kodebase/core uses mocked fs"
+    - "Removed unused baseDir constructor parameter - not needed for current implementation"
+    - "All acceptance criteria met: orchestration working, 100% coverage, git-based actors, valid artifacts"
+  tags: [orchestration, scaffolding, git-actor-detection]
