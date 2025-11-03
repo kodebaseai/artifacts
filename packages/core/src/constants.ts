@@ -227,6 +227,70 @@ export const CArtifact = {
 export type TArtifactType = (typeof CArtifact)[keyof typeof CArtifact];
 
 /**
+ * Sort fields for artifact queries.
+ *
+ * These fields can be used to order query results:
+ * - `id` - Sort by artifact ID lexicographically (A < A.1 < A.1.1)
+ * - `priority` - Sort by priority level (low < medium < high < critical)
+ * - `timestamp` - Sort by most recent event timestamp
+ *
+ * @example
+ * ```ts
+ * import { CSortBy } from "@kodebase/core";
+ *
+ * const criteria = {
+ *   sortBy: CSortBy.PRIORITY,
+ *   sortOrder: "desc"
+ * };
+ * ```
+ *
+ * @see {@link TSortBy}, {@link CSortOrder}
+ */
+export const CSortBy = {
+  /** Sort by artifact ID */
+  ID: "id",
+  /** Sort by priority level */
+  PRIORITY: "priority",
+  /** Sort by timestamp of last event */
+  TIMESTAMP: "timestamp",
+} as const;
+
+/**
+ * Union type of all valid sort fields.
+ */
+export type TSortBy = (typeof CSortBy)[keyof typeof CSortBy];
+
+/**
+ * Sort order for query results.
+ *
+ * - `asc` - Ascending order (A to Z, low to high, oldest to newest)
+ * - `desc` - Descending order (Z to A, high to low, newest to oldest)
+ *
+ * @example
+ * ```ts
+ * import { CSortOrder } from "@kodebase/core";
+ *
+ * const criteria = {
+ *   sortBy: "priority",
+ *   sortOrder: CSortOrder.DESC
+ * };
+ * ```
+ *
+ * @see {@link TSortOrder}, {@link CSortBy}
+ */
+export const CSortOrder = {
+  /** Ascending order (default) */
+  ASC: "asc",
+  /** Descending order */
+  DESC: "desc",
+} as const;
+
+/**
+ * Union type of all valid sort orders.
+ */
+export type TSortOrder = (typeof CSortOrder)[keyof typeof CSortOrder];
+
+/**
  * Array of all artifact lifecycle states for iteration.
  *
  * @example
@@ -256,6 +320,16 @@ export const ESTIMATION_SIZES = Object.values(CEstimationSize);
  * Array of all artifact types for iteration.
  */
 export const ARTIFACT_TYPES = Object.values(CArtifact);
+
+/**
+ * Array of all sort fields for iteration.
+ */
+export const SORT_FIELDS = Object.values(CSortBy);
+
+/**
+ * Array of all sort orders for iteration.
+ */
+export const SORT_ORDERS = Object.values(CSortOrder);
 
 /**
  * Regular expression for validating human actor format.
