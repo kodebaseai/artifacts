@@ -288,7 +288,9 @@ export class DependencyGraphService {
 
     // BFS traversal with path-based circular detection
     while (queue.length > 0) {
-      const { id: currentId, path } = queue.shift()!;
+      const item = queue.shift();
+      if (!item) break;
+      const { id: currentId, path } = item;
 
       // Skip if already processed
       if (visited.has(currentId)) {
