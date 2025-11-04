@@ -5,6 +5,7 @@ export {
   type TAnyArtifact,
 } from "@kodebase/core";
 export * from "./artifact-service.js";
+export * from "./cascade-service.js";
 export * from "./context-service.js";
 export * from "./dependency-graph-service.js";
 export * from "./error-formatting.js";

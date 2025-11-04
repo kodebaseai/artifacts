@@ -1,5 +1,24 @@
 # @kodebase/artifacts
 
+## 1.1.0
+
+### Minor Changes
+
+- [#120](https://github.com/kodebaseai/kodebase/pull/120) [`90b9267`](https://github.com/kodebaseai/kodebase/commit/90b9267c6e094978d207b9ece22ca9d96cac15ed) Thanks [@migcarva](https://github.com/migcarva)! - Add CascadeService with comprehensive cascade automation support
+
+  Implement complete CascadeService API in @kodebase/artifacts package, providing unified interface for all cascade operations:
+
+  - **CascadeService API**: Exported service with 4 cascade methods (completion, readiness, progress, orchestration)
+  - **Completion Cascade**: Auto-transitions parent to in_review when all siblings complete
+  - **Readiness Cascade**: Auto-unblocks dependents when blockers complete (handles partial dependency resolution)
+  - **Progress Cascade**: Auto-transitions parent to in_progress when first child starts work
+  - **Orchestration**: executeCascades() provides single entry point with trigger-based routing
+  - **Performance**: <100ms execution validated for typical 3-5 level hierarchies
+  - **Testing**: 363 comprehensive tests with 91.35% coverage
+  - **Architecture**: Proper layering - CascadeService wraps CascadeEngine from @kodebase/core per ADR-001
+
+  This enables git-ops package to automate artifact state transitions without violating architecture boundaries or duplicating cascade logic.
+
 ## 1.0.0
 
 ### Major Changes
