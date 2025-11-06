@@ -102,7 +102,7 @@ export function validateDependencies(
   // If artifact is a Map, validate all artifacts
   // If artifact is a single artifact, validate it against allArtifacts
   const artifactsToValidate =
-    artifact instanceof Map ? artifact : allArtifacts ?? new Map();
+    artifact instanceof Map ? artifact : (allArtifacts ?? new Map());
 
   if (artifactsToValidate.size === 0) {
     return {
@@ -148,7 +148,7 @@ function formatCircularDependencyErrors(
 ): DependencyValidationError[] {
   return issues.map((issue) => ({
     code: "CIRCULAR_DEPENDENCY",
-    message: issue.formatted,
+    message: issue.message,
     artifactId: issue.cycle[0],
     suggestedFix: "Remove one of the blocking relationships to break the cycle",
   }));
@@ -177,9 +177,7 @@ function formatCrossLevelDependencyErrors(
  * @private
  */
 function formatRelationshipConsistencyErrors(
-  issues: ReturnType<
-    typeof ArtifactValidator.validateRelationshipConsistency
-  >,
+  issues: ReturnType<typeof ArtifactValidator.validateRelationshipConsistency>,
 ): DependencyValidationError[] {
   return issues.map((issue) => {
     if (issue.code === "RELATIONSHIP_UNKNOWN_ARTIFACT") {
@@ -211,9 +209,10 @@ function formatRelationshipConsistencyErrors(
       message: issue.message,
       artifactId,
       referencedId,
-      suggestedFix: field && artifactId && referencedId
-        ? `Ensure ${field}/${field === "blocks" ? "blocked_by" : "blocks"} relationship is bidirectional between ${artifactId} and ${referencedId}`
-        : "Ensure relationship is bidirectional",
+      suggestedFix:
+        field && artifactId && referencedId
+          ? `Ensure ${field}/${field === "blocks" ? "blocked_by" : "blocks"} relationship is bidirectional between ${artifactId} and ${referencedId}`
+          : "Ensure relationship is bidirectional",
     };
   });
 }

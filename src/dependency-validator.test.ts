@@ -342,9 +342,9 @@ describe("dependency-validator", () => {
       });
 
       // Should not detect circular dependency
-      expect(
-        result.errors.some((e) => e.code === "CIRCULAR_DEPENDENCY"),
-      ).toBe(false);
+      expect(result.errors.some((e) => e.code === "CIRCULAR_DEPENDENCY")).toBe(
+        false,
+      );
     });
 
     test("should support disabling cross-level dependency checks", () => {
