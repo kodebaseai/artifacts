@@ -4,6 +4,7 @@ export {
   scaffoldMilestone,
   type TAnyArtifact,
 } from "@kodebase/core";
+export * from "./artifact-schema-validator.js";
 export * from "./artifact-service.js";
 export * from "./cascade-service.js";
 export * from "./context-service.js";
