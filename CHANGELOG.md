@@ -1,5 +1,20 @@
 # @kodebase/artifacts
 
+## 1.1.1
+
+### Patch Changes
+
+- [#164](https://github.com/kodebaseai/kodebase/pull/164) [`38f531e`](https://github.com/kodebaseai/kodebase/commit/38f531e11e9ba887b5a3a75bfb3a88874d415a43) Thanks [@migcarva](https://github.com/migcarva)! - Add comprehensive test coverage for template-utils
+
+  Increased test coverage for template-utils.ts from 5.4% to 97.29% by adding 42 new tests covering previously untested functions:
+
+  - ARTIFACT_ID_REGEX: 10 tests validating regex pattern matching for artifact IDs
+  - getCurrentState(): 6 tests for extracting artifact state from events
+  - extractArtifactIds(): 20 tests for extracting IDs from branches, PR titles, and bodies
+  - getArtifactSlug(): 10 tests with filesystem integration for slug extraction
+
+  All 86 tests passing.
+
 ## 1.1.0
 
 ### Minor Changes

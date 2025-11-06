@@ -1,6 +1,6 @@
 {
   "name": "@kodebase/artifacts",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "High-level artifact operations for Kodebase",
   "license": "MIT",
   "publishConfig": {
