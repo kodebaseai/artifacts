@@ -39,7 +39,8 @@
     "prepack": "pnpm lint:package"
   },
   "dependencies": {
-    "@kodebase/core": "workspace:*"
+    "@kodebase/core": "workspace:*",
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
