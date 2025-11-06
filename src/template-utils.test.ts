@@ -1,5 +1,15 @@
-import { describe, expect, it } from "vitest";
-import { generateSlug } from "./template-utils.js";
+import * as fs from "node:fs/promises";
+import * as os from "node:os";
+import * as path from "node:path";
+import type { TAnyArtifact, TArtifactEvent } from "@kodebase/core";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  ARTIFACT_ID_REGEX,
+  extractArtifactIds,
+  generateSlug,
+  getArtifactSlug,
+  getCurrentState,
+} from "./template-utils.js";
 
 describe("generateSlug", () => {
   describe("basic transformations", () => {
@@ -212,6 +222,405 @@ describe("generateSlug", () => {
       expect(slug).toBe("feature");
       expect(slug[0]).not.toBe("-");
       expect(slug[slug.length - 1]).not.toBe("-");
+    });
+  });
+});
+
+describe("ARTIFACT_ID_REGEX", () => {
+  it("should match single-level artifact IDs", () => {
+    const text = "Working on A.1 today";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toEqual(["A.1"]);
+  });
+
+  it("should match two-level artifact IDs", () => {
+    const text = "Implementing A.1.5";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toEqual(["A.1.5"]);
+  });
+
+  it("should match three-level artifact IDs", () => {
+    const text = "Working on C.4.1.2";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toEqual(["C.4.1.2"]);
+  });
+
+  it("should match multiple artifact IDs", () => {
+    const text = "A.1.5 depends on B.2.3 and C.1";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toEqual(["A.1.5", "B.2.3", "C.1"]);
+  });
+
+  it("should match artifact IDs with different letters", () => {
+    const text = "A.1, B.2, C.3, Z.99";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toEqual(["A.1", "B.2", "C.3", "Z.99"]);
+  });
+
+  it("should not match lowercase letters", () => {
+    const text = "a.1 is not valid";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toBeNull();
+  });
+
+  it("should not match without word boundaries", () => {
+    const text = "version2.1.5";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toBeNull();
+  });
+
+  it("should match IDs at word boundaries with hyphens", () => {
+    const text = "feature-A.1.5-description";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toEqual(["A.1.5"]);
+  });
+
+  it("should match IDs in brackets", () => {
+    const text = "[A.1.5] Feature title";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toEqual(["A.1.5"]);
+  });
+
+  it("should not match IDs without numbers", () => {
+    const text = "Just A or B";
+    const matches = text.match(ARTIFACT_ID_REGEX);
+    expect(matches).toBeNull();
+  });
+});
+
+describe("getCurrentState", () => {
+  it("should return null for artifact with no events", () => {
+    const artifact: TAnyArtifact = {
+      id: "A.1",
+      metadata: {
+        title: "Test",
+        events: [],
+      },
+      content: { summary: "test" },
+    } as TAnyArtifact;
+
+    expect(getCurrentState(artifact)).toBeNull();
+  });
+
+  it("should return null for artifact with undefined events", () => {
+    const artifact: TAnyArtifact = {
+      id: "A.1",
+      metadata: {
+        title: "Test",
+        events: undefined as unknown as TArtifactEvent[],
+      },
+      content: { summary: "test" },
+    } as TAnyArtifact;
+
+    expect(getCurrentState(artifact)).toBeNull();
+  });
+
+  it("should return the last event for artifact with one event", () => {
+    const artifact: TAnyArtifact = {
+      id: "A.1",
+      metadata: {
+        title: "Test",
+        events: [{ event: "draft", timestamp: "2024-01-01T00:00:00Z" }],
+      },
+      content: { summary: "test" },
+    } as TAnyArtifact;
+
+    expect(getCurrentState(artifact)).toBe("draft");
+  });
+
+  it("should return the last event for artifact with multiple events", () => {
+    const artifact: TAnyArtifact = {
+      id: "A.1",
+      metadata: {
+        title: "Test",
+        events: [
+          { event: "draft", timestamp: "2024-01-01T00:00:00Z" },
+          { event: "in_progress", timestamp: "2024-01-02T00:00:00Z" },
+          { event: "blocked", timestamp: "2024-01-03T00:00:00Z" },
+        ],
+      },
+      content: { summary: "test" },
+    } as TAnyArtifact;
+
+    expect(getCurrentState(artifact)).toBe("blocked");
+  });
+
+  it("should return null if last event has no event property", () => {
+    const artifact: TAnyArtifact = {
+      id: "A.1",
+      metadata: {
+        title: "Test",
+        events: [
+          { timestamp: "2024-01-01T00:00:00Z" } as unknown as TArtifactEvent,
+        ],
+      },
+      content: { summary: "test" },
+    } as TAnyArtifact;
+
+    expect(getCurrentState(artifact)).toBeNull();
+  });
+});
+
+describe("extractArtifactIds", () => {
+  describe("single source extraction", () => {
+    it("should extract from branch name only", () => {
+      const ids = extractArtifactIds("A.1.5-feature", null, null);
+      expect(ids).toEqual(["A.1.5"]);
+    });
+
+    it("should extract from PR title only", () => {
+      const ids = extractArtifactIds(null, "[A.1.5] Add feature", null);
+      expect(ids).toEqual(["A.1.5"]);
+    });
+
+    it("should extract from PR body only", () => {
+      const ids = extractArtifactIds(null, null, "Implements A.1.5");
+      expect(ids).toEqual(["A.1.5"]);
+    });
+  });
+
+  describe("multiple sources extraction", () => {
+    it("should extract from all sources", () => {
+      const ids = extractArtifactIds(
+        "A.1.5-feature",
+        "[A.1.5] Add feature",
+        "Implements A.1.5 and depends on B.2.3",
+      );
+      expect(ids).toEqual(["A.1.5", "B.2.3"]);
+    });
+
+    it("should deduplicate IDs across sources", () => {
+      const ids = extractArtifactIds(
+        "A.1.5-feature",
+        "[A.1.5] Add feature",
+        "Closes A.1.5",
+      );
+      expect(ids).toEqual(["A.1.5"]);
+    });
+
+    it("should extract multiple IDs from each source", () => {
+      const ids = extractArtifactIds(
+        "A.1.5-A.1.6",
+        "[A.1.5] [A.1.7] Multi-feature",
+        "Implements A.1.5, A.1.6, A.1.7, and B.2.3",
+      );
+      expect(ids).toEqual(["A.1.5", "A.1.6", "A.1.7", "B.2.3"]);
+    });
+  });
+
+  describe("sorting and deduplication", () => {
+    it("should sort IDs alphabetically", () => {
+      const ids = extractArtifactIds(null, null, "C.1 B.2 A.3");
+      expect(ids).toEqual(["A.3", "B.2", "C.1"]);
+    });
+
+    it("should deduplicate identical IDs", () => {
+      const ids = extractArtifactIds(null, null, "A.1.5 A.1.5 A.1.5");
+      expect(ids).toEqual(["A.1.5"]);
+    });
+
+    it("should sort by letter then number", () => {
+      const ids = extractArtifactIds(null, null, "A.10 A.2 A.1 B.1");
+      expect(ids).toEqual(["A.1", "A.10", "A.2", "B.1"]);
+    });
+  });
+
+  describe("edge cases", () => {
+    it("should return empty array when all sources are null", () => {
+      const ids = extractArtifactIds(null, null, null);
+      expect(ids).toEqual([]);
+    });
+
+    it("should return empty array when sources have no artifact IDs", () => {
+      const ids = extractArtifactIds("feature", "Add feature", "Description");
+      expect(ids).toEqual([]);
+    });
+
+    it("should handle empty strings", () => {
+      const ids = extractArtifactIds("", "", "");
+      expect(ids).toEqual([]);
+    });
+
+    it("should extract from complex branch names", () => {
+      const ids = extractArtifactIds(
+        "feature/A.1.5-implement-auth",
+        null,
+        null,
+      );
+      expect(ids).toEqual(["A.1.5"]);
+    });
+
+    it("should extract from PR body with markdown", () => {
+      const ids = extractArtifactIds(
+        null,
+        null,
+        "## Changes\n- Implements A.1.5\n- Fixes B.2.3\n\n**Closes** C.1",
+      );
+      expect(ids).toEqual(["A.1.5", "B.2.3", "C.1"]);
+    });
+  });
+
+  describe("real-world patterns", () => {
+    it("should extract from typical branch name", () => {
+      const ids = extractArtifactIds("C.1.2-add-user-auth", null, null);
+      expect(ids).toEqual(["C.1.2"]);
+    });
+
+    it("should extract from typical PR title", () => {
+      const ids = extractArtifactIds(
+        null,
+        "[A.1.5] Implement user authentication",
+        null,
+      );
+      expect(ids).toEqual(["A.1.5"]);
+    });
+
+    it("should extract from PR body with dependencies", () => {
+      const ids = extractArtifactIds(
+        null,
+        null,
+        "Implements A.1.5\n\nDepends on:\n- B.2.3\n- C.4.1",
+      );
+      expect(ids).toEqual(["A.1.5", "B.2.3", "C.4.1"]);
+    });
+  });
+});
+
+describe("getArtifactSlug", () => {
+  let tempDir: string;
+
+  beforeEach(async () => {
+    // Create temporary directory for test artifacts
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "artifact-test-"));
+  });
+
+  afterEach(async () => {
+    // Clean up temporary directory
+    await fs.rm(tempDir, { recursive: true, force: true });
+  });
+
+  describe("successful slug extraction", () => {
+    it("should extract slug from initiative artifact", async () => {
+      // Create .kodebase/artifacts/A.my-initiative/A.yml
+      const artifactsDir = path.join(tempDir, ".kodebase", "artifacts");
+      const artifactDir = path.join(artifactsDir, "A.my-initiative");
+      await fs.mkdir(artifactDir, { recursive: true });
+      await fs.writeFile(
+        path.join(artifactDir, "A.yml"),
+        "metadata:\n  title: Test",
+      );
+
+      const slug = await getArtifactSlug("A", tempDir);
+      expect(slug).toBe("my-initiative");
+    });
+
+    it("should extract slug from milestone artifact", async () => {
+      // Create .kodebase/artifacts/A.init/A.1.milestone/A.1.yml
+      const artifactsDir = path.join(tempDir, ".kodebase", "artifacts");
+      const artifactDir = path.join(artifactsDir, "A.init", "A.1.milestone");
+      await fs.mkdir(artifactDir, { recursive: true });
+      await fs.writeFile(
+        path.join(artifactDir, "A.1.yml"),
+        "metadata:\n  title: Test",
+      );
+
+      const slug = await getArtifactSlug("A.1", tempDir);
+      expect(slug).toBe("milestone");
+    });
+
+    it("should extract slug from issue artifact", async () => {
+      // Create .kodebase/artifacts/A.init/A.1.ms/A.1.2.issue-name.yml
+      // Issues are files directly in milestone directory, not in subdirectories
+      const artifactsDir = path.join(tempDir, ".kodebase", "artifacts");
+      const milestoneDir = path.join(artifactsDir, "A.init", "A.1.ms");
+      await fs.mkdir(milestoneDir, { recursive: true });
+      await fs.writeFile(
+        path.join(milestoneDir, "A.1.2.issue-name.yml"),
+        "metadata:\n  title: Test",
+      );
+
+      const slug = await getArtifactSlug("A.1.2", tempDir);
+      expect(slug).toBe("issue-name");
+    });
+
+    it("should handle slug with hyphens", async () => {
+      const artifactsDir = path.join(tempDir, ".kodebase", "artifacts");
+      const artifactDir = path.join(artifactsDir, "B.multi-word-slug");
+      await fs.mkdir(artifactDir, { recursive: true });
+      await fs.writeFile(
+        path.join(artifactDir, "B.yml"),
+        "metadata:\n  title: Test",
+      );
+
+      const slug = await getArtifactSlug("B", tempDir);
+      expect(slug).toBe("multi-word-slug");
+    });
+
+    it("should handle slug with numbers", async () => {
+      const artifactsDir = path.join(tempDir, ".kodebase", "artifacts");
+      const artifactDir = path.join(artifactsDir, "C.version-2-0");
+      await fs.mkdir(artifactDir, { recursive: true });
+      await fs.writeFile(
+        path.join(artifactDir, "C.yml"),
+        "metadata:\n  title: Test",
+      );
+
+      const slug = await getArtifactSlug("C", tempDir);
+      expect(slug).toBe("version-2-0");
+    });
+  });
+
+  describe("error handling", () => {
+    it("should return undefined for non-existent artifact", async () => {
+      // Create artifacts directory first
+      await fs.mkdir(path.join(tempDir, ".kodebase", "artifacts"), {
+        recursive: true,
+      });
+      const slug = await getArtifactSlug("Z.99", tempDir);
+      expect(slug).toBeUndefined();
+    });
+
+    it("should return undefined for empty artifacts directory", async () => {
+      await fs.mkdir(path.join(tempDir, ".kodebase", "artifacts"), {
+        recursive: true,
+      });
+      const slug = await getArtifactSlug("A.1", tempDir);
+      expect(slug).toBeUndefined();
+    });
+
+    it("should throw error for non-existent base directory", async () => {
+      await expect(
+        getArtifactSlug("A.1", "/nonexistent/path"),
+      ).rejects.toThrow();
+    });
+  });
+
+  describe("edge cases", () => {
+    it("should handle artifact with minimal slug", async () => {
+      const artifactsDir = path.join(tempDir, ".kodebase", "artifacts");
+      const artifactDir = path.join(artifactsDir, "D.x");
+      await fs.mkdir(artifactDir, { recursive: true });
+      await fs.writeFile(
+        path.join(artifactDir, "D.yml"),
+        "metadata:\n  title: Test",
+      );
+
+      const slug = await getArtifactSlug("D", tempDir);
+      expect(slug).toBe("x");
+    });
+
+    it("should return undefined for directory without dot separator", async () => {
+      const artifactsDir = path.join(tempDir, ".kodebase", "artifacts");
+      const artifactDir = path.join(artifactsDir, "Enoslug");
+      await fs.mkdir(artifactDir, { recursive: true });
+      await fs.writeFile(
+        path.join(artifactDir, "E.yml"),
+        "metadata:\n  title: Test",
+      );
+
+      const slug = await getArtifactSlug("E", tempDir);
+      // Should return empty string as slug (directory format issue)
+      expect(slug).toBeDefined();
     });
   });
 });

@@ -136,3 +136,71 @@ export function extractArtifactIds(
 
   return Array.from(artifacts).sort();
 }
+
+/**
+ * Extracts the slug portion from an artifact's directory path.
+ *
+ * Given an artifact ID, locates its file in the artifacts directory and
+ * extracts the slug from the directory name (format: "{id}-{slug}").
+ *
+ * @param artifactId - The artifact ID to find (e.g., "A.1.5")
+ * @param baseDir - Base directory of the repository
+ * @returns The slug portion or undefined if not found
+ *
+ * @example
+ * ```ts
+ * // For directory: .kodebase/artifacts/A.1.5-my-feature/A.1.5.yml
+ * const slug = await getArtifactSlug("A.1.5", "/path/to/repo");
+ * // "my-feature"
+ * ```
+ */
+export async function getArtifactSlug(
+  artifactId: string,
+  baseDir: string,
+): Promise<string | undefined> {
+  const { loadAllArtifactPaths, getArtifactIdFromPath } = await import(
+    "@kodebase/core"
+  );
+
+  const artifactsRoot = `${baseDir}/.kodebase/artifacts`;
+  const allPaths = await loadAllArtifactPaths(artifactsRoot);
+
+  // Find the path for this artifact
+  const artifactPath = allPaths.find((p) => {
+    const id = getArtifactIdFromPath(p);
+    return id === artifactId;
+  });
+
+  if (!artifactPath) {
+    return undefined;
+  }
+
+  // Extract slug based on artifact type
+  const pathParts = artifactPath.split("/");
+  const fileName = pathParts[pathParts.length - 1];
+  const dirName = pathParts[pathParts.length - 2];
+
+  if (!fileName || !dirName) {
+    return undefined;
+  }
+
+  // Check if this is an issue artifact (3+ segments in ID)
+  const idSegments = artifactId.split(".");
+  if (idSegments.length >= 3) {
+    // Issue: filename format is {id}.{slug}.yml or {id}.yml
+    // Example: A.1.2.my-issue.yml
+    const fileNameWithoutExt = fileName.replace(/\.yml$/, "");
+    if (fileNameWithoutExt === artifactId) {
+      // No slug (just A.1.2.yml)
+      return undefined;
+    }
+    // Extract slug: remove artifact ID and dot
+    const slug = fileNameWithoutExt.substring(artifactId.length + 1);
+    return slug || undefined;
+  }
+
+  // Initiative or Milestone: directory format is {id}.{slug}
+  // Example: A.my-init or A.1.my-milestone
+  const slug = dirName.substring(artifactId.length + 1);
+  return slug || undefined;
+}
