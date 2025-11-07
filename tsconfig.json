@@ -11,7 +11,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "paths": {
-      "@kodebase/artifacts": ["./src"]
+      "@kodebase/artifacts": ["./src"],
+      "@kodebase/test-utils": ["../test-utils/src"]
     }
   },
   "include": ["src/**/*.ts"],

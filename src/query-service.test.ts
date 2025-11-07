@@ -3,20 +3,17 @@ import {
   scaffoldIssue,
   scaffoldMilestone,
 } from "@kodebase/core";
+vi.mock("node:fs/promises", async () => {
+  const { fs } = await import("memfs");
+  const api = fs.promises as unknown as Record<string, unknown>;
+  return { default: api, ...api } as any;
+});
 import { vol } from "memfs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ArtifactService } from "./artifact-service.js";
 import { ArtifactNotFoundError } from "./errors.js";
 import { type ArtifactTreeNode, QueryService } from "./query-service.js";
-
-// Mock node:fs/promises to use memfs
-vi.mock("node:fs/promises", async () => {
-  const { fs } = await import("memfs");
-  return {
-    default: fs.promises,
-  };
-});
 
 describe("QueryService", () => {
   const testBaseDir = "/test-workspace";
