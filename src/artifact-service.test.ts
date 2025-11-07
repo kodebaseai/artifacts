@@ -6,12 +6,14 @@ import {
   scaffoldIssue,
   scaffoldMilestone,
 } from "@kodebase/core";
+
 // Mock node:fs/promises to use memfs (hoisted). Must be inline to avoid hoist import issues.
 vi.mock("node:fs/promises", async () => {
   const { fs } = await import("memfs");
   const api = fs.promises as unknown as Record<string, unknown>;
   return { default: api, ...api } as any;
 });
+
 import { vol } from "memfs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
