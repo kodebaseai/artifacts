@@ -3,6 +3,15 @@
   "version": "1.1.2",
   "description": "High-level artifact operations for Kodebase",
   "license": "MIT",
+  "homepage": "https://github.com/kodebaseai/artifacts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kodebaseai/artifacts.git",
+    "directory": "."
+  },
+  "bugs": {
+    "url": "https://github.com/kodebaseai/artifacts/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
