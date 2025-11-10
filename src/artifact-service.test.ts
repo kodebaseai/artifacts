@@ -11,6 +11,7 @@ import {
 vi.mock("node:fs/promises", async () => {
   const { fs } = await import("memfs");
   const api = fs.promises as unknown as Record<string, unknown>;
+  // biome-ignore lint/suspicious/noExplicitAny: memfs mock requires any for proper type inference
   return { default: api, ...api } as any;
 });
 
