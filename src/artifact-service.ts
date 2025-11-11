@@ -8,8 +8,11 @@
  */
 
 import fs from "node:fs/promises";
+import path from "node:path";
 
 import {
+  getArtifactIdFromPath,
+  loadAllArtifactPaths,
   readArtifact,
   resolveArtifactPaths,
   type TAnyArtifact,
@@ -18,6 +21,8 @@ import {
 } from "@kodebase/core";
 
 import { ArtifactNotFoundError } from "./errors.js";
+
+const ARTIFACTS_DIR = ".kodebase/artifacts";
 
 /**
  * Options for creating an artifact.
@@ -132,6 +137,8 @@ export class ArtifactService {
   /**
    * Retrieves an artifact by its ID.
    *
+   * When slug is not provided, searches for any file matching the ID pattern.
+   *
    * @param options - Get options
    * @returns The artifact data
    * @throws ArtifactNotFoundError if the artifact file doesn't exist
@@ -148,25 +155,51 @@ export class ArtifactService {
   async getArtifact(options: GetArtifactOptions): Promise<TAnyArtifact> {
     const { id, slug, baseDir = process.cwd() } = options;
 
-    // Resolve paths
-    const { filePath } = await resolveArtifactPaths({
-      id,
-      slug,
-      baseDir,
-    });
+    // If slug is provided, use direct path resolution
+    if (slug) {
+      const { filePath } = await resolveArtifactPaths({
+        id,
+        slug,
+        baseDir,
+      });
 
-    // Check if file exists
-    try {
-      await fs.access(filePath);
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-        throw new ArtifactNotFoundError(id, filePath);
+      try {
+        await fs.access(filePath);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+          throw new ArtifactNotFoundError(id, filePath);
+        }
+        throw error;
       }
-      throw error;
+
+      return await readArtifact<TAnyArtifact>(filePath);
     }
 
-    // Read and return artifact
-    return await readArtifact<TAnyArtifact>(filePath);
+    // No slug provided - search for the artifact file
+    const artifactsRoot = path.join(baseDir, ARTIFACTS_DIR);
+    const allPaths = await loadAllArtifactPaths(artifactsRoot);
+
+    // Find matching artifact by ID
+    const matchingPath = allPaths.find((filePath: string) => {
+      const fileId = getArtifactIdFromPath(filePath);
+      return fileId === id;
+    });
+
+    if (!matchingPath) {
+      // For better error message, try to construct expected path
+      try {
+        const { filePath } = await resolveArtifactPaths({
+          id,
+          slug: "unknown",
+          baseDir,
+        });
+        throw new ArtifactNotFoundError(id, filePath);
+      } catch {
+        throw new ArtifactNotFoundError(id, `<unknown path for ${id}>`);
+      }
+    }
+
+    return await readArtifact<TAnyArtifact>(matchingPath);
   }
 
   /**
