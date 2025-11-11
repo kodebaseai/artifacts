@@ -15,6 +15,7 @@ import {
   type RelationshipConsistencyIssue,
   type StateTransitionError,
   type TAnyArtifact,
+  type TArtifactType,
 } from "@kodebase/core";
 
 /**
@@ -122,9 +123,12 @@ export class ValidationService {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
 
+    // Infer artifact type from ID to avoid content-based detection errors
+    const expectedType = this.getArtifactTypeFromId(options.artifactId);
+
     // 1. Schema validation
     try {
-      ArtifactValidator.validateArtifact(artifact, undefined, {
+      ArtifactValidator.validateArtifact(artifact, expectedType, {
         artifactId: options.artifactId,
       });
     } catch (error) {
@@ -210,6 +214,22 @@ export class ValidationService {
     }
 
     return results;
+  }
+
+  /**
+   * Infer artifact type from ID format.
+   *
+   * @private
+   */
+  private getArtifactTypeFromId(id: string): TArtifactType {
+    const segments = id.split(".");
+    if (segments.length === 1) {
+      return "initiative";
+    }
+    if (segments.length === 2) {
+      return "milestone";
+    }
+    return "issue";
   }
 
   /**
