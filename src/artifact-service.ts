@@ -244,12 +244,32 @@ export class ArtifactService {
       },
     };
 
-    // Resolve paths
-    const { filePath } = await resolveArtifactPaths({
-      id,
-      slug,
-      baseDir,
-    });
+    // Determine the file path
+    let filePath: string;
+
+    if (slug) {
+      // Slug provided - use it directly
+      ({ filePath } = await resolveArtifactPaths({
+        id,
+        slug,
+        baseDir,
+      }));
+    } else {
+      // No slug provided - find the actual file path to preserve slugs in filenames
+      const artifactsRoot = path.join(baseDir, ARTIFACTS_DIR);
+      const allPaths = await loadAllArtifactPaths(artifactsRoot);
+
+      const matchingPath = allPaths.find((p: string) => {
+        const fileId = getArtifactIdFromPath(p);
+        return fileId === id;
+      });
+
+      if (!matchingPath) {
+        throw new ArtifactNotFoundError(id, `<unknown path for ${id}>`);
+      }
+
+      filePath = matchingPath;
+    }
 
     // Write updated artifact
     await writeArtifact(filePath, updatedArtifact);
@@ -298,12 +318,32 @@ export class ArtifactService {
       },
     };
 
-    // Resolve paths
-    const { filePath } = await resolveArtifactPaths({
-      id,
-      slug,
-      baseDir,
-    });
+    // Determine the file path
+    let filePath: string;
+
+    if (slug) {
+      // Slug provided - use it directly
+      ({ filePath } = await resolveArtifactPaths({
+        id,
+        slug,
+        baseDir,
+      }));
+    } else {
+      // No slug provided - find the actual file path to preserve slugs in filenames
+      const artifactsRoot = path.join(baseDir, ARTIFACTS_DIR);
+      const allPaths = await loadAllArtifactPaths(artifactsRoot);
+
+      const matchingPath = allPaths.find((p: string) => {
+        const fileId = getArtifactIdFromPath(p);
+        return fileId === id;
+      });
+
+      if (!matchingPath) {
+        throw new ArtifactNotFoundError(id, `<unknown path for ${id}>`);
+      }
+
+      filePath = matchingPath;
+    }
 
     // Write updated artifact
     await writeArtifact(filePath, updatedArtifact);
