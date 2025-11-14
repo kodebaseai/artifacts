@@ -10,8 +10,8 @@
  * from `@kodebase/core` and provides orchestration for artifact workflows.
  *
  * @module cascade-service
- * @see {@link https://github.com/kodebase-org/kodebase/blob/main/.kodebase/docs/specs/git-ops/cascade-system.md | Cascade System Specification}
- * @see {@link https://github.com/kodebase-org/kodebase/blob/main/.kodebase/docs/specs/git-ops/adr/ADR-001-cascade-engine-integration.md | ADR-001: Cascade Engine Integration}
+ * @see {@link https://github.com/kodebase-org/kodebase/blob/main/.kodebase/docs/reference/specs/git-ops/cascade-system.md | Cascade System Specification}
+ * @see {@link https://github.com/kodebase-org/kodebase/blob/main/.kodebase/docs/reference/specs/git-ops/adr/ADR-001-cascade-engine-integration.md | ADR-001: Cascade Engine Integration}
  */
 
 import type { TAnyArtifact } from "@kodebase/core";
