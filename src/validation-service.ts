@@ -240,10 +240,12 @@ export class ValidationService {
    * - Cross-level dependencies
    * - Relationship consistency (bidirectional)
    *
+   * Only includes errors that involve the current artifact.
+   *
    * @private
    */
   private validateDependencies(
-    _artifactId: string,
+    artifactId: string,
     _artifact: TAnyArtifact,
     allArtifacts: Map<string, TAnyArtifact>,
   ): ValidationError[] {
@@ -252,17 +254,35 @@ export class ValidationService {
     // Check circular dependencies
     const circularIssues =
       ArtifactValidator.detectCircularDependencies(allArtifacts);
-    errors.push(...this.formatCircularDependencyErrors(circularIssues));
+    const relevantCircularIssues = circularIssues.filter((issue) =>
+      issue.cycle.includes(artifactId),
+    );
+    errors.push(...this.formatCircularDependencyErrors(relevantCircularIssues));
 
     // Check cross-level dependencies
     const crossLevelIssues =
       ArtifactValidator.detectCrossLevelDependencies(allArtifacts);
-    errors.push(...this.formatCrossLevelDependencyErrors(crossLevelIssues));
+    const relevantCrossLevelIssues = crossLevelIssues.filter(
+      (issue) =>
+        issue.sourceId === artifactId || issue.dependencyId === artifactId,
+    );
+    errors.push(
+      ...this.formatCrossLevelDependencyErrors(relevantCrossLevelIssues),
+    );
 
     // Check relationship consistency
     const consistencyIssues =
       ArtifactValidator.validateRelationshipConsistency(allArtifacts);
-    errors.push(...this.formatRelationshipConsistencyErrors(consistencyIssues));
+    const relevantConsistencyIssues = consistencyIssues.filter((issue) => {
+      // Match artifact ID quoted in message (e.g., 'A.1.1') or unquoted (e.g., A.1.1)
+      const quotedId = `'${artifactId}'`;
+      return (
+        issue.message.includes(quotedId) || issue.message.includes(artifactId)
+      );
+    });
+    errors.push(
+      ...this.formatRelationshipConsistencyErrors(relevantConsistencyIssues),
+    );
 
     return errors;
   }
