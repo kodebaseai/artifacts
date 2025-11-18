@@ -1,7 +1,11 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-import { getArtifactIdFromPath } from "@kodebase/core";
+import {
+  CArtifact,
+  getArtifactIdFromPath,
+  type TArtifactType,
+} from "@kodebase/core";
 
 import { ArtifactError } from "./error-formatting.js";
 import { NotInKodebaseProjectError } from "./errors.js";
@@ -127,17 +131,17 @@ export class ContextService {
       segments.slice(0, index + 1).join("."),
     );
 
-    let level: "initiative" | "milestone" | "issue";
+    let level: TArtifactType;
     let parentId: string | undefined;
 
     if (segments.length === 1) {
-      level = "initiative";
+      level = CArtifact.INITIATIVE;
       parentId = undefined;
     } else if (segments.length === 2) {
-      level = "milestone";
+      level = CArtifact.MILESTONE;
       parentId = segments[0];
     } else {
-      level = "issue";
+      level = CArtifact.ISSUE;
       parentId = segments.slice(0, 2).join(".");
     }
 
@@ -265,12 +269,15 @@ export class ContextService {
    * const ctx = await service.requireContext('milestone')
    * // Throws if in root or initiative-only context
    */
-  async requireContext(
-    level: "initiative" | "milestone" | "issue",
-  ): Promise<ContextInfo> {
+  async requireContext(level: TArtifactType): Promise<ContextInfo> {
     const context = await this.detectContext();
 
-    const levelHierarchy = ["root", "initiative", "milestone", "issue"];
+    const levelHierarchy = [
+      "root",
+      CArtifact.INITIATIVE,
+      CArtifact.MILESTONE,
+      CArtifact.ISSUE,
+    ];
     const requiredIndex = levelHierarchy.indexOf(level);
     const currentIndex = levelHierarchy.indexOf(context.level);
 
@@ -328,17 +335,17 @@ export class ContextService {
       segments.slice(0, index + 1).join("."),
     );
 
-    let level: "initiative" | "milestone" | "issue";
+    let level: TArtifactType;
     let parentId: string | undefined;
 
     if (segments.length === 1) {
-      level = "initiative";
+      level = CArtifact.INITIATIVE;
       parentId = undefined;
     } else if (segments.length === 2) {
-      level = "milestone";
+      level = CArtifact.MILESTONE;
       parentId = segments[0];
     } else {
-      level = "issue";
+      level = CArtifact.ISSUE;
       parentId = segments.slice(0, 2).join(".");
     }
 

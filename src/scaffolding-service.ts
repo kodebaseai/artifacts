@@ -7,6 +7,8 @@ import type {
   TPriority,
 } from "@kodebase/core";
 import {
+  CEstimationSize,
+  CPriority,
   scaffoldInitiative,
   scaffoldIssue,
   scaffoldMilestone,
@@ -207,8 +209,8 @@ export class ScaffoldingService {
         "TODO: Add success criteria",
       ],
       assignee: metadata?.assignee,
-      priority: metadata?.priority ?? "medium",
-      estimation: metadata?.estimation ?? "M",
+      priority: metadata?.priority ?? CPriority.MEDIUM,
+      estimation: metadata?.estimation ?? CEstimationSize.M,
       notes: metadata?.notes,
     });
 
@@ -265,8 +267,8 @@ export class ScaffoldingService {
       summary: metadata?.summary ?? "TODO: Add summary",
       deliverables: metadata?.deliverables ?? ["TODO: Add deliverables"],
       assignee: metadata?.assignee,
-      priority: metadata?.priority ?? "medium",
-      estimation: metadata?.estimation ?? "M",
+      priority: metadata?.priority ?? CPriority.MEDIUM,
+      estimation: metadata?.estimation ?? CEstimationSize.M,
       notes: metadata?.notes,
     });
 
@@ -329,8 +331,8 @@ export class ScaffoldingService {
         "TODO: Add acceptance criteria",
       ],
       assignee: metadata?.assignee,
-      priority: metadata?.priority ?? "medium",
-      estimation: metadata?.estimation ?? "M",
+      priority: metadata?.priority ?? CPriority.MEDIUM,
+      estimation: metadata?.estimation ?? CEstimationSize.M,
       notes: metadata?.notes,
     });
 

@@ -8,6 +8,7 @@
  */
 
 import {
+  CArtifactEvent,
   type CircularDependencyIssue,
   type CrossLevelDependencyIssue,
   detectCircularDependencies,
@@ -247,7 +248,7 @@ export class DependencyGraphService {
     for (const dep of dependencies) {
       const events = dep.artifact.metadata.events;
       const hasCompletedEvent = events.some(
-        (event) => event.event === "completed",
+        (event) => event.event === CArtifactEvent.COMPLETED,
       );
 
       if (!hasCompletedEvent) {

@@ -1,4 +1,8 @@
-import { loadAllArtifactPaths, loadArtifactsByType } from "@kodebase/core";
+import {
+  CArtifact,
+  loadAllArtifactPaths,
+  loadArtifactsByType,
+} from "@kodebase/core";
 
 /**
  * Service for allocating unique IDs for Kodebase artifacts.
@@ -64,7 +68,7 @@ export class IdAllocationService {
    */
   async allocateNextInitiativeId(): Promise<string> {
     const allPaths = await loadAllArtifactPaths(this.artifactsRoot);
-    const initiativeIds = loadArtifactsByType(allPaths, "initiative");
+    const initiativeIds = loadArtifactsByType(allPaths, CArtifact.INITIATIVE);
 
     if (initiativeIds.length === 0) {
       return "A";
@@ -109,7 +113,7 @@ export class IdAllocationService {
     this.validateInitiativeId(parentId);
 
     const allPaths = await loadAllArtifactPaths(this.artifactsRoot);
-    const allMilestoneIds = loadArtifactsByType(allPaths, "milestone");
+    const allMilestoneIds = loadArtifactsByType(allPaths, CArtifact.MILESTONE);
 
     const milestoneIds = allMilestoneIds.filter((id) =>
       id.startsWith(`${parentId}.`),
@@ -165,7 +169,7 @@ export class IdAllocationService {
     this.validateMilestoneId(parentId);
 
     const allPaths = await loadAllArtifactPaths(this.artifactsRoot);
-    const allIssueIds = loadArtifactsByType(allPaths, "issue");
+    const allIssueIds = loadArtifactsByType(allPaths, CArtifact.ISSUE);
 
     const issueIds = allIssueIds.filter((id) => id.startsWith(`${parentId}.`));
 

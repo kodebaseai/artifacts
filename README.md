@@ -104,7 +104,7 @@ const artifact = await service.getArtifact({
 const updated = await service.updateMetadata({
   id: "A",
   updates: {
-    priority: "high",
+    priority: CPriority.HIGH,
     title: "Updated Title"
   }
 });
@@ -116,7 +116,7 @@ const withEvent = await service.appendEvent({
     event: "ready",
     timestamp: "2025-11-02T12:00:00Z",
     actor: "Alice (alice@example.com)",
-    trigger: "dependencies_met"
+    trigger: CEventTrigger.DEPENDENCIES_MET
   }
 });
 ```
@@ -148,17 +148,17 @@ const ancestors = await service.getAncestors("A.1.3"); // ["A", "A.1"]
 const siblings = await service.getSiblings("A.1.3"); // Other A.1.x issues
 
 // Query and filter
-const inProgress = await service.findByState("in_progress");
-const milestones = await service.findByType("milestone");
+const inProgress = await service.findByState(CArtifactEvent.IN_PROGRESS);
+const milestones = await service.findByType(CArtifact.MILESTONE);
 const aliceWork = await service.findByAssignee("Alice (alice@example.com)");
-const critical = await service.findByPriority("critical");
+const critical = await service.findByPriority(CPriority.CRITICAL);
 
 // Complex queries
 const results = await service.findArtifacts({
   state: "ready",
-  type: "issue",
+  type: CArtifact.ISSUE,
   assignee: "Alice (alice@example.com)",
-  priority: "high"
+  priority: CPriority.HIGH
 });
 ```
 
@@ -271,7 +271,7 @@ const result = service.validateArtifact(artifact, {
   artifactId: "A.1.1",
   allArtifacts: artifactsMap,
   currentState: "ready",
-  nextState: "in_progress"
+  nextState: CArtifactEvent.IN_PROGRESS
 });
 
 if (!result.valid) {
@@ -331,8 +331,8 @@ const { id, artifact, slug } = await service.scaffoldInitiative(
     scopeOut: ["CLI", "Web UI"],
     successCriteria: ["Package published", "95%+ test coverage"],
     assignee: "alice@example.com",
-    priority: "high",
-    estimation: "L"
+    priority: CPriority.HIGH,
+    estimation: CEstimationSize.L
   }
 );
 
@@ -343,8 +343,8 @@ console.log(slug); // "core-package-development"
 const milestone = await service.scaffoldMilestone("B", "API Implementation", {
   summary: "Implement REST API endpoints",
   deliverables: ["OpenAPI spec", "Rate limiting", "Auth middleware"],
-  priority: "high",
-  estimation: "M"
+  priority: CPriority.HIGH,
+  estimation: CEstimationSize.M
 });
 
 // Scaffold an issue under milestone A.1
@@ -355,8 +355,8 @@ const issue = await service.scaffoldIssue("A.1", "Fix memory leak", {
     "All tests pass",
     "Added regression test"
   ],
-  priority: "critical",
-  estimation: "S"
+  priority: CPriority.CRITICAL,
+  estimation: CEstimationSize.S
 });
 ```
 
@@ -547,8 +547,8 @@ async function createIssue(title: string, summary: string) {
   const { id, artifact, slug } = await scaffoldService.scaffoldIssue("A.1", title, {
     summary,
     acceptanceCriteria: ["Implementation complete", "Tests pass"],
-    priority: "medium",
-    estimation: "M"
+    priority: CPriority.MEDIUM,
+    estimation: CEstimationSize.M
   });
 
   // 3. Validate before creating
@@ -693,7 +693,7 @@ async function autoTransitionToReady(artifactId: string) {
           event: "ready",
           timestamp: new Date().toISOString(),
           actor: "automation (automation@kodebase.ai)",
-          trigger: "dependencies_met"
+          trigger: CEventTrigger.DEPENDENCIES_MET
         }
       });
 
@@ -909,7 +909,7 @@ import { createArtifact } from "@kodebase/artifact-manager";
 const result = validateArtifact(artifact);
 
 // Legacy query
-const results = await queryArtifacts({ state: "ready" });
+const results = await queryArtifacts({ state: CArtifactEvent.READY });
 
 // Legacy create
 await createArtifact(id, artifact);
@@ -930,7 +930,7 @@ const result = validationService.validateArtifact(artifact, { artifactId: id });
 
 // Current query
 const queryService = new QueryService();
-const results = await queryService.findByState("ready");
+const results = await queryService.findByState(CArtifactEvent.READY);
 
 // Current create
 const artifactService = new ArtifactService();

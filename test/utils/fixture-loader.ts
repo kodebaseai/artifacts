@@ -1,8 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { TAnyArtifact } from "@kodebase/core";
+import type { TAnyArtifact, TArtifactType } from "@kodebase/core";
 import {
+  CArtifact,
   readArtifact,
   scaffoldInitiative,
   scaffoldIssue,
@@ -135,7 +136,7 @@ export const FIXTURES = {
  * @returns Scaffolded artifact
  */
 export function createTestArtifact(
-  type: "initiative",
+  type: CArtifact.INITIATIVE,
   overrides?: {
     title?: string;
     createdBy?: string;
@@ -146,7 +147,7 @@ export function createTestArtifact(
   },
 ): TAnyArtifact;
 export function createTestArtifact(
-  type: "milestone",
+  type: CArtifact.MILESTONE,
   overrides?: {
     title?: string;
     createdBy?: string;
@@ -155,7 +156,7 @@ export function createTestArtifact(
   },
 ): TAnyArtifact;
 export function createTestArtifact(
-  type: "issue",
+  type: CArtifact.ISSUE,
   overrides?: {
     title?: string;
     createdBy?: string;
@@ -164,7 +165,7 @@ export function createTestArtifact(
   },
 ): TAnyArtifact;
 export function createTestArtifact(
-  type: "initiative" | "milestone" | "issue",
+  type: TArtifactType,
   overrides?: Record<string, unknown>,
 ): TAnyArtifact {
   const defaults = {
@@ -172,7 +173,7 @@ export function createTestArtifact(
   };
 
   switch (type) {
-    case "initiative":
+    case CArtifact.INITIATIVE:
       return scaffoldInitiative({
         title: "Test Initiative",
         vision: "Test vision",
@@ -182,7 +183,7 @@ export function createTestArtifact(
         ...defaults,
         ...overrides,
       });
-    case "milestone":
+    case CArtifact.MILESTONE:
       return scaffoldMilestone({
         title: "Test Milestone",
         summary: "Test summary",
@@ -190,7 +191,7 @@ export function createTestArtifact(
         ...defaults,
         ...overrides,
       });
-    case "issue":
+    case CArtifact.ISSUE:
       return scaffoldIssue({
         title: "Test Issue",
         summary: "Test summary",

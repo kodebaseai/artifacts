@@ -15,7 +15,7 @@
  */
 
 import type { TAnyArtifact } from "@kodebase/core";
-import { CascadeEngine } from "@kodebase/core";
+import { CArtifactEvent, CascadeEngine, CEventTrigger } from "@kodebase/core";
 
 import { ArtifactService } from "./artifact-service.js";
 import { DependencyGraphService } from "./dependency-graph-service.js";
@@ -347,7 +347,7 @@ export class CascadeService {
     }
 
     // Parent must be in_progress to cascade to in_review
-    if (parentState !== "in_progress") {
+    if (parentState !== CArtifactEvent.IN_PROGRESS) {
       // Parent not started yet or already in_review/completed
       return result;
     }
@@ -367,7 +367,7 @@ export class CascadeService {
     const cascadeEvent = this.engine.generateCascadeEvent(
       decision.newState, // "in_review"
       {
-        event: "completed",
+        event: CArtifactEvent.COMPLETED,
         actor: actor ?? "System Cascade (cascade@completion)",
         timestamp: new Date().toISOString(),
       },
@@ -694,7 +694,7 @@ export class CascadeService {
     }
 
     // Parent must be ready to cascade to in_progress
-    if (parentState !== "ready") {
+    if (parentState !== CArtifactEvent.READY) {
       // Parent not ready (already started or still in draft)
       return result;
     }
@@ -714,7 +714,7 @@ export class CascadeService {
     const cascadeEvent = this.engine.generateCascadeEvent(
       decision.newState, // "in_progress"
       {
-        event: "in_progress",
+        event: CArtifactEvent.IN_PROGRESS,
         actor: actor ?? "System Cascade (cascade@progress)",
         timestamp: new Date().toISOString(),
       },
@@ -794,9 +794,9 @@ export class CascadeService {
     // Progress triggers (branch_created, work_started, etc.) → progress cascade only
     // Completion triggers (pr_merged, manual_completion, etc.) → completion then readiness
     const isProgressTrigger =
-      trigger === "branch_created" ||
+      trigger === CEventTrigger.BRANCH_CREATED ||
       trigger === "work_started" ||
-      trigger === "children_started";
+      trigger === CEventTrigger.CHILDREN_STARTED;
 
     if (isProgressTrigger) {
       // Progress cascade: parent ready → in_progress when first child starts

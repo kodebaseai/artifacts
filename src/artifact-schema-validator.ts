@@ -9,7 +9,7 @@
 
 import fs from "node:fs/promises";
 import type { TAnyArtifact } from "@kodebase/core";
-import { ARTIFACT_EVENTS, ArtifactValidator } from "@kodebase/core";
+import { ARTIFACT_EVENTS, ArtifactValidator, CArtifact } from "@kodebase/core";
 import type { Document, ParsedNode } from "yaml";
 import yaml, { LineCounter } from "yaml";
 
@@ -538,7 +538,7 @@ function suggestSchemaFix(issue: ArtifactValidationIssue): string | undefined {
   }
 
   if (code.includes("WRONG_TYPE")) {
-    return issue.message.includes("initiative")
+    return issue.message.includes(CArtifact.INITIATIVE)
       ? "Reference an initiative ID (e.g., A, B)"
       : issue.message.includes("milestone")
         ? "Reference a milestone ID (e.g., A.1, B.2)"

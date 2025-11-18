@@ -1,5 +1,9 @@
 import path from "node:path";
-import type { TAnyArtifact } from "@kodebase/core";
+import {
+  CArtifact,
+  type TAnyArtifact,
+  type TArtifactType,
+} from "@kodebase/core";
 import { expect } from "vitest";
 import { setupMockFs, writeMockFile } from "../utils/filesystem-mock.js";
 import { createTestArtifact } from "../utils/fixture-loader.js";
@@ -70,7 +74,7 @@ export async function createTestHierarchy(
 
   if (hierarchy.initiative) {
     const { id, title } = hierarchy.initiative;
-    const artifact = createTestArtifact("initiative", { title });
+    const artifact = createTestArtifact(CArtifact.INITIATIVE, { title });
     artifact.metadata.id = id;
 
     const dirPath = path.join(artifactDir, id);
@@ -83,7 +87,7 @@ export async function createTestHierarchy(
   if (hierarchy.milestones) {
     for (const milestone of hierarchy.milestones) {
       const { id, title, parentId } = milestone;
-      const artifact = createTestArtifact("milestone", { title });
+      const artifact = createTestArtifact(CArtifact.MILESTONE, { title });
       artifact.metadata.id = id;
       artifact.metadata.relationships = {
         parent: parentId,
@@ -100,7 +104,7 @@ export async function createTestHierarchy(
   if (hierarchy.issues) {
     for (const issue of hierarchy.issues) {
       const { id, title, parentId } = issue;
-      const artifact = createTestArtifact("issue", { title });
+      const artifact = createTestArtifact(CArtifact.ISSUE, { title });
       artifact.metadata.id = id;
       artifact.metadata.relationships = {
         parent: parentId,
@@ -227,23 +231,23 @@ export function expectArtifactValid(artifact: TAnyArtifact): void {
  */
 export function expectArtifactType(
   artifact: TAnyArtifact,
-  type: "initiative" | "milestone" | "issue",
+  type: TArtifactType,
 ): void {
   expectArtifactValid(artifact);
 
   switch (type) {
-    case "initiative":
+    case CArtifact.INITIATIVE:
       expect(artifact.content).toHaveProperty("vision");
       expect(artifact.content).toHaveProperty("scope");
       expect(artifact.content).toHaveProperty("scope.in");
       expect(artifact.content).toHaveProperty("scope.out");
       expect(artifact.content).toHaveProperty("success_criteria");
       break;
-    case "milestone":
+    case CArtifact.MILESTONE:
       expect(artifact.content).toHaveProperty("summary");
       expect(artifact.content).toHaveProperty("deliverables");
       break;
-    case "issue":
+    case CArtifact.ISSUE:
       expect(artifact.content).toHaveProperty("summary");
       expect(artifact.content).toHaveProperty("acceptance_criteria");
       break;

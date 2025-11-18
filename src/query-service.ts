@@ -8,6 +8,7 @@
  */
 
 import {
+  CArtifact,
   getArtifactIdFromPath,
   loadAllArtifactPaths,
   readArtifact,
@@ -697,12 +698,12 @@ export class QueryService {
   private getArtifactType(id: string): TArtifactType {
     const segments = id.split(".");
     if (segments.length === 1) {
-      return "initiative";
+      return CArtifact.INITIATIVE;
     }
     if (segments.length === 2) {
-      return "milestone";
+      return CArtifact.MILESTONE;
     }
-    return "issue";
+    return CArtifact.ISSUE;
   }
 
   /**

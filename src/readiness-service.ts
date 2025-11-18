@@ -9,6 +9,7 @@
  */
 
 import {
+  CArtifact,
   CArtifactEvent,
   canTransition,
   type TAnyArtifact,
@@ -150,7 +151,7 @@ export class ReadinessService {
         if (
           currentState === CArtifactEvent.COMPLETED ||
           currentState === CArtifactEvent.CANCELLED ||
-          currentState === "archived"
+          currentState === CArtifactEvent.ARCHIVED
         ) {
           continue;
         }
@@ -198,7 +199,7 @@ export class ReadinessService {
     if (
       currentState === CArtifactEvent.COMPLETED ||
       currentState === CArtifactEvent.CANCELLED ||
-      currentState === "archived"
+      currentState === CArtifactEvent.ARCHIVED
     ) {
       reasons.push({
         type: "invalid_state",
@@ -440,15 +441,15 @@ export class ReadinessService {
     // Artifact type is determined by the schema version pattern
     // For now, we can infer from the content structure
     if ("deliverables" in artifact.content) {
-      return "milestone";
+      return CArtifact.MILESTONE;
     }
     if ("scopeIn" in artifact.content && "scopeOut" in artifact.content) {
       if ("deliverables" in artifact.content) {
-        return "milestone";
+        return CArtifact.MILESTONE;
       }
-      return "issue";
+      return CArtifact.ISSUE;
     }
-    return "initiative";
+    return CArtifact.INITIATIVE;
   }
 
   /**

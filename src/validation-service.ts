@@ -10,6 +10,7 @@ import {
   type ArtifactValidationIssue,
   ArtifactValidator,
   assertTransition,
+  CArtifact,
   type CircularDependencyIssue,
   type CrossLevelDependencyIssue,
   type RelationshipConsistencyIssue,
@@ -224,12 +225,12 @@ export class ValidationService {
   private getArtifactTypeFromId(id: string): TArtifactType {
     const segments = id.split(".");
     if (segments.length === 1) {
-      return "initiative";
+      return CArtifact.INITIATIVE;
     }
     if (segments.length === 2) {
-      return "milestone";
+      return CArtifact.MILESTONE;
     }
-    return "issue";
+    return CArtifact.ISSUE;
   }
 
   /**
@@ -366,9 +367,9 @@ export class ValidationService {
     }
 
     if (code.includes("WRONG_TYPE")) {
-      return issue.message.includes("initiative")
+      return issue.message.includes(CArtifact.INITIATIVE)
         ? "Reference an initiative ID (e.g., A, B)"
-        : issue.message.includes("milestone")
+        : issue.message.includes(CArtifact.MILESTONE)
           ? "Reference a milestone ID (e.g., A.1, B.2)"
           : "Reference an issue ID (e.g., A.1.1, B.2.3)";
     }
