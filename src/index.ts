@@ -7,6 +7,7 @@ export {
 export * from "./artifact-schema-validator.js";
 export * from "./artifact-service.js";
 export * from "./cascade-service.js";
+export * from "./context-generator.js";
 export * from "./context-service.js";
 export * from "./dependency-graph-service.js";
 export * from "./dependency-validator.js";
