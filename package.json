@@ -1,6 +1,6 @@
 {
   "name": "@kodebase/artifacts",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "High-level artifact operations for Kodebase",
   "license": "MIT",
   "homepage": "https://github.com/kodebaseai/artifacts#readme",
@@ -56,7 +56,7 @@
     "@kodebase/test-utils": "workspace:*",
     "@kodebase/typescript-config": "workspace:*",
     "@types/node": "^22.19.0",
-    "@vitest/coverage-istanbul": "^4.0.8",
+    "@vitest/coverage-istanbul": "^4.0.12",
     "memfs": "^4.50.0",
     "publint": "^0.3.15",
     "typedoc": "^0.28.14",

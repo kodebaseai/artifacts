@@ -1,5 +1,117 @@
 # @kodebase/artifacts
 
+## 1.1.3
+
+### Patch Changes
+
+- [#301](https://github.com/kodebaseai/kodebase/pull/301) [`ee86091`](https://github.com/kodebaseai/kodebase/commit/ee86091417044998e1c9c0b33d1d05ad8dc20835) Thanks [@migcarva](https://github.com/migcarva)! - Complete F.4 Interactions & File Watcher milestone - Real-time artifact monitoring, state persistence, and enhanced UI features:
+
+  **F.4.2: File Watcher & Cache Management (#279)**
+
+  - FileWatcherService (300 lines) with chokidar integration for real-time artifact monitoring
+  - Fixed-window debounce (300ms) with Set-based deduplication
+  - Generation counter for race condition prevention
+  - Atomic cache invalidation pipeline with 4 checkpoints
+  - awaitWriteFinish for stable file reads
+
+  **F.4.3: UI Update Pipeline & Real-Time Sync (#280)**
+
+  - Complete UI update pipeline with three view builders (Work, Tree, Timeline)
+  - Integrated groupByStatus(), buildTree(), and buildTimeline()
+  - Loading state messaging during pipeline execution
+  - Performance measurement at each stage (<50ms grouping, <100ms tree/timeline)
+
+  **F.4.4: View Preferences Persistence (#281)**
+
+  - PreferenceStorage service (110 lines) with globalState integration
+  - State schema: ViewPreference, SortPreference, ExpandedGroupsState
+  - Storage keys: artifactExplorer.preferences.{view,sort,expandedGroups}
+  - Atomic preference updates with lifecycle management
+
+  **F.4.5: State Persistence & Synchronization (#282)**
+
+  - Unified state persistence architecture with 6 integrated phases
+  - Backward-compatible schema migration (3 keys → 1 unified key)
+  - Crash recovery with checkpoint files (3-step atomic process)
+  - External change detection via globalState.onDidChange
+  - Fixed-window debounce (300ms) for preference updates
+  - 221 tests passing with 95.84% coverage
+
+  **F.4.6: Loading States & Visual Feedback (#283)**
+
+  - LoadingSpinner component with animated overlay and backdrop-filter blur
+  - Bidirectional SET_LOADING message protocol
+  - Four-phase loading sequence with user-friendly status messages
+  - Semantic HTML (<output>) for accessibility
+
+  **F.4.7 & F.4.8: Settings Configuration & Integration (#284)**
+
+  - Comprehensive settings schema with 7 configurable options across 4 categories
+  - SettingsService for reactive behavior with onDidChangeConfiguration listener
+  - artifactPath changes trigger immediate reload
+  - autoRefresh toggles file watcher on/off
+  - Path type detection with platform independence
+
+  **F.4.9: Activity Bar Logo & Extension Activation (#285)**
+
+  - Editor Title Menu activation UI with Kodebase logo
+  - WorkTrackerPanel.toggle() for visibility state management
+  - SVG icon (16x17px) with light/dark theme support
+
+  **F.4.10: Multi-Panel Architecture (#288)**
+
+  - Multi-panel architecture supporting 3 panels (Artifact Explorer, Initiative Planner, Project Dashboard)
+  - Centralized state management with globalState persistence
+  - Semantic icon navigation (Compass, BotMessageSquare, ChartNoAxesCombined)
+  - VSCode theme color integration using Tailwind arbitrary syntax
+  - ThemeShowcase component as design system reference
+
+  **F.4.11: Artifact List UI Revamp - Linear-Inspired Design (#289)**
+
+  - Complete UI redesign with expandable content sections
+  - Full event timeline display with type-safe data pipeline (TEvent[])
+  - Blocking dependency visualization with resolved status
+  - Corrected artifact sorting (CRITICAL→LOW, XL→XS)
+  - Accordion-based collapsible sections for metadata
+  - 220 tests passing with 94.67% coverage
+
+  **F.4.12: Enhanced Parent Blocking UX (#292)**
+
+  - Contextual status display ("Ready (blocked by parent D.3)")
+  - Synthetic BLOCKED events for parent-blocking scenarios
+  - Improved metadata organization (2 logical rows)
+  - Context generator moved to @kodebase/artifacts package
+  - Parent blocking hierarchy detection (all ancestors checked)
+  - 11 comprehensive tests
+
+  **F.4.14: Timeline View - Parent-Grouped Gantt Chart (#291)**
+
+  - Parent-grouped hierarchical visualization (Issues→Milestones→Initiatives)
+  - Type selector with Issue/Milestone/Initiative views
+  - Fixed-width columns (75px/day, 100px/week, 120px/month)
+  - Event-based timeline extraction with segmented state transitions
+  - Velocity estimation with median calculation and confidence scoring
+  - 12-color fixed palette for parent groups with hover interactions
+  - Sticky headers with both-axis scrolling
+  - Progress indicators and estimated completion visualization
+
+  **Key Technical Achievements:**
+
+  - Real-time synchronization with file watcher debouncing and atomic cache invalidation
+  - Unified state management with crash recovery and schema migration
+  - Extensible multi-panel architecture for future IDE companion features
+  - WCAG AA accessibility compliance with keyboard navigation
+  - Performance optimizations: virtualization, memoization, <100ms rendering for 100+ artifacts
+  - Comprehensive TypeScript strict mode compliance across all components
+  - 440+ tests passing with >94% coverage
+
+  **Package Changes:**
+
+  - @kodebase/vscode-extension: Core extension functionality with all F.4 features
+  - @kodebase/artifacts: Context generator extraction for reusability
+
+  Resolves F.4 milestone - Interactions & File Watcher.
+
 ## 1.1.2
 
 ### Patch Changes
