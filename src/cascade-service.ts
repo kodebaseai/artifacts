@@ -536,15 +536,32 @@ export class CascadeService {
         continue;
       }
 
-      // Extract slug from directory name
+      // Extract slug from path
+      // Issues: filename format {id}.{slug}.yml
+      // Milestones/Initiatives: filename format {id}.yml, directory format {id}.{slug}/
       const pathParts = dependentPath.split("/");
-      const dependentDirName = pathParts[pathParts.length - 2];
+      const fileName = pathParts[pathParts.length - 1];
+      const dirName = pathParts[pathParts.length - 2];
 
-      if (!dependentDirName?.startsWith(`${dependentId}.`)) {
-        // Skip if invalid directory format
+      if (!fileName?.endsWith(".yml")) {
+        // Skip if invalid filename format
         continue;
       }
-      const dependentSlug = dependentDirName.substring(dependentId.length + 1);
+
+      let dependentSlug: string;
+      if (fileName === `${dependentId}.yml`) {
+        // Milestone/Initiative: extract slug from directory name
+        if (!dirName?.startsWith(`${dependentId}.`)) {
+          continue;
+        }
+        dependentSlug = dirName.substring(dependentId.length + 1);
+      } else if (fileName.startsWith(`${dependentId}.`)) {
+        // Issue: extract slug from filename (remove {id}. prefix and .yml suffix)
+        dependentSlug = fileName.slice(dependentId.length + 1, -4);
+      } else {
+        // Skip if format doesn't match
+        continue;
+      }
 
       // 3. Merge the updated events back into the full artifact
       // CascadeEngine returns a CascadeChild (metadata only), but we need the full artifact

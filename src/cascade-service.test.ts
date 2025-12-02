@@ -690,7 +690,7 @@ describe("CascadeService", () => {
       expect(result.events).toHaveLength(1);
       expect(result.events[0]?.artifactId).toBe("A.2");
       expect(result.events[0]?.event).toBe("ready");
-      expect(result.events[0]?.trigger).toBe("dependency_completed");
+      expect(result.events[0]?.trigger).toBe("dependencies_met");
 
       // Verify artifact has ready event
       const updated = await artifactService.getArtifact({
@@ -1765,7 +1765,7 @@ describe("CascadeService", () => {
       // Check readiness cascade result
       const readinessEvent = result.events.find((e) => e.event === "ready");
       expect(readinessEvent?.artifactId).toBe("A.2");
-      expect(readinessEvent?.trigger).toBe("dependency_completed");
+      expect(readinessEvent?.trigger).toBe("dependencies_met");
     });
 
     it("should run progress cascade only for branch_created trigger", async () => {
