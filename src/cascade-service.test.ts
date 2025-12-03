@@ -80,435 +80,25 @@ describe("CascadeService", () => {
   });
 
   describe("executeCompletionCascade", () => {
-    it("should transition parent to in_review when all siblings complete", async () => {
-      // Arrange: Create initiative → milestone → 3 issues
-      // Initiative A
-      await artifactService.createArtifact({
-        id: "A",
-        artifact: scaffoldInitiative({
-          title: "Initiative A",
-          createdBy: "Test User (test@example.com)",
-          vision: "Test vision",
-          scopeIn: ["Feature A"],
-          scopeOut: ["Feature Z"],
-          successCriteria: ["Criterion A"],
-        }),
-        slug: "initiative-a",
-        baseDir: testBaseDir,
-      });
+    // NOTE: executeCompletionCascade is now a no-op.
+    // Parent completion is now explicit via `kb complete <id>` command.
+    // These tests verify the method returns empty results for API compatibility.
 
-      // Add in_progress event to initiative
-      await artifactService.appendEvent({
-        id: "A",
-        slug: "initiative-a",
-        event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:00:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Milestone A.1
-      await artifactService.createArtifact({
-        id: "A.1",
-        artifact: scaffoldMilestone({
-          title: "Milestone A.1",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test milestone",
-          deliverables: ["Deliverable 1"],
-        }),
-        slug: "milestone-a1",
-        baseDir: testBaseDir,
-      });
-
-      // Add in_progress event to milestone
-      await artifactService.appendEvent({
-        id: "A.1",
-        slug: "milestone-a1",
-        event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:01:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Create 3 issues, mark 2 as completed
-      for (let i = 1; i <= 3; i++) {
-        await artifactService.createArtifact({
-          id: `A.1.${i}`,
-          artifact: scaffoldIssue({
-            title: `Issue A.1.${i}`,
-            createdBy: "Test User (test@example.com)",
-            summary: `Test issue ${i}`,
-            acceptanceCriteria: [`Criterion ${i}`],
-          }),
-          slug: `issue-a1${i}`,
-          baseDir: testBaseDir,
-        });
-
-        // Add completed event to first 2 issues
-        if (i <= 2) {
-          await artifactService.appendEvent({
-            id: `A.1.${i}`,
-            slug: `issue-a1${i}`,
-            event: {
-              event: "completed",
-              timestamp: `2025-01-0${i}T12:00:00Z`,
-              actor: "Test User",
-              trigger: "pr_merged",
-            },
-            baseDir: testBaseDir,
-          });
-        }
-      }
-
-      // Add completed event to third issue (this should trigger cascade)
-      await artifactService.appendEvent({
-        id: "A.1.3",
-        slug: "issue-a13",
-        event: {
-          event: "completed",
-          timestamp: "2025-01-03T12:00:00Z",
-          actor: "Test User",
-          trigger: "pr_merged",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Act: Execute completion cascade for A.1.3
+    it("should return empty result (deprecated - no automatic parent cascade)", async () => {
+      // Act: Try to cascade for any artifact
       const result = await cascadeService.executeCompletionCascade({
         artifactId: "A.1.3",
         trigger: "pr_merged",
         baseDir: testBaseDir,
       });
 
-      // Assert: Parent milestone moved to in_review
-      expect(result.updatedArtifacts).toHaveLength(1);
-      expect(result.updatedArtifacts[0]?.metadata.title).toBe("Milestone A.1");
-      expect(result.events).toHaveLength(1);
-      expect(result.events[0]?.artifactId).toBe("A.1");
-      expect(result.events[0]?.event).toBe("in_review");
-      expect(result.events[0]?.trigger).toBe("children_completed");
-
-      // Verify parent artifact has in_review event
-      const updatedParent = await artifactService.getArtifact({
-        id: "A.1",
-        slug: "milestone-a1",
-        baseDir: testBaseDir,
-      });
-      const lastEvent =
-        updatedParent.metadata.events[updatedParent.metadata.events.length - 1];
-      expect(lastEvent?.event).toBe("in_review");
-    });
-
-    it("should return empty result when parent doesn't exist", async () => {
-      // Act: Try to cascade for non-existent artifact
-      const result = await cascadeService.executeCompletionCascade({
-        artifactId: "Z.1.1",
-        trigger: "pr_merged",
-        baseDir: testBaseDir,
-      });
-
-      // Assert: Empty result (parent doesn't exist)
+      // Assert: Always returns empty result (method is now a no-op)
       expect(result.updatedArtifacts).toEqual([]);
       expect(result.events).toEqual([]);
     });
 
-    it("should return empty result when artifact is top-level initiative", async () => {
-      // Arrange: Create initiative
-      await artifactService.createArtifact({
-        id: "A",
-        artifact: scaffoldInitiative({
-          title: "Initiative A",
-          createdBy: "Test User (test@example.com)",
-          vision: "Test vision",
-          scopeIn: ["Feature A"],
-          scopeOut: ["Feature Z"],
-          successCriteria: ["Criterion A"],
-        }),
-        slug: "initiative-a",
-        baseDir: testBaseDir,
-      });
-
-      // Act: Try to cascade top-level initiative (no parent)
-      const result = await cascadeService.executeCompletionCascade({
-        artifactId: "A",
-        trigger: "pr_merged",
-        baseDir: testBaseDir,
-      });
-
-      // Assert: Empty result (no parent to cascade to)
-      expect(result.updatedArtifacts).toEqual([]);
-      expect(result.events).toEqual([]);
-    });
-
-    it("should return empty result when parent not in_progress", async () => {
-      // Arrange: Create milestone and issue, but parent is still in draft
-      await artifactService.createArtifact({
-        id: "A",
-        artifact: scaffoldInitiative({
-          title: "Initiative A",
-          createdBy: "Test User (test@example.com)",
-          vision: "Test vision",
-          scopeIn: ["Feature A"],
-          scopeOut: ["Feature Z"],
-          successCriteria: ["Criterion A"],
-        }),
-        slug: "initiative-a",
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.createArtifact({
-        id: "A.1",
-        artifact: scaffoldMilestone({
-          title: "Milestone A.1",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test milestone",
-          deliverables: ["Deliverable 1"],
-        }),
-        slug: "milestone-a1",
-        baseDir: testBaseDir,
-      });
-
-      // Parent is still in draft (not in_progress)
-
-      // Act: Try to cascade
-      const result = await cascadeService.executeCompletionCascade({
-        artifactId: "A.1",
-        trigger: "pr_merged",
-        baseDir: testBaseDir,
-      });
-
-      // Assert: Empty result (parent not in_progress)
-      expect(result.updatedArtifacts).toEqual([]);
-      expect(result.events).toEqual([]);
-    });
-
-    it("should return empty result when not all siblings complete", async () => {
-      // Arrange: Create milestone with 2 issues, only 1 completes
-      await artifactService.createArtifact({
-        id: "A",
-        artifact: scaffoldInitiative({
-          title: "Initiative A",
-          createdBy: "Test User (test@example.com)",
-          vision: "Test vision",
-          scopeIn: ["Feature A"],
-          scopeOut: ["Feature Z"],
-          successCriteria: ["Criterion A"],
-        }),
-        slug: "initiative-a",
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.appendEvent({
-        id: "A",
-        slug: "initiative-a",
-        event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:00:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.createArtifact({
-        id: "A.1",
-        artifact: scaffoldMilestone({
-          title: "Milestone A.1",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test milestone",
-          deliverables: ["Deliverable 1"],
-        }),
-        slug: "milestone-a1",
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.appendEvent({
-        id: "A.1",
-        slug: "milestone-a1",
-        event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:01:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Create 2 issues
-      await artifactService.createArtifact({
-        id: "A.1.1",
-        artifact: scaffoldIssue({
-          title: "Issue A.1.1",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test issue 1",
-          acceptanceCriteria: ["Criterion 1"],
-        }),
-        slug: "issue-a11",
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.createArtifact({
-        id: "A.1.2",
-        artifact: scaffoldIssue({
-          title: "Issue A.1.2",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test issue 2",
-          acceptanceCriteria: ["Criterion 2"],
-        }),
-        slug: "issue-a12",
-        baseDir: testBaseDir,
-      });
-
-      // Only complete first issue
-      await artifactService.appendEvent({
-        id: "A.1.1",
-        slug: "issue-a11",
-        event: {
-          event: "completed",
-          timestamp: "2025-01-01T12:00:00Z",
-          actor: "Test User",
-          trigger: "pr_merged",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Act: Try to cascade (second issue still incomplete)
-      const result = await cascadeService.executeCompletionCascade({
-        artifactId: "A.1.1",
-        trigger: "pr_merged",
-        baseDir: testBaseDir,
-      });
-
-      // Assert: Empty result (not all siblings complete)
-      expect(result.updatedArtifacts).toEqual([]);
-      expect(result.events).toEqual([]);
-    });
-
-    it("should ignore cancelled siblings when checking completion", async () => {
-      // Arrange: Create milestone with 3 issues, 2 completed, 1 cancelled
-      await artifactService.createArtifact({
-        id: "A",
-        artifact: scaffoldInitiative({
-          title: "Initiative A",
-          createdBy: "Test User (test@example.com)",
-          vision: "Test vision",
-          scopeIn: ["Feature A"],
-          scopeOut: ["Feature Z"],
-          successCriteria: ["Criterion A"],
-        }),
-        slug: "initiative-a",
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.appendEvent({
-        id: "A",
-        slug: "initiative-a",
-        event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:00:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.createArtifact({
-        id: "A.1",
-        artifact: scaffoldMilestone({
-          title: "Milestone A.1",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test milestone",
-          deliverables: ["Deliverable 1"],
-        }),
-        slug: "milestone-a1",
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.appendEvent({
-        id: "A.1",
-        slug: "milestone-a1",
-        event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:01:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Create 3 issues
-      for (let i = 1; i <= 3; i++) {
-        await artifactService.createArtifact({
-          id: `A.1.${i}`,
-          artifact: scaffoldIssue({
-            title: `Issue A.1.${i}`,
-            createdBy: "Test User (test@example.com)",
-            summary: `Test issue ${i}`,
-            acceptanceCriteria: [`Criterion ${i}`],
-          }),
-          slug: `issue-a1${i}`,
-          baseDir: testBaseDir,
-        });
-      }
-
-      // Complete first two issues
-      await artifactService.appendEvent({
-        id: "A.1.1",
-        slug: "issue-a11",
-        event: {
-          event: "completed",
-          timestamp: "2025-01-01T12:00:00Z",
-          actor: "Test User",
-          trigger: "pr_merged",
-        },
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.appendEvent({
-        id: "A.1.2",
-        slug: "issue-a12",
-        event: {
-          event: "completed",
-          timestamp: "2025-01-02T12:00:00Z",
-          actor: "Test User",
-          trigger: "pr_merged",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Cancel third issue
-      await artifactService.appendEvent({
-        id: "A.1.3",
-        slug: "issue-a13",
-        event: {
-          event: "cancelled",
-          timestamp: "2025-01-03T12:00:00Z",
-          actor: "Test User",
-          trigger: "manual_cancel",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Act: Execute cascade (cancelled sibling should not block)
-      const result = await cascadeService.executeCompletionCascade({
-        artifactId: "A.1.2",
-        trigger: "pr_merged",
-        baseDir: testBaseDir,
-      });
-
-      // Assert: Parent moved to in_review (cancelled sibling ignored)
-      expect(result.updatedArtifacts).toHaveLength(1);
-      expect(result.events[0]?.event).toBe("in_review");
-    });
-
-    it("should use custom actor when provided", async () => {
-      // Arrange: Create completed artifacts
+    it("should return empty result regardless of artifact state", async () => {
+      // Arrange: Create complete hierarchy with all children completed
       await artifactService.createArtifact({
         id: "A",
         artifact: scaffoldInitiative({
@@ -583,18 +173,26 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
-      // Act: Execute with custom actor
+      // Act: Try to cascade (even with valid setup)
       const result = await cascadeService.executeCompletionCascade({
         artifactId: "A.1.1",
-        trigger: "manual_completion",
-        actor: "Custom Actor (custom@example.com)",
+        trigger: "pr_merged",
         baseDir: testBaseDir,
       });
 
-      // Assert: Custom actor used
-      expect(result.events[0]?.actor).toBe(
-        "System Cascade (cascade@completion)",
-      );
+      // Assert: Still returns empty (completion cascade is deprecated)
+      expect(result.updatedArtifacts).toEqual([]);
+      expect(result.events).toEqual([]);
+
+      // Verify parent was NOT updated
+      const parent = await artifactService.getArtifact({
+        id: "A.1",
+        slug: "milestone-a1",
+        baseDir: testBaseDir,
+      });
+      const lastEvent =
+        parent.metadata.events[parent.metadata.events.length - 1];
+      expect(lastEvent?.event).toBe("in_progress"); // Still in_progress, not in_review
     });
   });
 
@@ -1622,12 +1220,15 @@ describe("CascadeService", () => {
   });
 
   describe("executeCascades", () => {
-    it("should run completion + readiness cascade for pr_merged trigger", async () => {
-      // Arrange: Create hierarchy with completion and blocking relationships
+    it("should run only readiness cascade for pr_merged trigger (completion cascade deprecated)", async () => {
+      // Arrange: Create hierarchy with blocking relationships
       // A (initiative)
-      // ├── A.1 (milestone, blocks A.2)
-      // │   └── A.1.1 (issue) ← complete this
+      // ├── A.1 (milestone, blocks A.2) - marked as completed
       // └── A.2 (milestone, blocked by A.1)
+      //
+      // NOTE: Completion cascade no longer auto-transitions parent to in_review.
+      // Parent completion is now explicit via `kb complete <id>` command.
+      // Only readiness cascade (unblocking dependents) runs now.
 
       await artifactService.createArtifact({
         id: "A",
@@ -1655,7 +1256,7 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
-      // Create A.1 (blocker milestone)
+      // Create A.1 (blocker milestone) - mark as completed
       await artifactService.createArtifact({
         id: "A.1",
         artifact: scaffoldMilestone({
@@ -1672,24 +1273,11 @@ describe("CascadeService", () => {
         id: "A.1",
         slug: "milestone-a1",
         event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:01:00Z",
+          event: "completed",
+          timestamp: "2025-01-01T12:00:00Z",
           actor: "Test User",
-          trigger: "children_started",
+          trigger: "pr_merged",
         },
-        baseDir: testBaseDir,
-      });
-
-      // Create A.1.1 (issue)
-      await artifactService.createArtifact({
-        id: "A.1.1",
-        artifact: scaffoldIssue({
-          title: "Issue A.1.1",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test issue",
-          acceptanceCriteria: ["Criterion 1"],
-        }),
-        slug: "issue-a11",
         baseDir: testBaseDir,
       });
 
@@ -1729,43 +1317,27 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
-      // Complete A.1.1 (this should trigger completion cascade for A.1, then readiness for A.2)
-      await artifactService.appendEvent({
-        id: "A.1.1",
-        slug: "issue-a11",
-        event: {
-          event: "completed",
-          timestamp: "2025-01-01T12:00:00Z",
-          actor: "Test User",
-          trigger: "pr_merged",
-        },
-        baseDir: testBaseDir,
-      });
-
-      // Act: Execute all cascades
+      // Act: Execute all cascades for A.1 (the completed milestone)
       const result = await cascadeService.executeCascades({
-        artifactId: "A.1.1",
+        artifactId: "A.1",
         trigger: "pr_merged",
         baseDir: testBaseDir,
       });
 
-      // Assert: Should have 2 updates
-      // 1. A.1 moved to in_review (completion cascade)
-      // 2. A.2 moved to ready (readiness cascade)
-      expect(result.updatedArtifacts).toHaveLength(2);
-      expect(result.events).toHaveLength(2);
+      // Assert: Only readiness cascade runs (completion cascade is deprecated)
+      // A.2 should be unblocked and moved to ready
+      expect(result.events.length).toBeGreaterThanOrEqual(1);
 
-      // Check completion cascade result
-      const completionEvent = result.events.find(
-        (e) => e.event === "in_review",
-      );
-      expect(completionEvent?.artifactId).toBe("A.1");
-      expect(completionEvent?.trigger).toBe("children_completed");
-
-      // Check readiness cascade result
+      // Check readiness cascade result - A.2 moved to ready
       const readinessEvent = result.events.find((e) => e.event === "ready");
       expect(readinessEvent?.artifactId).toBe("A.2");
       expect(readinessEvent?.trigger).toBe("dependencies_met");
+
+      // No completion cascade result (no in_review event for parent)
+      const completionEvent = result.events.find(
+        (e) => e.event === "in_review",
+      );
+      expect(completionEvent).toBeUndefined();
     });
 
     it("should run progress cascade only for branch_created trigger", async () => {
@@ -1888,8 +1460,9 @@ describe("CascadeService", () => {
       expect(result.events).toEqual([]);
     });
 
-    it("should handle custom actor across all cascades", async () => {
-      // Arrange: Simple completion scenario
+    it("should handle custom actor for readiness cascade", async () => {
+      // Arrange: Create blocking scenario for readiness cascade
+      // J.1 (blocker) and J.2 (blocked by J.1)
       await artifactService.createArtifact({
         id: "J",
         artifact: scaffoldInitiative({
@@ -1904,24 +1477,12 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
-      await artifactService.appendEvent({
-        id: "J",
-        slug: "initiative-j",
-        event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:00:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
       await artifactService.createArtifact({
         id: "J.1",
         artifact: scaffoldMilestone({
           title: "Milestone J.1",
           createdBy: "Test User (test@example.com)",
-          summary: "Test milestone",
+          summary: "Blocker milestone",
           deliverables: ["Deliverable 1"],
         }),
         slug: "milestone-j1",
@@ -1932,30 +1493,6 @@ describe("CascadeService", () => {
         id: "J.1",
         slug: "milestone-j1",
         event: {
-          event: "in_progress",
-          timestamp: "2025-01-01T10:01:00Z",
-          actor: "Test User",
-          trigger: "children_started",
-        },
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.createArtifact({
-        id: "J.1.1",
-        artifact: scaffoldIssue({
-          title: "Issue J.1.1",
-          createdBy: "Test User (test@example.com)",
-          summary: "Test issue",
-          acceptanceCriteria: ["Criterion 1"],
-        }),
-        slug: "issue-j11",
-        baseDir: testBaseDir,
-      });
-
-      await artifactService.appendEvent({
-        id: "J.1.1",
-        slug: "issue-j11",
-        event: {
           event: "completed",
           timestamp: "2025-01-01T12:00:00Z",
           actor: "Test User",
@@ -1964,19 +1501,54 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
+      // Create J.2 blocked by J.1
+      const j2 = scaffoldMilestone({
+        title: "Milestone J.2",
+        createdBy: "Test User (test@example.com)",
+        summary: "Dependent milestone",
+        deliverables: ["Deliverable 2"],
+      });
+      j2.metadata.relationships.blocked_by = ["J.1"];
+
+      await artifactService.createArtifact({
+        id: "J.2",
+        artifact: j2,
+        slug: "milestone-j2",
+        baseDir: testBaseDir,
+      });
+
+      await artifactService.appendEvent({
+        id: "J.2",
+        slug: "milestone-j2",
+        event: {
+          event: "blocked",
+          timestamp: "2025-01-01T10:00:00Z",
+          actor: "Test User",
+          trigger: "has_dependencies",
+          metadata: {
+            blocking_dependencies: [
+              {
+                artifact_id: "J.1",
+                resolved: false,
+              },
+            ],
+          },
+        },
+        baseDir: testBaseDir,
+      });
+
       // Act: Execute with custom actor
       const result = await cascadeService.executeCascades({
-        artifactId: "J.1.1",
+        artifactId: "J.1",
         trigger: "pr_merged",
         actor: "Git Hook (hook@post-merge)",
         baseDir: testBaseDir,
       });
 
-      // Assert: All events use system actor (CascadeEngine behavior)
+      // Assert: Readiness cascade should use the custom actor
       expect(result.events.length).toBeGreaterThan(0);
-      for (const event of result.events) {
-        expect(event.actor).toBe("System Cascade (cascade@completion)");
-      }
+      const readyEvent = result.events.find((e) => e.event === "ready");
+      expect(readyEvent?.actor).toBe("Git Hook (hook@post-merge)");
     });
   });
 
@@ -2025,8 +1597,9 @@ describe("CascadeService", () => {
 
   describe("Integration & Performance Tests", () => {
     describe("Performance Validation", () => {
-      it("should complete 3-level cascade in <100ms", async () => {
-        // Setup 3-level hierarchy (Initiative → Milestone → Issue)
+      it("should complete readiness cascade chain in <100ms", async () => {
+        // Setup 3-level blocking chain (PERF.1 → PERF.2 → PERF.3)
+        // When PERF.1 completes, PERF.2 should become ready
         await artifactService.createArtifact({
           id: "PERF",
           artifact: scaffoldInitiative({
@@ -2044,68 +1617,18 @@ describe("CascadeService", () => {
         await artifactService.createArtifact({
           id: "PERF.1",
           artifact: scaffoldMilestone({
-            title: "Performance Milestone",
+            title: "Performance Blocker",
             createdBy: "Test User (test@example.com)",
-            summary: "Performance test",
+            summary: "Performance blocker",
             deliverables: ["Deliverable 1"],
           }),
-          slug: "perf-milestone",
-          baseDir: testBaseDir,
-        });
-
-        await artifactService.createArtifact({
-          id: "PERF.1.1",
-          artifact: scaffoldIssue({
-            title: "Performance Issue",
-            createdBy: "Test User (test@example.com)",
-            summary: "Performance test",
-            acceptanceCriteria: ["Criterion 1"],
-          }),
-          slug: "perf-issue",
-          baseDir: testBaseDir,
-        });
-
-        // Set all to in_progress
-        await artifactService.appendEvent({
-          id: "PERF",
-          slug: "perf-initiative",
-          event: {
-            event: "in_progress",
-            timestamp: "2025-01-01T10:00:00Z",
-            actor: "Test User",
-            trigger: "children_started",
-          },
+          slug: "perf-blocker",
           baseDir: testBaseDir,
         });
 
         await artifactService.appendEvent({
           id: "PERF.1",
-          slug: "perf-milestone",
-          event: {
-            event: "in_progress",
-            timestamp: "2025-01-01T10:01:00Z",
-            actor: "Test User",
-            trigger: "children_started",
-          },
-          baseDir: testBaseDir,
-        });
-
-        await artifactService.appendEvent({
-          id: "PERF.1.1",
-          slug: "perf-issue",
-          event: {
-            event: "in_progress",
-            timestamp: "2025-01-01T10:02:00Z",
-            actor: "Test User",
-            trigger: "work_started",
-          },
-          baseDir: testBaseDir,
-        });
-
-        // Complete issue
-        await artifactService.appendEvent({
-          id: "PERF.1.1",
-          slug: "perf-issue",
+          slug: "perf-blocker",
           event: {
             event: "completed",
             timestamp: "2025-01-01T12:00:00Z",
@@ -2115,10 +1638,46 @@ describe("CascadeService", () => {
           baseDir: testBaseDir,
         });
 
+        // Create PERF.2 blocked by PERF.1
+        const perf2 = scaffoldMilestone({
+          title: "Performance Dependent",
+          createdBy: "Test User (test@example.com)",
+          summary: "Performance dependent",
+          deliverables: ["Deliverable 2"],
+        });
+        perf2.metadata.relationships.blocked_by = ["PERF.1"];
+
+        await artifactService.createArtifact({
+          id: "PERF.2",
+          artifact: perf2,
+          slug: "perf-dependent",
+          baseDir: testBaseDir,
+        });
+
+        await artifactService.appendEvent({
+          id: "PERF.2",
+          slug: "perf-dependent",
+          event: {
+            event: "blocked",
+            timestamp: "2025-01-01T10:00:00Z",
+            actor: "Test User",
+            trigger: "has_dependencies",
+            metadata: {
+              blocking_dependencies: [
+                {
+                  artifact_id: "PERF.1",
+                  resolved: false,
+                },
+              ],
+            },
+          },
+          baseDir: testBaseDir,
+        });
+
         // Measure cascade execution time
         const startTime = performance.now();
         await cascadeService.executeCascades({
-          artifactId: "PERF.1.1",
+          artifactId: "PERF.1",
           trigger: "pr_merged",
           baseDir: testBaseDir,
         });
@@ -2126,13 +1685,14 @@ describe("CascadeService", () => {
 
         // Performance measurement for local visibility (typically <100ms locally, may vary in CI)
         // Not asserting on duration to avoid flakiness across different environments
-        console.log(`3-level cascade completed in ${duration.toFixed(2)}ms`);
+        console.log(`Readiness cascade completed in ${duration.toFixed(2)}ms`);
       });
     });
 
     describe("Idempotency Tests", () => {
-      it("should safely handle running same cascade multiple times", async () => {
-        // Setup: Simple parent-child (Milestone → Issue)
+      it("should safely handle running same cascade multiple times (readiness cascade)", async () => {
+        // Setup: Blocking scenario for readiness cascade idempotency test
+        // IDM.1 (blocker) and IDM.2 (blocked by IDM.1)
         await artifactService.createArtifact({
           id: "IDM",
           artifact: scaffoldInitiative({
@@ -2150,56 +1710,18 @@ describe("CascadeService", () => {
         await artifactService.createArtifact({
           id: "IDM.1",
           artifact: scaffoldMilestone({
-            title: "Idempotent Milestone",
+            title: "Idempotent Blocker",
             createdBy: "Test User (test@example.com)",
-            summary: "Idempotent test",
+            summary: "Idempotent blocker",
             deliverables: ["Deliverable 1"],
           }),
-          slug: "idem-milestone",
+          slug: "idem-blocker",
           baseDir: testBaseDir,
         });
 
-        await artifactService.createArtifact({
-          id: "IDM.1.1",
-          artifact: scaffoldIssue({
-            title: "Idempotent Issue",
-            createdBy: "Test User (test@example.com)",
-            summary: "Idempotent test",
-            acceptanceCriteria: ["Criterion 1"],
-          }),
-          slug: "idem-issue",
-          baseDir: testBaseDir,
-        });
-
-        // Both in_progress
         await artifactService.appendEvent({
           id: "IDM.1",
-          slug: "idem-milestone",
-          event: {
-            event: "in_progress",
-            timestamp: "2025-01-01T10:00:00Z",
-            actor: "Test User",
-            trigger: "children_started",
-          },
-          baseDir: testBaseDir,
-        });
-
-        await artifactService.appendEvent({
-          id: "IDM.1.1",
-          slug: "idem-issue",
-          event: {
-            event: "in_progress",
-            timestamp: "2025-01-01T10:01:00Z",
-            actor: "Test User",
-            trigger: "work_started",
-          },
-          baseDir: testBaseDir,
-        });
-
-        // Complete child
-        await artifactService.appendEvent({
-          id: "IDM.1.1",
-          slug: "idem-issue",
+          slug: "idem-blocker",
           event: {
             event: "completed",
             timestamp: "2025-01-01T12:00:00Z",
@@ -2209,34 +1731,72 @@ describe("CascadeService", () => {
           baseDir: testBaseDir,
         });
 
+        // Create IDM.2 blocked by IDM.1
+        const idm2 = scaffoldMilestone({
+          title: "Idempotent Dependent",
+          createdBy: "Test User (test@example.com)",
+          summary: "Idempotent dependent",
+          deliverables: ["Deliverable 2"],
+        });
+        idm2.metadata.relationships.blocked_by = ["IDM.1"];
+
+        await artifactService.createArtifact({
+          id: "IDM.2",
+          artifact: idm2,
+          slug: "idem-dependent",
+          baseDir: testBaseDir,
+        });
+
+        await artifactService.appendEvent({
+          id: "IDM.2",
+          slug: "idem-dependent",
+          event: {
+            event: "blocked",
+            timestamp: "2025-01-01T10:00:00Z",
+            actor: "Test User",
+            trigger: "has_dependencies",
+            metadata: {
+              blocking_dependencies: [
+                {
+                  artifact_id: "IDM.1",
+                  resolved: false,
+                },
+              ],
+            },
+          },
+          baseDir: testBaseDir,
+        });
+
         // Run cascade 3 times
         const result1 = await cascadeService.executeCascades({
-          artifactId: "IDM.1.1",
+          artifactId: "IDM.1",
           trigger: "pr_merged",
           baseDir: testBaseDir,
         });
         const result2 = await cascadeService.executeCascades({
-          artifactId: "IDM.1.1",
+          artifactId: "IDM.1",
           trigger: "pr_merged",
           baseDir: testBaseDir,
         });
         const result3 = await cascadeService.executeCascades({
-          artifactId: "IDM.1.1",
+          artifactId: "IDM.1",
           trigger: "pr_merged",
           baseDir: testBaseDir,
         });
 
-        // First run should transition parent to in_review
+        // First run should transition dependent to ready
         expect(result1.events.length).toBeGreaterThanOrEqual(1);
-        expect(result1.events.some((e) => e.event === "in_review")).toBe(true);
+        expect(result1.events.some((e) => e.event === "ready")).toBe(true);
 
         // Subsequent runs should return empty results (no state changes)
         expect(result2.events.length).toBe(0);
         expect(result3.events.length).toBe(0);
       });
 
-      it("should handle concurrent cascade executions safely", async () => {
-        // Setup: Milestone with 2 issues
+      it("should handle sequential cascade executions for multiple blockers", async () => {
+        // Setup: Two blockers for one dependent
+        // CON.1 and CON.2 both block CON.3
+        // Running cascades sequentially to avoid race conditions in tests
         await artifactService.createArtifact({
           id: "CON",
           artifact: scaffoldInitiative({
@@ -2254,80 +1814,71 @@ describe("CascadeService", () => {
         await artifactService.createArtifact({
           id: "CON.1",
           artifact: scaffoldMilestone({
-            title: "Concurrent Milestone",
+            title: "Concurrent Blocker 1",
             createdBy: "Test User (test@example.com)",
-            summary: "Concurrent test",
+            summary: "Concurrent blocker 1",
             deliverables: ["Deliverable 1"],
           }),
-          slug: "concurrent-milestone",
+          slug: "concurrent-blocker-1",
           baseDir: testBaseDir,
         });
 
         await artifactService.createArtifact({
-          id: "CON.1.1",
-          artifact: scaffoldIssue({
-            title: "Concurrent Issue 1",
+          id: "CON.2",
+          artifact: scaffoldMilestone({
+            title: "Concurrent Blocker 2",
             createdBy: "Test User (test@example.com)",
-            summary: "Concurrent test 1",
-            acceptanceCriteria: ["Criterion 1"],
+            summary: "Concurrent blocker 2",
+            deliverables: ["Deliverable 2"],
           }),
-          slug: "concurrent-issue-1",
+          slug: "concurrent-blocker-2",
           baseDir: testBaseDir,
         });
+
+        // Create CON.3 blocked by both CON.1 and CON.2
+        const con3 = scaffoldMilestone({
+          title: "Concurrent Dependent",
+          createdBy: "Test User (test@example.com)",
+          summary: "Concurrent dependent",
+          deliverables: ["Deliverable 3"],
+        });
+        con3.metadata.relationships.blocked_by = ["CON.1", "CON.2"];
 
         await artifactService.createArtifact({
-          id: "CON.1.2",
-          artifact: scaffoldIssue({
-            title: "Concurrent Issue 2",
-            createdBy: "Test User (test@example.com)",
-            summary: "Concurrent test 2",
-            acceptanceCriteria: ["Criterion 1"],
-          }),
-          slug: "concurrent-issue-2",
+          id: "CON.3",
+          artifact: con3,
+          slug: "concurrent-dependent",
           baseDir: testBaseDir,
         });
 
-        // All in_progress
         await artifactService.appendEvent({
-          id: "CON.1",
-          slug: "concurrent-milestone",
+          id: "CON.3",
+          slug: "concurrent-dependent",
           event: {
-            event: "in_progress",
+            event: "blocked",
             timestamp: "2025-01-01T10:00:00Z",
             actor: "Test User",
-            trigger: "children_started",
+            trigger: "has_dependencies",
+            metadata: {
+              blocking_dependencies: [
+                {
+                  artifact_id: "CON.1",
+                  resolved: false,
+                },
+                {
+                  artifact_id: "CON.2",
+                  resolved: false,
+                },
+              ],
+            },
           },
           baseDir: testBaseDir,
         });
 
+        // Complete both blockers
         await artifactService.appendEvent({
-          id: "CON.1.1",
-          slug: "concurrent-issue-1",
-          event: {
-            event: "in_progress",
-            timestamp: "2025-01-01T10:01:00Z",
-            actor: "Test User",
-            trigger: "work_started",
-          },
-          baseDir: testBaseDir,
-        });
-
-        await artifactService.appendEvent({
-          id: "CON.1.2",
-          slug: "concurrent-issue-2",
-          event: {
-            event: "in_progress",
-            timestamp: "2025-01-01T10:02:00Z",
-            actor: "Test User",
-            trigger: "work_started",
-          },
-          baseDir: testBaseDir,
-        });
-
-        // Complete both children
-        await artifactService.appendEvent({
-          id: "CON.1.1",
-          slug: "concurrent-issue-1",
+          id: "CON.1",
+          slug: "concurrent-blocker-1",
           event: {
             event: "completed",
             timestamp: "2025-01-01T12:01:00Z",
@@ -2338,8 +1889,8 @@ describe("CascadeService", () => {
         });
 
         await artifactService.appendEvent({
-          id: "CON.1.2",
-          slug: "concurrent-issue-2",
+          id: "CON.2",
+          slug: "concurrent-blocker-2",
           event: {
             event: "completed",
             timestamp: "2025-01-01T12:02:00Z",
@@ -2349,24 +1900,37 @@ describe("CascadeService", () => {
           baseDir: testBaseDir,
         });
 
-        // Run cascades concurrently for both children
-        const [result1, result2] = await Promise.all([
-          cascadeService.executeCascades({
-            artifactId: "CON.1.1",
-            trigger: "pr_merged",
-            baseDir: testBaseDir,
-          }),
-          cascadeService.executeCascades({
-            artifactId: "CON.1.2",
-            trigger: "pr_merged",
-            baseDir: testBaseDir,
-          }),
-        ]);
+        // Run cascades sequentially - first CON.1 (partial resolution), then CON.2 (full resolution)
+        const result1 = await cascadeService.executeCascades({
+          artifactId: "CON.1",
+          trigger: "pr_merged",
+          baseDir: testBaseDir,
+        });
 
-        // One of them should transition parent to in_review, the other should be empty
-        const totalEvents = result1.events.length + result2.events.length;
-        expect(totalEvents).toBeGreaterThanOrEqual(1);
-        expect(totalEvents).toBeLessThanOrEqual(2);
+        const result2 = await cascadeService.executeCascades({
+          artifactId: "CON.2",
+          trigger: "pr_merged",
+          baseDir: testBaseDir,
+        });
+
+        // First cascade should update CON.3 (mark CON.1 as resolved) but NOT add ready
+        // because CON.2 is still unresolved
+        expect(result1.updatedArtifacts).toHaveLength(1);
+        expect(result1.events).toHaveLength(0); // No ready event yet
+
+        // Second cascade should transition CON.3 to ready
+        expect(result2.events).toHaveLength(1);
+        expect(result2.events[0]?.event).toBe("ready");
+
+        // Verify CON.3 ended up in ready state
+        const con3Updated = await artifactService.getArtifact({
+          id: "CON.3",
+          slug: "concurrent-dependent",
+          baseDir: testBaseDir,
+        });
+        const lastEvent =
+          con3Updated.metadata.events[con3Updated.metadata.events.length - 1];
+        expect(lastEvent?.event).toBe("ready");
       });
     });
   });

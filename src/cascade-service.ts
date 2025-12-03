@@ -1,10 +1,15 @@
 /**
  * High-level service for cascade automation operations.
  *
- * Provides methods for executing three types of cascades:
- * - **Completion Cascade**: When all children complete → parent moves to in_review
+ * Provides methods for executing two types of cascades:
  * - **Readiness Cascade**: When blocker completes → dependents become ready
  * - **Progress Cascade**: When first child starts → parent moves to in_progress
+ *
+ * **Note:** Completion Cascade (parent to in_review) has been deprecated.
+ * Parent completion is now explicit via `kb complete <id>` command, which:
+ * 1. Creates a completion branch and PR
+ * 2. Generates delivery_summary (milestones) or impact_summary (initiatives)
+ * 3. Transitions the parent to in_review when PR is ready
  *
  * This service wraps the low-level {@link https://github.com/kodebase-org/kodebase/tree/main/packages/core/src/automation/cascade | CascadeEngine}
  * from `@kodebase/core` and provides orchestration for artifact workflows.
@@ -240,167 +245,34 @@ export class CascadeService {
   /**
    * Execute completion cascade when artifact completes.
    *
-   * Checks if parent should move to in_review when all sibling artifacts are complete.
-   * This is typically triggered after a PR is merged.
+   * **DEPRECATED:** This method no longer performs automatic parent cascades.
    *
-   * **Algorithm:**
-   * 1. Load the completed artifact
-   * 2. Find parent artifact ID
-   * 3. Load all sibling artifacts (children of parent)
-   * 4. Check if all siblings are in 'completed' state
-   * 5. If yes, add 'in_review' event to parent
+   * Previously, this would transition parent artifacts to `in_review` when all
+   * children completed. This behavior was removed because:
+   * 1. Parent completion should be explicit via `kb complete <id>` command
+   * 2. Milestones/initiatives need `delivery_summary`/`impact_summary` before completion
+   * 3. The `in_review` state should only be set when there's an actual PR open
    *
-   * **Idempotency:** Safe to call multiple times. If parent is already in_review or beyond,
-   * no changes are made.
+   * **New Flow:**
+   * 1. When all children complete, Sherpa surfaces the parent as "completable"
+   * 2. User/LLM runs `kb complete <id>` to explicitly complete the parent
+   * 3. This creates a completion branch, fills the summary, and opens a PR
+   * 4. The PR transitions the parent to `in_review`, then `completed` on merge
    *
-   * @param options - Completion cascade options
-   * @returns Result containing updated artifacts and events
+   * This method is kept for API compatibility but returns an empty result.
    *
-   * @example
-   * ```typescript
-   * // After merging PR for issue A.1.5
-   * const result = await cascadeService.executeCompletionCascade({
-   *   artifactId: 'A.1.5',
-   *   trigger: 'pr_merged',
-   *   actor: 'Git Hook (hook@post-merge)',
-   * });
-   *
-   * if (result.updatedArtifacts.length > 0) {
-   *   console.log(`Parent A.1 moved to in_review`);
-   * }
-   * ```
+   * @param _options - Completion cascade options (unused)
+   * @returns Empty result - no cascade performed
    */
   async executeCompletionCascade(
-    options: CompletionCascadeOptions,
+    _options: CompletionCascadeOptions,
   ): Promise<CascadeResult> {
-    const result: CascadeResult = {
+    // No-op: Parent completion is now explicit via `kb complete` command
+    // Sherpa surfaces completable milestones/initiatives for user action
+    return {
       updatedArtifacts: [],
       events: [],
     };
-
-    const { artifactId, actor, baseDir } = options;
-
-    // 1. Extract parent ID from artifact ID
-    const parentId = this.getParentId(artifactId);
-    if (!parentId) {
-      // No parent (top-level initiative), nothing to cascade
-      return result;
-    }
-
-    // 2-4. Use QueryService to load parent and siblings (it handles slug resolution)
-    const queryService = new QueryService(baseDir);
-    let parent: TAnyArtifact;
-    let parentSlug: string;
-    let siblings: Array<{ id: string; artifact: TAnyArtifact }>;
-    try {
-      // Load siblings (which also verifies parent exists)
-      siblings = await queryService.getChildren(parentId);
-
-      // Load parent artifact using QueryService (no slug needed)
-      const ancestors = await queryService.getAncestors(artifactId);
-      const parentArtifact = ancestors.find((a) => a.id === parentId);
-      if (!parentArtifact) {
-        throw new Error(`Parent ${parentId} not found in ancestors`);
-      }
-      parent = parentArtifact.artifact;
-
-      // Extract slug from directory path by checking the filesystem
-      // Use loadAllArtifactPaths to get all paths, then find parent's path
-      const { loadAllArtifactPaths, getArtifactIdFromPath } = await import(
-        "@kodebase/core"
-      );
-      const artifactsRoot = `${baseDir}/.kodebase/artifacts`;
-      const allPaths = await loadAllArtifactPaths(artifactsRoot);
-
-      // Find the path for the parent artifact
-      const parentPath = allPaths.find((p) => {
-        const id = getArtifactIdFromPath(p);
-        return id === parentId;
-      });
-
-      if (!parentPath) {
-        throw new Error(`Parent ${parentId} path not found in artifact paths`);
-      }
-
-      // Extract directory name from path
-      // Path format: /base/.kodebase/artifacts/A.slug/A.1.slug/A.1.yml
-      const pathParts = parentPath.split("/");
-      const parentDirName = pathParts[pathParts.length - 2]; // Get directory name before file
-
-      // Extract slug from directory name (format: ID.slug)
-      if (!parentDirName?.startsWith(`${parentId}.`)) {
-        throw new Error(
-          `Invalid directory format for ${parentId}: ${parentDirName}`,
-        );
-      }
-      parentSlug = parentDirName.substring(parentId.length + 1);
-    } catch {
-      // Parent doesn't exist, cannot cascade
-      return result;
-    }
-
-    // 5. Get parent's current state
-    const parentState = this.getCurrentState(parent);
-    if (!parentState) {
-      // Parent has no events, cannot determine state
-      return result;
-    }
-
-    // Parent must be in_progress to cascade to in_review
-    if (parentState !== CArtifactEvent.IN_PROGRESS) {
-      // Parent not started yet or already in_review/completed
-      return result;
-    }
-
-    // 6. Use CascadeEngine to check if parent should cascade
-    const decision = this.engine.shouldCascadeToParent(
-      siblings.map((s) => s.artifact),
-      parentState,
-    );
-
-    if (!decision.shouldCascade) {
-      // Not all siblings are done, or other blocking condition
-      return result;
-    }
-
-    // 7. Generate cascade event using CascadeEngine
-    const cascadeEvent = this.engine.generateCascadeEvent(
-      decision.newState, // "in_review"
-      {
-        event: CArtifactEvent.COMPLETED,
-        actor: actor ?? "System Cascade (cascade@completion)",
-        timestamp: new Date().toISOString(),
-      },
-      "completion_cascade",
-    );
-
-    // 8. Append in_review event to parent
-    await this.artifactService.appendEvent({
-      id: parentId,
-      slug: parentSlug,
-      event: cascadeEvent,
-      baseDir,
-    });
-
-    // 9. Reload parent to get updated artifact (using QueryService to avoid slug issues)
-    const reloadedAncestors = await queryService.getAncestors(artifactId);
-    const reloadedParent = reloadedAncestors.find((a) => a.id === parentId);
-    if (!reloadedParent) {
-      throw new Error(`Failed to reload parent ${parentId} after cascade`);
-    }
-    const updatedParent = reloadedParent.artifact;
-
-    // 10. Add to result
-    result.updatedArtifacts.push(updatedParent);
-    result.events.push({
-      artifactId: parentId,
-      event: cascadeEvent.event,
-      timestamp: cascadeEvent.timestamp,
-      actor: cascadeEvent.actor,
-      trigger: cascadeEvent.trigger,
-    });
-
-    return result;
   }
 
   /**

@@ -57,7 +57,7 @@
     "@kodebase/typescript-config": "workspace:*",
     "@types/node": "^22.19.1",
     "@vitest/coverage-istanbul": "^4.0.13",
-    "memfs": "^4.51.0",
+    "memfs": "^4.51.1",
     "publint": "^0.3.15",
     "typedoc": "^0.28.14",
     "typedoc-plugin-coverage": "^4.0.2"
