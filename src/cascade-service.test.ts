@@ -906,13 +906,19 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
-      // Assert: Parent milestone moved to in_progress
-      expect(result.updatedArtifacts).toHaveLength(1);
+      // Assert: Parent milestone and grandparent initiative both moved to in_progress
+      expect(result.updatedArtifacts).toHaveLength(2);
       expect(result.updatedArtifacts[0]?.metadata.title).toBe("Milestone A.1");
-      expect(result.events).toHaveLength(1);
+      expect(result.updatedArtifacts[1]?.metadata.title).toBe("Initiative A");
+      expect(result.events).toHaveLength(2);
+      // First event is for the milestone (direct parent)
       expect(result.events[0]?.artifactId).toBe("A.1");
       expect(result.events[0]?.event).toBe("in_progress");
       expect(result.events[0]?.trigger).toBe("children_started");
+      // Second event is for the initiative (grandparent, cascaded from milestone)
+      expect(result.events[1]?.artifactId).toBe("A");
+      expect(result.events[1]?.event).toBe("in_progress");
+      expect(result.events[1]?.trigger).toBe("children_started");
 
       // Verify parent artifact has in_progress event
       const updatedParent = await artifactService.getArtifact({
@@ -1206,16 +1212,19 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
-      // Assert: Cascade produced result
-      expect(result.updatedArtifacts).toHaveLength(1);
-      expect(result.events).toHaveLength(1);
+      // Assert: Cascade produced result (both milestone and initiative)
+      expect(result.updatedArtifacts).toHaveLength(2);
+      expect(result.events).toHaveLength(2);
+      // First event is for the milestone (direct parent)
       expect(result.events[0]?.artifactId).toBe("G.1");
       expect(result.events[0]?.event).toBe("in_progress");
       expect(result.events[0]?.trigger).toBe("children_started");
       // CascadeEngine uses a single system actor for all cascade types
-      expect(result.events[0]?.actor).toBe(
-        "System Cascade (cascade@completion)",
-      );
+      expect(result.events[0]?.actor).toBe("agent.cascade");
+      // Second event is for the initiative (grandparent)
+      expect(result.events[1]?.artifactId).toBe("G");
+      expect(result.events[1]?.event).toBe("in_progress");
+      expect(result.events[1]?.trigger).toBe("children_started");
     });
   });
 
@@ -1424,12 +1433,17 @@ describe("CascadeService", () => {
         baseDir: testBaseDir,
       });
 
-      // Assert: Only progress cascade runs
-      expect(result.updatedArtifacts).toHaveLength(1);
-      expect(result.events).toHaveLength(1);
+      // Assert: Progress cascade runs for both milestone and initiative
+      expect(result.updatedArtifacts).toHaveLength(2);
+      expect(result.events).toHaveLength(2);
+      // First event is for the milestone (direct parent)
       expect(result.events[0]?.artifactId).toBe("H.1");
       expect(result.events[0]?.event).toBe("in_progress");
       expect(result.events[0]?.trigger).toBe("children_started");
+      // Second event is for the initiative (grandparent)
+      expect(result.events[1]?.artifactId).toBe("H");
+      expect(result.events[1]?.event).toBe("in_progress");
+      expect(result.events[1]?.trigger).toBe("children_started");
     });
 
     it("should return empty result when no cascades trigger", async () => {

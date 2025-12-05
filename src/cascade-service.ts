@@ -47,7 +47,7 @@ export interface CascadeResult {
     event: string;
     /** ISO 8601 timestamp when the event occurred */
     timestamp: string;
-    /** Actor who triggered the cascade (e.g., 'System Cascade (cascade@completion)') */
+    /** Actor who triggered the cascade (e.g., 'agent.cascade') */
     actor: string;
     /** What triggered this event (e.g., 'children_completed', 'dependencies_met') */
     trigger: string;
@@ -71,7 +71,7 @@ export interface CompletionCascadeOptions {
   trigger: string;
 
   /**
-   * Optional actor override. Defaults to 'System Cascade (cascade@completion)'.
+   * Optional actor override. Defaults to 'agent.cascade'.
    */
   actor?: string;
 
@@ -98,7 +98,7 @@ export interface ReadinessCascadeOptions {
   trigger?: string;
 
   /**
-   * Optional actor override. Defaults to 'System Cascade (cascade@dependency-resolution)'.
+   * Optional actor override. Defaults to 'agent.cascade'.
    */
   actor?: string;
 
@@ -124,7 +124,7 @@ export interface ProgressCascadeOptions {
   trigger: string;
 
   /**
-   * Optional actor override. Defaults to 'System Cascade (cascade@progress)'.
+   * Optional actor override. Defaults to 'agent.cascade'.
    */
   actor?: string;
 
@@ -328,7 +328,7 @@ export class CascadeService {
    * const result = await cascadeService.executeReadinessCascade({
    *   completedArtifactId: 'B.2',
    *   trigger: 'dependencies_met',
-   *   actor: 'System Cascade (cascade@dependency-resolution)',
+   *   actor: 'agent.cascade',
    * });
    *
    * console.log(`Unblocked ${result.updatedArtifacts.length} artifacts`);
@@ -342,11 +342,7 @@ export class CascadeService {
       events: [],
     };
 
-    const {
-      completedArtifactId,
-      actor = "System Cascade (cascade@dependency-resolution)",
-      baseDir,
-    } = options;
+    const { completedArtifactId, actor = "agent.cascade", baseDir } = options;
 
     // 1. Find all artifacts blocked by this completed artifact
     // Create fresh DependencyGraphService to avoid stale cache
@@ -604,7 +600,7 @@ export class CascadeService {
       decision.newState, // "in_progress"
       {
         event: CArtifactEvent.IN_PROGRESS,
-        actor: actor ?? "System Cascade (cascade@progress)",
+        actor: actor ?? "agent.cascade",
         timestamp: new Date().toISOString(),
       },
       "progress_cascade",
@@ -635,6 +631,19 @@ export class CascadeService {
       actor: cascadeEvent.actor,
       trigger: cascadeEvent.trigger,
     });
+
+    // 11. Recursively cascade to grandparent if parent was updated
+    // This handles the chain: Issue A.1.1 → Milestone A.1 → Initiative A
+    const grandparentResult = await this.executeProgressCascade({
+      artifactId: parentId,
+      trigger: "children_started",
+      actor: actor ?? "agent.cascade",
+      baseDir,
+    });
+
+    // Merge grandparent results into our result
+    result.updatedArtifacts.push(...grandparentResult.updatedArtifacts);
+    result.events.push(...grandparentResult.events);
 
     return result;
   }
